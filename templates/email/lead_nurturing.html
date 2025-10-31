@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hast du noch Fragen?</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: #2A5D3C;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .content p {
+            margin: 16px 0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .content h3 {
+            color: #2A5D3C;
+            font-size: 22px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+        .faq {
+            background: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #2A5D3C;
+            margin: 16px 0;
+            border-radius: 4px;
+        }
+        .faq h4 {
+            color: #2A5D3C;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        .faq p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .faq ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .faq ul li {
+            margin: 4px 0;
+        }
+        .button {
+            display: inline-block;
+            background: #FF6B35;
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 8px 16px 0;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #e55a28;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer a {
+            color: #2A5D3C;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hallo {{ first_name }}!</h1>
+        </div>
+        
+        <div class="content">
+            <p>ich habe gesehen, dass du dich für eine Mitgliedschaft bei G3 CrossFit interessierst. Gibt es noch offene Fragen, die ich dir beantworten kann?</p>
+            
+            <h3>Die häufigsten Fragen:</h3>
+            
+            <div class="faq">
+                <h4>Bin ich fit genug für CrossFit?</h4>
+                <p>Absolut! Unsere Coaches skalieren jedes Workout individuell für dein Fitnesslevel. Vom kompletten Anfänger bis zum erfahrenen Athleten - jeder ist willkommen.</p>
+            </div>
+            
+            <div class="faq">
+                <h4>Wie läuft ein typisches Training ab?</h4>
+                <p>Jedes Training dauert 60 Minuten:</p>
+                <ul>
+                    <li>Warm-up (10 Min)</li>
+                    <li>Technik/Kraft (20 Min)</li>
+                    <li>Workout (20 Min)</li>
+                    <li>Cool-down (10 Min)</li>
+                </ul>
+            </div>
+            
+            <div class="faq">
+                <h4>Kann ich erstmal ein Probetraining machen?</h4>
+                <p>Ja! Dein erstes Training ist kostenlos und unverbindlich. So kannst du uns und unsere Community kennenlernen.</p>
+            </div>
+            
+            <div class="faq">
+                <h4>Was kostet eine Mitgliedschaft?</h4>
+                <p>Wir haben verschiedene Pakete ab 89€/Monat. Je nach deinen Zielen und wie oft du trainieren möchtest, finden wir das passende Paket für dich.</p>
+            </div>
+            
+            <p style="margin-top: 32px;">Bereit durchzustarten?</p>
+            <a href="{{ g3_website }}/Preise" class="button">Jetzt Mitglied werden</a>
+            
+            <p>Oder buche ein kostenloses Probetraining:</p>
+            <a href="{{ g3_website }}/Kontakt" class="button">Probetraining buchen</a>
+            
+            <p style="margin-top: 32px;">Ich bin jederzeit für dich da. Ruf mich einfach an oder antworte auf diese E-Mail.</p>
+            
+            <p>Sportliche Grüße,<br>
+            <strong>Denis</strong><br>
+            G3 CrossFit<br>
+            Tel: {{ g3_phone }}</p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>G3 CrossFit Berlin</strong></p>
+            <p>{{ g3_address }}</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            <p><a href="{{ g3_website }}">{{ g3_website }}</a></p>
+        </div>
+    </div>
+</body>
+</html>

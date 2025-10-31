@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neues Mitglied</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: #2A5D3C;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .member-info {
+            background: #f9f9f9;
+            border-left: 4px solid #FF6B35;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .member-info p {
+            margin: 12px 0;
+            font-size: 16px;
+        }
+        .member-info strong {
+            color: #2A5D3C;
+            display: inline-block;
+            min-width: 150px;
+        }
+        .checklist {
+            background: #fff8f0;
+            border: 2px solid #FF6B35;
+            padding: 20px;
+            margin: 24px 0;
+            border-radius: 8px;
+        }
+        .checklist h3 {
+            color: #FF6B35;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+        .checklist ul li {
+            padding: 8px 0;
+            font-size: 16px;
+        }
+        .checklist ul li:before {
+            content: "☐ ";
+            color: #FF6B35;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .button {
+            display: inline-block;
+            background: #2A5D3C;
+            color: white !important;
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #1f4429;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Neues Mitglied bei G3 CrossFit!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hallo Team,</p>
+            
+            <p>wir haben ein neues Mitglied! Hier sind die Details:</p>
+            
+            <div class="member-info">
+                <p><strong>Name:</strong> {{ first_name }} {{ last_name }}</p>
+                <p><strong>E-Mail:</strong> <a href="mailto:{{ email }}" style="color: #2A5D3C;">{{ email }}</a></p>
+                <p><strong>Telefon:</strong> {{ phone }}</p>
+                <p><strong>Mitgliedschaft:</strong> {{ membership_type }}</p>
+                <p><strong>Startdatum:</strong> {{ start_date }}</p>
+                <p><strong>Monatlicher Wert:</strong> {{ monthly_price }}€</p>
+            </div>
+            
+            <div class="checklist">
+                <h3>Nächste Schritte:</h3>
+                <ul>
+                    <li>Willkommens-Anruf innerhalb von 24h</li>
+                    <li>Onboarding-Termin vereinbaren</li>
+                    <li>In Facebook-Gruppe einladen</li>
+                    <li>Persönliche Begrüßung beim ersten Training</li>
+                </ul>
+            </div>
+            
+            <p>Profil in WODIFY ansehen:</p>
+            <a href="{{ wodify_profile_url }}" class="button">WODIFY Profil öffnen</a>
+            
+            <p>Lasst uns {{ first_name }} herzlich willkommen heißen! 💪</p>
+            
+            <p>Beste Grüße,<br>
+            <strong>G3 CrossFit Automation System</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>Diese E-Mail wurde automatisch generiert.</p>
+        </div>
+    </div>
+</body>
+</html>

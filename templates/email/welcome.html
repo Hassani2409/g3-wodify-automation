@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willkommen bei G3 CrossFit</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #2A5D3C 0%, #6BAF7E 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .content p {
+            margin: 16px 0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .content h3 {
+            color: #2A5D3C;
+            font-size: 22px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+        .content h4 {
+            color: #2A5D3C;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+        .content ul {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+        .content ul li {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            background: #FF6B35;
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #e55a28;
+        }
+        .membership-info {
+            background: #f9f9f9;
+            border-left: 4px solid #2A5D3C;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .membership-info p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .membership-info strong {
+            color: #2A5D3C;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 0 0 8px 8px;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer a {
+            color: #2A5D3C;
+            text-decoration: none;
+        }
+        hr {
+            margin: 32px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Willkommen bei G3 CrossFit!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hallo {{ first_name }},</p>
+            
+            <p>herzlich willkommen in der G3 CrossFit Familie! Wir freuen uns riesig, dass du dich entschieden hast, Teil unserer Community zu werden.</p>
+            
+            <h3>Deine nächsten Schritte:</h3>
+            
+            <h4>1. WODIFY App herunterladen</h4>
+            <p>Lade die WODIFY App herunter, um Kurse zu buchen und deinen Fortschritt zu tracken:</p>
+            <ul>
+                <li><strong>iOS:</strong> <a href="https://apps.apple.com/de/app/wodify/id543913831" style="color: #2A5D3C;">App Store</a></li>
+                <li><strong>Android:</strong> <a href="https://play.google.com/store/apps/details?id=com.wodify.wodify" style="color: #2A5D3C;">Google Play</a></li>
+            </ul>
+            
+            <h4>2. Dein erstes Training buchen</h4>
+            <p>Öffne die WODIFY App oder unsere Website und buche deinen ersten Kurs:</p>
+            <a href="{{ wodify_schedule_url }}" class="button">Zum Kursplan</a>
+            
+            <h4>3. Unserer Community beitreten</h4>
+            <p>Tritt unserer Facebook-Gruppe bei, um dich mit anderen Mitgliedern auszutauschen:</p>
+            <a href="{{ g3_facebook_group }}" class="button">Zur Facebook-Gruppe</a>
+            
+            <hr>
+            
+            <div class="membership-info">
+                <p><strong>Deine Mitgliedschaft:</strong></p>
+                <p><strong>Typ:</strong> {{ membership_type }}</p>
+                <p><strong>Startdatum:</strong> {{ start_date }}</p>
+                <p><strong>Monatlicher Preis:</strong> {{ monthly_price }}€</p>
+            </div>
+            
+            <p>Bei Fragen stehen wir dir jederzeit zur Verfügung. Ruf uns einfach an oder antworte auf diese E-Mail.</p>
+            
+            <p>Wir freuen uns auf dich beim Training!</p>
+            
+            <p>Sportliche Grüße,<br>
+            <strong>Dein G3 CrossFit Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>G3 CrossFit Berlin</strong></p>
+            <p>{{ g3_address }}</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            <p><a href="{{ g3_website }}">{{ g3_website }}</a></p>
+        </div>
+    </div>
+</body>
+</html>
