@@ -6,7 +6,7 @@ import { ArrowRight, Star, Award, Users, Calendar, Dumbbell, ChevronDown } from 
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 pt-20">
       {/* Decorative Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div 
