@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* G3 CrossFit Brand Colors */
+  --color-primary-*: initial;
+  --color-primary-50: #E8F3ED;
+  --color-primary-100: #D1E7DB;
+  --color-primary-200: #A3CFB7;
+  --color-primary-300: #75B793;
+  --color-primary-400: #479F6F;
+  --color-primary-500: #2A5D3C;
+  --color-primary-600: #224A30;
+  --color-primary-700: #193824;
+  --color-primary-800: #112518;
+  --color-primary-900: #08130C;
+  --color-primary: var(--color-primary-500);
+
+  --color-secondary-*: initial;
+  --color-secondary-50: #F0F8F2;
+  --color-secondary-100: #E1F1E5;
+  --color-secondary-200: #C3E3CB;
+  --color-secondary-300: #A5D5B1;
+  --color-secondary-400: #87C797;
+  --color-secondary-500: #6BAF7E;
+  --color-secondary-600: #558C65;
+  --color-secondary-700: #40694C;
+  --color-secondary-800: #2B4633;
+  --color-secondary-900: #15231A;
+  --color-secondary: var(--color-secondary-500);
+
+  --color-accent-*: initial;
+  --color-accent-50: #FFF3EF;
+  --color-accent-100: #FFE7DF;
+  --color-accent-200: #FFCFBF;
+  --color-accent-300: #FFB79F;
+  --color-accent-400: #FF9F7F;
+  --color-accent-500: #FF6B35;
+  --color-accent-600: #FF4500;
+  --color-accent-700: #CC3700;
+  --color-accent-800: #992900;
+  --color-accent-900: #661B00;
+  --color-accent: var(--color-accent-500);
+
+  --color-background: #F9F5F0;
+  --color-card: #FFFFFF;
+  --color-muted: #E5E7EB;
+  --color-muted-foreground: #6B7280;
+  --color-foreground: #1F2937;
+
+  --font-sans: 'Open Sans', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Barlow Condensed', sans-serif;
+  --font-button: 'Montserrat', sans-serif;
+
+  --radius-button: 8px;
+  --radius-card: 12px;
+}
+
+@layer base {
+  body {
+    background: #F9F5F0;
+    color: #1F2937;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
+
+  button {
+    font-family: var(--font-button);
+  }
+}
