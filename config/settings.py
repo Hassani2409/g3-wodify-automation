@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     
     # WODIFY Configuration
     wodify_webhook_secret: str = Field(env="WODIFY_WEBHOOK_SECRET")
+    wodify_api_key: Optional[str] = Field(default=None, env="WODIFY_API_KEY")
+    wodify_api_url: str = Field(default="https://api.wodify.com/v1", env="WODIFY_API_URL")
+    wodify_location_id: Optional[str] = Field(default=None, env="WODIFY_LOCATION_ID")
     wodify_tenant: str = Field(default="g3crossfit", env="WODIFY_TENANT")
     wodify_app_url: str = Field(default="https://app.wodify.com", env="WODIFY_APP_URL")
     wodify_schedule_url: str = Field(

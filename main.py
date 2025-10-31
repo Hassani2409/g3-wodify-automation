@@ -16,6 +16,7 @@ import sys
 from config.settings import settings
 from src.api.webhooks import router as webhooks_router
 from src.api.admin import router as admin_router
+from src.api.schedule import router as schedule_router
 
 
 # Configure logging
@@ -74,6 +75,7 @@ app.add_middleware(
 # Include routers
 app.include_router(webhooks_router)
 app.include_router(admin_router)
+app.include_router(schedule_router)
 
 
 @app.on_event("startup")

@@ -437,10 +437,46 @@ export default function SchedulePage() {
   const [showSuccess, setShowSuccess] = useState({ isOpen: false, type: '', courseName: '' });
   const [user, setUser] = useState<any>(null); // TODO: Replace with proper auth
   const [filters, setFilters] = useState({ day: 'Alle', level: 'Alle', type: 'Alle', timeSlot: 'Alle' });
+  const [courses, setCourses] = useState<Course[]>(coursesData); // Start with mock data
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch courses from API on mount
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // TODO: Replace with your actual backend URL
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${apiUrl}/api/schedule/classes`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch courses');
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.classes) {
+          setCourses(data.classes);
+        }
+      } catch (err) {
+        console.error('Error fetching courses:', err);
+        setError('Kurse konnten nicht geladen werden. Verwende Mock-Daten.');
+        // Keep using mock data on error
+        setCourses(coursesData);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   // Filter courses based on selected filters
   const filteredCourses = useMemo(() => {
-    return coursesData.filter(course => {
+    return courses.filter(course => {
       const matchesDay = filters.day === 'Alle' || course.day === filters.day;
       const matchesLevel = filters.level === 'Alle' || course.level === filters.level;
       const matchesType = filters.type === 'Alle' || courseTypes[course.type].label === filters.type;
@@ -471,7 +507,7 @@ export default function SchedulePage() {
 
       return matchesDay && matchesLevel && matchesType && matchesTimeSlot;
     });
-  }, [filters]);
+  }, [filters, courses]);
 
   // Group courses by day for better display
   const coursesByDay = useMemo(() => {
@@ -490,13 +526,36 @@ export default function SchedulePage() {
     setIsBooking(true);
 
     try {
-      // TODO: Implement actual booking API call
-      // For now, just simulate a delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/api/schedule/book`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          class_id: course.id,
+          user_id: user.id || 'demo_user',
+          user_email: user.email || 'demo@example.com',
+          user_name: user.name || 'Demo User',
+        }),
+      });
 
-      console.log('Booking course:', course);
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.detail || 'Booking failed');
+      }
+
+      console.log('Booking successful:', data);
       setShowSuccess({ isOpen: true, type: 'booking', courseName: course.name });
       setSelectedCourse(null);
+
+      // Refresh courses to update availability
+      const coursesResponse = await fetch(`${apiUrl}/api/schedule/classes`);
+      const coursesData = await coursesResponse.json();
+      if (coursesData.success) {
+        setCourses(coursesData.classes);
+      }
     } catch (error) {
       console.error("Buchungsfehler:", error);
       alert("Es gab ein Problem bei der Buchung. Bitte versuche es erneut oder kontaktiere uns direkt.");
@@ -511,11 +570,27 @@ export default function SchedulePage() {
     setIsBooking(true);
 
     try {
-      // TODO: Implement actual waitlist API call
-      // For now, just simulate a delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/api/schedule/waitlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          class_id: course.id,
+          user_id: user.id || 'demo_user',
+          user_email: user.email || 'demo@example.com',
+          user_name: user.name || 'Demo User',
+        }),
+      });
 
-      console.log('Joining waitlist for course:', course);
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.detail || 'Waitlist join failed');
+      }
+
+      console.log('Waitlist join successful:', data);
       setShowSuccess({ isOpen: true, type: 'waitlist', courseName: course.name });
       setSelectedCourse(null);
     } catch (error) {
