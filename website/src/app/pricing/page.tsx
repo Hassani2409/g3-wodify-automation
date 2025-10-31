@@ -13,14 +13,20 @@ import { Badge } from "@/components/ui/badge";
 interface Plan {
   name: string;
   monthlyPrice: number;
-  yearlyPrice: number;
+  sixMonthPrice: number;
+  twelveMonthPrice: number;
   features: string[];
   isPopular: boolean;
+  stripePriceId?: {
+    monthly?: string;
+    sixMonth?: string;
+    twelveMonth?: string;
+  };
 }
 
 interface SignupModalProps {
   plan: Plan | null;
-  billingType: 'monthly' | 'yearly';
+  billingType: 'monthly' | 'sixMonth' | 'twelveMonth';
   onClose: () => void;
 }
 
@@ -81,17 +87,30 @@ const SignupModal = ({ plan, billingType, onClose }: SignupModalProps) => {
 
     setIsSubmitting(true);
     try {
-      const price = billingType === 'monthly' ? plan.monthlyPrice : Math.round(plan.yearlyPrice / 12);
-      const billingCycle = billingType === 'monthly' ? 'Monatlich' : 'Jährlich';
+      let price = plan.monthlyPrice;
+      let billingCycle = 'Monatlich';
 
-      // Simulate API call - replace with actual email sending logic
+      if (billingType === 'sixMonth') {
+        price = plan.sixMonthPrice;
+        billingCycle = '6 Monate';
+      } else if (billingType === 'twelveMonth') {
+        price = plan.twelveMonthPrice;
+        billingCycle = '12 Monate';
+      }
+
+      // TODO: Integrate with Stripe Checkout
+      // const stripePriceId = plan.stripePriceId?.[billingType];
+      // Redirect to Stripe Checkout with the selected plan
+
+      // For now, simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       console.log('Membership signup:', {
         plan: plan.name,
         price,
         billingCycle,
-        formData
+        formData,
+        // stripePriceId
       });
 
       setStep('success');
@@ -173,8 +192,11 @@ const SignupModal = ({ plan, billingType, onClose }: SignupModalProps) => {
             <h3 className="text-xl font-bold mb-4 text-foreground font-heading">Schritt 3: Bestätigung</h3>
             <div className="bg-muted p-4 rounded-lg space-y-2 mb-6">
               <div className="flex justify-between"><span className="text-muted-foreground font-body">Mitgliedschaft:</span> <span className="font-semibold text-foreground font-body">{plan.name}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground font-body">Zahlungsweise:</span> <span className="font-semibold text-foreground font-body">{billingType === 'monthly' ? 'Monatlich' : 'Jährlich'}</span></div>
-              <div className="flex justify-between font-bold text-lg"><span className="text-foreground font-heading">Preis:</span> <span className="text-accent-500 font-heading">{billingType === 'monthly' ? plan.monthlyPrice : Math.round(plan.yearlyPrice/12)}€ / Monat</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground font-body">Zahlungsweise:</span> <span className="font-semibold text-foreground font-body">{billingType === 'monthly' ? 'Monatlich' : billingType === 'sixMonth' ? '6 Monate' : '12 Monate'}</span></div>
+              <div className="flex justify-between font-bold text-lg"><span className="text-foreground font-heading">Preis:</span> <span className="text-accent-500 font-heading">{billingType === 'monthly' ? plan.monthlyPrice : billingType === 'sixMonth' ? plan.sixMonthPrice : plan.twelveMonthPrice}€ / Monat</span></div>
+              {billingType !== 'monthly' && (
+                <div className="flex justify-between text-sm"><span className="text-muted-foreground font-body">Aufnahmegebühr:</span> <span className="font-semibold text-foreground font-body">49€ (einmalig)</span></div>
+              )}
             </div>
             <div className="border-t pt-4">
               <label htmlFor="privacy" className="flex items-start space-x-3">
@@ -245,30 +267,66 @@ const SignupModal = ({ plan, billingType, onClose }: SignupModalProps) => {
 };
 
 export default function PricingPage() {
-  const [billingType, setBillingType] = useState<'monthly' | 'yearly'>('monthly');
+  const [billingType, setBillingType] = useState<'monthly' | 'sixMonth' | 'twelveMonth'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
   const plans: Plan[] = [
     {
-      name: "Starter",
-      monthlyPrice: 89,
-      yearlyPrice: 979,
-      features: ["8 Kurse pro Monat", "Freier Zugang zum Open Gym", "Community Events"],
-      isPopular: false
+      name: "2x pro Woche",
+      monthlyPrice: 140,
+      sixMonthPrice: 110,
+      twelveMonthPrice: 100,
+      features: [
+        "2 Trainings pro Woche",
+        "Freier Zugang zum Open Gym",
+        "Community Events",
+        "Professionelle Betreuung"
+      ],
+      isPopular: false,
+      stripePriceId: {
+        monthly: 'price_xxx', // TODO: Add real Stripe Price IDs
+        sixMonth: 'price_xxx',
+        twelveMonth: 'price_xxx'
+      }
+    },
+    {
+      name: "3x pro Woche",
+      monthlyPrice: 150,
+      sixMonthPrice: 130,
+      twelveMonthPrice: 120,
+      features: [
+        "3 Trainings pro Woche",
+        "Freier Zugang zum Open Gym",
+        "Alle Spezialkurse inklusive",
+        "Community Events",
+        "Professionelle Betreuung"
+      ],
+      isPopular: false,
+      stripePriceId: {
+        monthly: 'price_xxx',
+        sixMonth: 'price_xxx',
+        twelveMonth: 'price_xxx'
+      }
     },
     {
       name: "Unlimited",
-      monthlyPrice: 129,
-      yearlyPrice: 1419,
-      features: ["Unbegrenzt Kurse", "Freier Zugang zum Open Gym", "Alle Spezialkurse inklusive", "10% Rabatt im Shop", "Kostenlose Workshops"],
-      isPopular: true
-    },
-    {
-      name: "Premium",
-      monthlyPrice: 189,
-      yearlyPrice: 2079,
-      features: ["Alle 'Unlimited' Vorteile", "2 Personal Trainings pro Monat", "Individuelle Ernährungsberatung"],
-      isPopular: false
+      monthlyPrice: 175,
+      sixMonthPrice: 150,
+      twelveMonthPrice: 140,
+      features: [
+        "Unbegrenzt Trainings pro Woche",
+        "Freier Zugang zum Open Gym",
+        "Alle Spezialkurse inklusive",
+        "Community Events",
+        "Professionelle Betreuung",
+        "Priorität bei Workshops"
+      ],
+      isPopular: true,
+      stripePriceId: {
+        monthly: 'price_xxx',
+        sixMonth: 'price_xxx',
+        twelveMonth: 'price_xxx'
+      }
     }
   ];
 
@@ -310,21 +368,44 @@ export default function PricingPage() {
 
       {/* Billing Cycle Toggle */}
       <section className="py-8 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center gap-4">
-          <span className={`font-semibold transition-colors font-button ${billingType === 'monthly' ? 'text-accent-500' : 'text-muted-foreground'}`}>
-            Monatlich
-          </span>
-          <div
-            className="w-14 h-8 flex items-center bg-muted rounded-full p-1 cursor-pointer transition-colors hover:bg-muted/80"
-            onClick={() => setBillingType(bt => bt === 'monthly' ? 'yearly' : 'monthly')}
-          >
-            <div
-              className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform ${billingType === 'yearly' ? 'translate-x-6' : ''}`}
-            />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+            <button
+              onClick={() => setBillingType('monthly')}
+              className={`px-6 py-3 rounded-button font-button font-semibold transition-all ${
+                billingType === 'monthly'
+                  ? 'bg-accent-500 text-white shadow-lg'
+                  : 'bg-transparent border-2 border-muted text-muted-foreground hover:bg-muted'
+              }`}
+            >
+              Monatlich
+            </button>
+            <button
+              onClick={() => setBillingType('sixMonth')}
+              className={`px-6 py-3 rounded-button font-button font-semibold transition-all relative ${
+                billingType === 'sixMonth'
+                  ? 'bg-accent-500 text-white shadow-lg'
+                  : 'bg-transparent border-2 border-muted text-muted-foreground hover:bg-muted'
+              }`}
+            >
+              6 Monate
+              <Badge className="absolute -top-2 -right-2 bg-secondary-500 text-white text-xs">Spare bis zu 30€</Badge>
+            </button>
+            <button
+              onClick={() => setBillingType('twelveMonth')}
+              className={`px-6 py-3 rounded-button font-button font-semibold transition-all relative ${
+                billingType === 'twelveMonth'
+                  ? 'bg-accent-500 text-white shadow-lg'
+                  : 'bg-transparent border-2 border-muted text-muted-foreground hover:bg-muted'
+              }`}
+            >
+              12 Monate
+              <Badge className="absolute -top-2 -right-2 bg-secondary-500 text-white text-xs">Spare bis zu 40€</Badge>
+            </button>
           </div>
-          <span className={`font-semibold transition-colors font-button ${billingType === 'yearly' ? 'text-accent-500' : 'text-muted-foreground'}`}>
-            Jährlich <Badge className="bg-secondary-100 text-secondary-800 ml-2">-15%</Badge>
-          </span>
+          <p className="text-center mt-4 text-sm text-muted-foreground font-body">
+            Aufnahmegebühr: 49€ (einmalig bei 6- und 12-Monats-Verträgen)
+          </p>
         </div>
       </section>
 
@@ -352,13 +433,21 @@ export default function PricingPage() {
                   <CardHeader className="text-center">
                     <CardTitle className="text-2xl font-heading text-foreground">{plan.name}</CardTitle>
                     <p className="text-4xl font-bold my-4 text-accent-500 font-heading">
-                      {billingType === 'monthly' ? plan.monthlyPrice : Math.round(plan.yearlyPrice/12)}€
+                      {billingType === 'monthly' ? plan.monthlyPrice : billingType === 'sixMonth' ? plan.sixMonthPrice : plan.twelveMonthPrice}€
                       <span className="text-lg font-medium text-muted-foreground font-body">/Monat</span>
                     </p>
-                    {billingType === 'yearly' && (
-                      <p className="text-sm text-muted-foreground font-body">
-                        {plan.yearlyPrice}€ jährlich abgerechnet
-                      </p>
+                    {billingType !== 'monthly' && (
+                      <div className="space-y-1">
+                        <p className="text-sm text-muted-foreground font-body">
+                          Vertragslaufzeit: {billingType === 'sixMonth' ? '6 Monate' : '12 Monate'}
+                        </p>
+                        <p className="text-xs text-secondary-600 font-body font-semibold">
+                          Spare {billingType === 'sixMonth'
+                            ? `${(plan.monthlyPrice - plan.sixMonthPrice) * 6}€`
+                            : `${(plan.monthlyPrice - plan.twelveMonthPrice) * 12}€`
+                          } insgesamt
+                        </p>
+                      </div>
                     )}
                   </CardHeader>
                   <CardContent className="flex-grow flex flex-col justify-between">
@@ -391,10 +480,13 @@ export default function PricingPage() {
       {/* Special Offers */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-foreground font-heading">
+            Weitere Optionen
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5 }}
             >
@@ -403,19 +495,13 @@ export default function PricingPage() {
                   <CardTitle className="mb-2 font-heading text-foreground">Drop-In</CardTitle>
                   <p className="mb-4 text-muted-foreground font-body">
                     Besuchst du Berlin oder möchtest nur eine einzelne Klasse ausprobieren?
-                    Kaufe eine 10er-Karte oder einen einzelnen Drop-In.
                   </p>
                 </div>
-                <div className="flex items-end justify-between">
-                  <div>
-                    <div className="text-3xl font-bold text-accent-500 font-heading">
-                      25€ <span className="text-lg font-medium text-muted-foreground font-body">/Klasse</span>
-                    </div>
-                    <div className="text-3xl font-bold text-accent-500 font-heading">
-                      200€ <span className="text-lg font-medium text-muted-foreground font-body">/10er-Karte</span>
-                    </div>
+                <div className="space-y-4">
+                  <div className="text-3xl font-bold text-accent-500 font-heading">
+                    25€ <span className="text-lg font-medium text-muted-foreground font-body">/Klasse</span>
                   </div>
-                  <Button asChild className="bg-transparent border-2 border-primary-500 text-primary-700 hover:bg-primary-500 hover:text-white font-button font-semibold px-6 py-3 rounded-button">
+                  <Button asChild className="w-full bg-transparent border-2 border-primary-500 text-primary-700 hover:bg-primary-500 hover:text-white font-button font-semibold px-6 py-3 rounded-button">
                     <Link href="/contact">Drop-In buchen</Link>
                   </Button>
                 </div>
@@ -423,27 +509,67 @@ export default function PricingPage() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
               <Card className="flex flex-col justify-between p-6 h-full border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300">
                 <div>
-                  <CardTitle className="mb-2 font-heading text-foreground">Kostenloses Probetraining</CardTitle>
+                  <CardTitle className="mb-2 font-heading text-foreground">10er-Karte</CardTitle>
                   <p className="mb-4 text-muted-foreground font-body">
-                    Neu bei CrossFit? Teste uns eine Woche lang kostenlos. Lerne die Trainer, die Community und die Grundlagen kennen.
+                    10 Gruppentrainings in 4 Monaten. Personenbezogen und nicht übertragbar.
                   </p>
                 </div>
-                <div className="flex items-end justify-between">
+                <div className="space-y-4">
+                  <div className="text-3xl font-bold text-accent-500 font-heading">
+                    200€ <span className="text-lg font-medium text-muted-foreground font-body">/10 Klassen</span>
+                  </div>
+                  <Button asChild className="w-full bg-transparent border-2 border-primary-500 text-primary-700 hover:bg-primary-500 hover:text-white font-button font-semibold px-6 py-3 rounded-button">
+                    <Link href="/contact">10er-Karte kaufen</Link>
+                  </Button>
+                </div>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Card className="flex flex-col justify-between p-6 h-full border-2 border-accent-500 hover:border-accent-600 transition-all duration-300 bg-accent-50">
+                <div>
+                  <CardTitle className="mb-2 font-heading text-foreground">Kostenloses Probetraining</CardTitle>
+                  <p className="mb-4 text-muted-foreground font-body">
+                    Neu bei CrossFit? Teste uns kostenlos. Lerne die Trainer, die Community und die Grundlagen kennen.
+                  </p>
+                </div>
+                <div className="space-y-4">
                   <div className="text-3xl font-bold text-accent-500 font-heading">0€</div>
-                  <Button asChild className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold px-6 py-3 rounded-button">
+                  <Button asChild className="w-full bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold px-6 py-3 rounded-button">
                     <Link href="/contact">Probetraining buchen</Link>
                   </Button>
                 </div>
               </Card>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Student Discount Info */}
+      <section className="py-12 bg-secondary-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h3 className="text-2xl font-bold mb-4 text-foreground font-heading">Ermäßigungen</h3>
+          <p className="text-lg text-muted-foreground font-body max-w-3xl mx-auto">
+            <strong>Studenten, Auszubildende und Soldaten</strong> erhalten eine Ermäßigung:<br />
+            <span className="text-accent-500 font-semibold">10€ bei 2x pro Woche</span> •
+            <span className="text-accent-500 font-semibold"> 15€ bei 3x pro Woche</span> •
+            <span className="text-accent-500 font-semibold"> 20€ bei Unlimited</span>
+          </p>
+          <p className="text-sm text-muted-foreground font-body mt-4">
+            Nachweis erforderlich bei Vertragsabschluss
+          </p>
         </div>
       </section>
     </div>
