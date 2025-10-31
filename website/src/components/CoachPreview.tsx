@@ -4,28 +4,36 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Award, Users, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { specificUnsplashPhotos } from "@/lib/unsplash";
 
 const coaches = [
   {
-    name: "Max Müller",
-    role: "Head Coach & Gründer",
-    certifications: "CF-L2, Weightlifting Coach",
-    image: "👨‍🏫",
-    specialty: "Olympic Lifting",
+    name: "Denis",
+    role: "Head Coach & Owner",
+    certifications: "CF-L2, Olympic Weightlifting, Mobility Coach",
+    image: specificUnsplashPhotos.coachMale1,
+    specialty: "Olympic Lifting & Programming",
+    experience: "8 Jahre Erfahrung",
+    funFact: "Kann 150kg Clean & Jerk",
   },
   {
-    name: "Sarah Schmidt",
+    name: "Sarah",
     role: "Senior Coach",
-    certifications: "CF-L2, Nutrition Coach",
-    image: "👩‍🏫",
+    certifications: "CF-L1, Nutrition Coach, Gymnastics",
+    image: specificUnsplashPhotos.coachFemale1,
     specialty: "Gymnastics & Mobility",
+    experience: "5 Jahre Erfahrung",
+    funFact: "15 Strict Pull-ups am Stück",
   },
   {
-    name: "Tom Wagner",
-    role: "Performance Coach",
-    certifications: "CF-L1, Sports Science",
-    image: "👨‍💼",
+    name: "Michael",
+    role: "Coach",
+    certifications: "CF-L1, Kettlebell Instructor",
+    image: specificUnsplashPhotos.coachMale2,
     specialty: "Strength & Conditioning",
+    experience: "3 Jahre Erfahrung",
+    funFact: "Marathon in unter 3 Stunden",
   },
 ];
 
@@ -85,26 +93,50 @@ export default function CoachPreview() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group"
             >
-              <div className="h-full p-8 rounded-2xl border border-zinc-700 bg-zinc-800/50 backdrop-blur-sm hover:border-emerald-500/50 transition-all duration-300 hover:transform hover:scale-105">
-                {/* Coach Image Placeholder */}
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border-2 border-zinc-700 flex items-center justify-center text-5xl group-hover:scale-110 transition-transform duration-300">
-                  {coach.image}
+              <div className="h-full p-8 rounded-2xl border border-primary-200 bg-card hover:border-primary-500 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
+                {/* Coach Image */}
+                <div className="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary-500 group-hover:border-accent-500 transition-all duration-300">
+                  <Image
+                    src={coach.image}
+                    alt={`${coach.name} - ${coach.role} bei G3 CrossFit`}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    sizes="128px"
+                  />
                 </div>
 
                 {/* Coach Info */}
-                <div className="text-center">
-                  <h3 className="text-xl font-bold text-white mb-1">
-                    {coach.name}
-                  </h3>
-                  <p className="text-emerald-400 font-medium mb-2">
-                    {coach.role}
-                  </p>
-                  <p className="text-sm text-zinc-400 mb-3">
-                    {coach.certifications}
-                  </p>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-700/50 text-xs text-zinc-300">
-                    Spezialisierung: {coach.specialty}
+                <div className="text-center space-y-3">
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground mb-1">
+                      {coach.name}
+                    </h3>
+                    <p className="text-primary-600 font-semibold mb-1">
+                      {coach.role}
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {coach.experience}
+                    </p>
                   </div>
+
+                  {/* Certifications */}
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {coach.certifications.split(', ').map((cert, i) => (
+                      <span key={i} className="px-2 py-1 rounded-md bg-primary-50 text-primary-700 text-xs font-medium">
+                        {cert}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Specialty Badge */}
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary-50 text-secondary-700 text-sm font-medium">
+                    🎯 {coach.specialty}
+                  </div>
+
+                  {/* Fun Fact */}
+                  <p className="text-sm text-accent-600 font-medium italic">
+                    💪 {coach.funFact}
+                  </p>
                 </div>
               </div>
             </motion.div>

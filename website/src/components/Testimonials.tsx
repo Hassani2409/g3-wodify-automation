@@ -1,50 +1,50 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, TrendingUp } from "lucide-react";
+import Image from "next/image";
+import { specificUnsplashPhotos } from "@/lib/unsplash";
 
 const testimonials = [
   {
-    name: "Anna Becker",
+    name: "Sarah M.",
+    age: 32,
     role: "Mitglied seit 2022",
-    image: "👩",
+    image: specificUnsplashPhotos.transformation1,
     rating: 5,
-    text: "G3 CrossFit hat mein Leben verändert! Die Coaches sind unglaublich motivierend und die Community ist wie eine zweite Familie. Ich habe nicht nur 15kg abgenommen, sondern auch so viel Selbstvertrauen gewonnen.",
+    text: "Von 0 auf 10 Pull-ups in 6 Monaten! Die Coaches bei G3 haben mir gezeigt, dass ich viel stärker bin, als ich dachte. Die Community pusht mich jeden Tag zu neuen Höchstleistungen.",
+    transformation: "+150% Fitness-Level",
+    result: "10 Pull-ups",
   },
   {
-    name: "Michael Schneider",
-    role: "Mitglied seit 2021",
-    image: "👨",
-    rating: 5,
-    text: "Als ehemaliger Sportmuffel hätte ich nie gedacht, dass ich CrossFit lieben würde. Das Team bei G3 macht jeden WOD zu einem Erlebnis. Beste Entscheidung meines Lebens!",
-  },
-  {
-    name: "Lisa Weber",
-    role: "Mitglied seit 2023",
-    image: "👩‍🦰",
-    rating: 5,
-    text: "Die Atmosphäre ist einzigartig! Jeder wird auf seinem Level abgeholt und gefördert. Die Fortschritte, die ich in nur 6 Monaten gemacht habe, sind unglaublich. Absolute Empfehlung!",
-  },
-  {
-    name: "David Klein",
+    name: "Michael K.",
+    age: 45,
     role: "Mitglied seit 2020",
-    image: "👨‍🦱",
+    image: specificUnsplashPhotos.transformation2,
     rating: 5,
-    text: "Professionelles Coaching, top Equipment und eine motivierende Community – was will man mehr? G3 CrossFit ist das beste Gym in Berlin, hands down!",
+    text: "15kg Gewichtsverlust in 8 Monaten! G3 CrossFit hat nicht nur meinen Körper, sondern auch mein Leben transformiert. Ich fühle mich mit 45 fitter als mit 30!",
+    transformation: "-15kg in 8 Monaten",
+    result: "Beste Form meines Lebens",
   },
   {
-    name: "Julia Hoffmann",
-    role: "Mitglied seit 2022",
-    image: "👩‍🦱",
-    rating: 5,
-    text: "Ich war anfangs skeptisch, aber die Coaches haben mich sofort überzeugt. Individuelles Training trotz Gruppenkursen. Hier fühlt man sich wirklich wohl!",
-  },
-  {
-    name: "Thomas Meyer",
+    name: "Lisa T.",
+    age: 28,
     role: "Mitglied seit 2021",
-    image: "👨‍🦲",
+    image: specificUnsplashPhotos.transformation3,
     rating: 5,
-    text: "Nach mehreren Gyms habe ich endlich mein Zuhause gefunden. Die Kombination aus hartem Training und Spaß ist perfekt. Danke G3 Team!",
+    text: "Erste Muscle-Up nach 1 Jahr Training! Was als Hobby begann, ist jetzt meine Leidenschaft. Die Coaches sind top und die Atmosphäre ist familiär.",
+    transformation: "+200% Kraft",
+    result: "Muscle-Up geschafft",
+  },
+  {
+    name: "Tom R.",
+    age: 38,
+    role: "Mitglied seit 2019",
+    image: specificUnsplashPhotos.transformation4,
+    rating: 5,
+    text: "Von Couch-Potato zum Marathon-Finisher! G3 CrossFit hat mir die Ausdauer und mentale Stärke gegeben, meinen ersten Marathon zu laufen. Unglaubliche Transformation!",
+    transformation: "Marathon in 3:45h",
+    result: "Vom Anfänger zum Athleten",
   },
 ];
 
@@ -76,7 +76,7 @@ export default function Testimonials() {
         </motion.div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
@@ -86,39 +86,60 @@ export default function Testimonials() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group"
             >
-              <div className="h-full p-8 rounded-2xl border border-zinc-700 bg-zinc-800/50 backdrop-blur-sm hover:border-emerald-500/50 transition-all duration-300 hover:transform hover:scale-105 relative">
+              <div className="h-full p-8 rounded-2xl border border-primary-200 bg-card hover:border-primary-500 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl relative">
                 {/* Quote Icon */}
                 <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <Quote className="w-12 h-12 text-emerald-400" />
+                  <Quote className="w-12 h-12 text-primary-500" />
+                </div>
+
+                {/* Author with Image */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-primary-500 shrink-0">
+                    <Image
+                      src={testimonial.image}
+                      alt={`${testimonial.name} - G3 CrossFit Transformation`}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                    />
+                  </div>
+                  <div>
+                    <div className="font-bold text-foreground">
+                      {testimonial.name}, {testimonial.age}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {testimonial.role}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Rating */}
                 <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
+                  {[...new Array(testimonial.rating)].map((_, i) => (
                     <Star
                       key={i}
-                      className="w-5 h-5 fill-emerald-400 text-emerald-400"
+                      className="w-5 h-5 fill-accent-500 text-accent-500"
                     />
                   ))}
                 </div>
 
                 {/* Testimonial Text */}
-                <p className="text-zinc-300 leading-relaxed mb-6 relative z-10">
+                <p className="text-foreground leading-relaxed mb-6 relative z-10">
                   "{testimonial.text}"
                 </p>
 
-                {/* Author */}
-                <div className="flex items-center gap-4 pt-6 border-t border-zinc-700">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-zinc-700 flex items-center justify-center text-2xl">
-                    {testimonial.image}
+                {/* Transformation Result */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-50 border border-primary-200">
+                    <TrendingUp className="w-5 h-5 text-primary-600" />
+                    <span className="text-sm font-semibold text-primary-700">
+                      {testimonial.transformation}
+                    </span>
                   </div>
-                  <div>
-                    <div className="font-semibold text-white">
-                      {testimonial.name}
-                    </div>
-                    <div className="text-sm text-zinc-400">
-                      {testimonial.role}
-                    </div>
+                  <div className="px-4 py-2 rounded-lg bg-accent-50 border border-accent-200">
+                    <span className="text-sm font-medium text-accent-700">
+                      🎯 {testimonial.result}
+                    </span>
                   </div>
                 </div>
               </div>

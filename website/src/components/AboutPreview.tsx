@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Target, Heart, Zap } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { specificUnsplashPhotos } from "@/lib/unsplash";
 
 const values = [
   {
@@ -39,18 +41,22 @@ export default function AboutPreview() {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            {/* Placeholder for Image - Replace with actual image */}
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-zinc-700">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">🏋️</div>
-                  <p className="text-zinc-400">G3 CrossFit Gym</p>
-                </div>
-              </div>
-              
+            {/* Community Image */}
+            <div className="relative aspect-4/3 rounded-2xl overflow-hidden border-4 border-primary-500 shadow-2xl">
+              <Image
+                src={specificUnsplashPhotos.communityGroup}
+                alt="G3 CrossFit Community - Gemeinsam trainieren in Berlin"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-linear-to-br from-primary-900/40 to-transparent" />
+
               {/* Decorative Elements */}
-              <div className="absolute top-4 right-4 w-20 h-20 bg-emerald-500/20 rounded-full blur-2xl" />
-              <div className="absolute bottom-4 left-4 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl" />
+              <div className="absolute top-4 right-4 w-20 h-20 bg-accent-500/30 rounded-full blur-2xl" />
+              <div className="absolute bottom-4 left-4 w-32 h-32 bg-secondary-500/30 rounded-full blur-2xl" />
             </div>
 
             {/* Stats Overlay */}

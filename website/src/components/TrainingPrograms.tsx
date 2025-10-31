@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { Dumbbell, Trophy, TrendingUp, Clock, Users, Zap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { specificUnsplashPhotos } from "@/lib/unsplash";
 
 const programs = [
   {
@@ -25,6 +27,7 @@ const programs = [
     ],
     gradient: "from-primary-600 to-primary-800",
     iconBg: "bg-primary-500",
+    image: specificUnsplashPhotos.crossfitMain,
   },
   {
     icon: Trophy,
@@ -46,9 +49,10 @@ const programs = [
     ],
     gradient: "from-secondary-600 to-secondary-800",
     iconBg: "bg-secondary-500",
+    image: specificUnsplashPhotos.weightliftingMain,
   },
   {
-    icon: TrendingUp,
+    icon: Zap,
     title: "Strength & Conditioning",
     tagline: "Maximalkraft und Muskelaufbau",
     description: "Fokussiertes Krafttraining mit Squats, Deadlifts und Bench Press",
@@ -67,6 +71,7 @@ const programs = [
     ],
     gradient: "from-accent-600 to-accent-800",
     iconBg: "bg-accent-500",
+    image: specificUnsplashPhotos.strengthMain,
   },
 ];
 
@@ -111,17 +116,22 @@ export default function TrainingPrograms() {
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 items-center`}
               >
-                {/* Image/Icon Section */}
-                <div className={`flex-1 relative h-96 rounded-card overflow-hidden bg-gradient-to-br ${program.gradient} p-8 flex items-center justify-center`}>
-                  <div className="absolute inset-0 opacity-20">
-                    <div 
-                      className="absolute inset-0" 
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                      }}
-                    />
+                {/* Image Section */}
+                <div className="flex-1 relative h-96 rounded-card overflow-hidden group">
+                  <Image
+                    src={program.image}
+                    alt={`${program.title} Training bei G3 CrossFit`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                  {/* Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${program.gradient} opacity-40 group-hover:opacity-30 transition-opacity duration-300`} />
+
+                  {/* Icon Badge */}
+                  <div className="absolute top-6 left-6 p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
+                    <Icon className="h-12 w-12 text-white" />
                   </div>
-                  <Icon className="h-48 w-48 text-white opacity-80" />
                 </div>
 
                 {/* Content Section */}
