@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probetraining bestätigt - G3 CrossFit</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #2A5D3C 0%, #6BAF7E 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .content p {
+            margin: 16px 0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .content h3 {
+            color: #2A5D3C;
+            font-size: 22px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+        .booking-info {
+            background: #f9f9f9;
+            border-left: 4px solid #2A5D3C;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .booking-info p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .booking-info strong {
+            color: #2A5D3C;
+        }
+        .button {
+            display: inline-block;
+            background: #FF6B35;
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #e55a28;
+        }
+        .preparation-list {
+            background: #E8F3ED;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+        .preparation-list ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        .preparation-list li {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 0 0 8px 8px;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer a {
+            color: #2A5D3C;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Probetraining bestätigt!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hallo {{ first_name }},</p>
+            
+            <p>super, dass du dich für ein Probetraining bei G3 CrossFit entschieden hast! Deine Buchung ist bestätigt.</p>
+            
+            <div class="booking-info">
+                <p><strong>Dein Probetraining:</strong></p>
+                <p><strong>Kurs:</strong> {{ class_name }}</p>
+                <p><strong>Datum:</strong> {{ class_date }}</p>
+                <p><strong>Uhrzeit:</strong> {{ class_time }}</p>
+                <p><strong>Trainer:</strong> {{ coach_name }}</p>
+                <p><strong>Adresse:</strong> {{ g3_address }}</p>
+                {% if calendar_link %}
+                <p style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">
+                    <a href="{{ calendar_link }}" style="color: #2A5D3C; text-decoration: none; font-weight: bold;">📅 Zum Kalender hinzufügen</a>
+                </p>
+                {% endif %}
+            </div>
+            
+            <h3>Vorbereitung für dein Probetraining</h3>
+            
+            <div class="preparation-list">
+                <p><strong>Was du mitbringen solltest:</strong></p>
+                <ul>
+                    <li>Sportkleidung (T-Shirt, Shorts/Leggings)</li>
+                    <li>Sportschuhe (CrossFit- oder Laufschuhe)</li>
+                    <li>Handtuch</li>
+                    <li>Wasserflasche</li>
+                    <li>Gute Laune! 😊</li>
+                </ul>
+            </div>
+            
+            <p><strong>Wichtig:</strong> Komme bitte 10-15 Minuten vor Kursbeginn, damit wir dir alles zeigen können und du dich umziehen kannst.</p>
+            
+            <h3>Was dich erwartet</h3>
+            
+            <p>In deinem Probetraining wirst du:</p>
+            <ul>
+                <li>Unser Studio kennenlernen</li>
+                <li>Die Grundbewegungen des CrossFit-Trainings erlernen</li>
+                <li>Ein Workout absolvieren (angepasst an dein Fitnesslevel)</li>
+                <li>Unsere Community erleben</li>
+                <li>Alle deine Fragen stellen können</li>
+            </ul>
+            
+            <p>Keine Sorge - jeder fängt mal an! Unser Team ist da, um dich zu unterstützen und sicherzustellen, dass du dich wohlfühlst.</p>
+            
+            <p>Falls du Fragen hast oder dein Probetraining verschieben möchtest, melde dich einfach bei uns:</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            
+            <p>Wir freuen uns darauf, dich kennenzulernen!</p>
+            
+            <p>Sportliche Grüße,<br>
+            <strong>Dein G3 CrossFit Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>G3 CrossFit Berlin</strong></p>
+            <p>{{ g3_address }}</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            <p><a href="{{ g3_website }}">{{ g3_website }}</a></p>
+        </div>
+    </div>
+</body>
+</html>
+

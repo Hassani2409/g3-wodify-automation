@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     # Database Configuration
     database_url: str = Field(default="sqlite:///./g3_wodify.db", env="DATABASE_URL")
     
+    # Redis Configuration (for scheduler job store in production)
+    redis_host: Optional[str] = Field(default=None, env="REDIS_HOST")
+    redis_port: int = Field(default=6379, env="REDIS_PORT")
+    redis_db: int = Field(default=0, env="REDIS_DB")
+    redis_password: Optional[str] = Field(default=None, env="REDIS_PASSWORD")
+    
     # WODIFY Configuration
     wodify_webhook_secret: str = Field(env="WODIFY_WEBHOOK_SECRET")
     wodify_api_key: Optional[str] = Field(default=None, env="WODIFY_API_KEY")
@@ -33,6 +39,14 @@ class Settings(BaseSettings):
     wodify_schedule_url: str = Field(
         default="https://g3-cross-fit-53cc52df.base44.app/Schedule",
         env="WODIFY_SCHEDULE_URL"
+    )
+    wodify_sales_portal_url: Optional[str] = Field(
+        default=None,
+        env="WODIFY_SALES_PORTAL_URL"
+    )
+    wodify_sales_portal_api_key: Optional[str] = Field(
+        default=None,
+        env="WODIFY_SALES_PORTAL_API_KEY"
     )
     
     # SendGrid Email Configuration
@@ -69,6 +83,14 @@ class Settings(BaseSettings):
     jwt_access_token_expire_minutes: int = Field(default=30, env="JWT_ACCESS_TOKEN_EXPIRE_MINUTES")
     jwt_refresh_token_expire_days: int = Field(default=7, env="JWT_REFRESH_TOKEN_EXPIRE_DAYS")
 
+    # AI/LLM Configuration
+    openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
+    anthropic_api_key: Optional[str] = Field(default=None, env="ANTHROPIC_API_KEY")
+    llm_provider: str = Field(default="openai", env="LLM_PROVIDER")  # "openai", "anthropic", or "fallback"
+    llm_model: str = Field(default="gpt-4o-mini", env="LLM_MODEL")  # e.g., "gpt-4o-mini", "gpt-4", "claude-3-haiku"
+    llm_temperature: float = Field(default=0.7, env="LLM_TEMPERATURE")
+    llm_max_tokens: int = Field(default=500, env="LLM_MAX_TOKENS")
+    
     # Feature Flags
     enable_welcome_email: bool = Field(default=True, env="ENABLE_WELCOME_EMAIL")
     enable_team_notification: bool = Field(default=True, env="ENABLE_TEAM_NOTIFICATION")

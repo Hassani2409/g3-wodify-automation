@@ -4,7 +4,7 @@ G3 CrossFit WODIFY Automation - Admin Dashboard API
 This module provides admin endpoints for monitoring and testing.
 """
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -15,6 +15,9 @@ from sqlalchemy import func
 from config.settings import settings
 from src.models.database import Member, Lead, EmailLog, WebhookLog
 from src.services.database_service import database_service
+from src.services.wodify_api_service import wodify_api_service
+from src.services.sync_service import sync_service
+from src.services.scheduler_service import scheduler_service
 
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -44,6 +47,15 @@ async def admin_dashboard(request: Request):
         
         # Get recent emails
         recent_emails = session.query(EmailLog).order_by(EmailLog.created_at.desc()).limit(10).all()
+        
+        # Get WODIFY status
+        try:
+            wodify_health = await wodify_api_service.check_api_health()
+            sync_status = sync_service.get_sync_status()
+        except Exception as e:
+            logger.warning(f"Failed to get WODIFY status: {str(e)}")
+            wodify_health = {"status": "error", "error": str(e)}
+            sync_status = {"wodify_configured": False}
         
         html_content = f"""
         <!DOCTYPE html>
@@ -246,6 +258,37 @@ async def admin_dashboard(request: Request):
                 </div>
                 
                 <div class="section">
+                    <h2>🔗 WODIFY Integration Status</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div style="background: {'#d4edda' if wodify_health.get('status') == 'healthy' else '#f8d7da'}; padding: 20px; border-radius: 10px; border: 2px solid {'#28a745' if wodify_health.get('status') == 'healthy' else '#dc3545'};">
+                            <h3 style="margin-bottom: 10px; color: {'#155724' if wodify_health.get('status') == 'healthy' else '#721c24'};">
+                                {'✓' if wodify_health.get('status') == 'healthy' else '✗'} WODIFY API Status
+                            </h3>
+                            <p style="margin: 5px 0; color: {'#155724' if wodify_health.get('status') == 'healthy' else '#721c24'};">
+                                <strong>Status:</strong> {wodify_health.get('status', 'unknown').upper()}
+                            </p>
+                            {f"<p style='margin: 5px 0; color: #721c24;'><strong>Error:</strong> {wodify_health.get('error', 'Unknown error')}</p>" if wodify_health.get('status') != 'healthy' else ""}
+                            <p style="margin: 5px 0; color: {'#155724' if wodify_health.get('status') == 'healthy' else '#721c24'};">
+                                <strong>Configured:</strong> {'Yes' if wodify_health.get('api_configured') else 'No'}
+                            </p>
+                        </div>
+                        <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; border: 2px solid #0066cc;">
+                            <h3 style="margin-bottom: 10px; color: #004085;">🔄 Synchronization Status</h3>
+                            <p style="margin: 5px 0; color: #004085;">
+                                <strong>Last Members Sync:</strong> {sync_status.get('last_sync_members', 'Never') or 'Never'}
+                            </p>
+                            <p style="margin: 5px 0; color: #004085;">
+                                <strong>Last Leads Sync:</strong> {sync_status.get('last_sync_leads', 'Never') or 'Never'}
+                            </p>
+                            <p style="margin: 5px 0; color: #004085;">
+                                <strong>Total Errors:</strong> {sync_status.get('total_errors', 0)}
+                            </p>
+                            <button class="test-button" onclick="triggerSync()" style="margin-top: 10px; width: 100%;">Trigger Manual Sync</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
                     <h2>📧 Recent Emails</h2>
                     <table>
                         <thead>
@@ -377,6 +420,29 @@ async def admin_dashboard(request: Request):
                         resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + error.message + '</p>';
                     }}
                 }}
+                
+                async function triggerSync() {{
+                    const resultDiv = document.getElementById('test-result');
+                    resultDiv.innerHTML = '<p style="color: #666;">Starting synchronization...</p>';
+                    
+                    try {{
+                        const response = await fetch('/api/sync/all?force=false', {{
+                            method: 'POST'
+                        }});
+                        const data = await response.json();
+                        
+                        if (response.ok) {{
+                            const membersInfo = data.members ? `Members: ${{data.members.synced || 0}} synced` : '';
+                            const leadsInfo = data.leads ? `Leads: ${{data.leads.synced || 0}} synced` : '';
+                            resultDiv.innerHTML = '<p style="color: #155724; background: #d4edda; padding: 10px; border-radius: 5px;">✓ Sync completed! ' + membersInfo + ' ' + leadsInfo + '</p>';
+                            setTimeout(() => location.reload(), 3000);
+                        }} else {{
+                            resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + (data.detail || data.error || 'Unknown error') + '</p>';
+                        }}
+                    }} catch (error) {{
+                        resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + error.message + '</p>';
+                    }}
+                }}
             </script>
         </body>
         </html>
@@ -392,11 +458,22 @@ async def admin_dashboard(request: Request):
 @limiter.limit("60/minute")
 async def get_stats(request: Request):
     """
-    Get system statistics as JSON
+    Get system statistics as JSON including WODIFY status
     """
     session = database_service.get_session()
     
     try:
+        # Get sync status
+        sync_status = sync_service.get_sync_status()
+        
+        # Get WODIFY API health (async, but we'll handle errors gracefully)
+        wodify_health = None
+        try:
+            wodify_health = await wodify_api_service.check_api_health()
+        except Exception as e:
+            logger.warning(f"Failed to check WODIFY API health: {str(e)}")
+            wodify_health = {"status": "check_failed", "error": str(e)}
+        
         stats = {
             "total_members": session.query(func.count(Member.client_id)).scalar() or 0,
             "total_leads": session.query(func.count(Lead.lead_id)).scalar() or 0,
@@ -405,6 +482,9 @@ async def get_stats(request: Request):
             "active_members": session.query(func.count(Member.client_id)).filter(
                 Member.membership_status == "Active"
             ).scalar() or 0,
+            "sync_status": sync_status,
+            "wodify_api_health": wodify_health,
+            "scheduler_status": scheduler_service.get_scheduler_status(),
             "timestamp": datetime.now().isoformat()
         }
         
@@ -412,6 +492,44 @@ async def get_stats(request: Request):
         
     finally:
         session.close()
+
+
+@router.get("/wodify-status")
+@limiter.limit("60/minute")
+async def get_wodify_status(request: Request):
+    """
+    Get detailed WODIFY API status and configuration
+    
+    Returns:
+        WODIFY API health status, configuration, and sync status
+    """
+    try:
+        # Get WODIFY API health
+        wodify_health = await wodify_api_service.check_api_health()
+        
+        # Get sync status
+        sync_status = sync_service.get_sync_status()
+        
+        # Get configuration (without exposing secrets)
+        config = {
+            "api_url": settings.wodify_api_url,
+            "location_id": settings.wodify_location_id,
+            "api_key_configured": bool(settings.wodify_api_key),
+            "webhook_secret_configured": bool(settings.wodify_webhook_secret),
+            "sales_portal_configured": bool(settings.wodify_sales_portal_url),
+            "tenant": settings.wodify_tenant
+        }
+        
+        return {
+            "wodify_api_health": wodify_health,
+            "sync_status": sync_status,
+            "configuration": config,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting WODIFY status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get WODIFY status: {str(e)}")
 
 
 @router.post("/test-webhook/membership")
@@ -447,6 +565,90 @@ async def send_test_membership_webhook(request: Request):
         "message": "Test membership webhook processed",
         "client_id": test_data.client_id
     }
+
+
+@router.get("/scheduler-status")
+@limiter.limit("60/minute")
+async def get_scheduler_status(request: Request):
+    """
+    Get scheduler status and all scheduled jobs
+    
+    Returns:
+        Scheduler status with all jobs
+    """
+    try:
+        status = scheduler_service.get_scheduler_status()
+        return status
+    except Exception as e:
+        logger.error(f"Error getting scheduler status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get scheduler status: {str(e)}")
+
+
+@router.get("/scheduler/jobs")
+@limiter.limit("60/minute")
+async def get_all_jobs(request: Request):
+    """
+    Get all scheduled jobs
+    
+    Returns:
+        List of all scheduled jobs
+    """
+    try:
+        jobs = scheduler_service.get_all_jobs()
+        return {"jobs": jobs, "total": len(jobs)}
+    except Exception as e:
+        logger.error(f"Error getting jobs: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get jobs: {str(e)}")
+
+
+@router.get("/scheduler/jobs/{job_id}")
+@limiter.limit("60/minute")
+async def get_job_status(request: Request, job_id: str):
+    """
+    Get status of a specific job
+    
+    Args:
+        job_id: Job ID
+    
+    Returns:
+        Job status information
+    """
+    try:
+        job_status = scheduler_service.get_job_status(job_id)
+        if job_status:
+            return job_status
+        else:
+            raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting job status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get job status: {str(e)}")
+
+
+@router.delete("/scheduler/jobs/{job_id}")
+@limiter.limit("10/minute")
+async def delete_job(request: Request, job_id: str):
+    """
+    Remove a scheduled job
+    
+    Args:
+        job_id: Job ID to remove
+    
+    Returns:
+        Success status
+    """
+    try:
+        success = scheduler_service.remove_job(job_id)
+        if success:
+            return {"status": "success", "message": f"Job {job_id} removed"}
+        else:
+            raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error removing job: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to remove job: {str(e)}")
 
 
 @router.post("/test-webhook/lead")

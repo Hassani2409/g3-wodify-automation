@@ -156,17 +156,18 @@ export default function TrainingPage() {
       </section>
 
       {/* Programs Grid */}
-      <section className="py-20">
+      <section className="py-20" id="programs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {programs.map((program, index) => (
               <motion.div
                 key={program.id}
+                id={program.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-card rounded-card border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300 hover:shadow-2xl overflow-hidden"
+                className="group bg-card rounded-card border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300 hover:shadow-2xl overflow-hidden scroll-mt-20"
               >
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden">

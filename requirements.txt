@@ -64,3 +64,7 @@ passlib[bcrypt]==1.7.4  # Password hashing
 
 # Demo
 rich==13.7.0  # Beautiful terminal output for demo script
+
+# LLM/AI Dependencies (optional - install only if using real LLM)
+openai>=1.0.0
+anthropic>=0.18.0

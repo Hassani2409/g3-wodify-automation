@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Optional
 
 from config.settings import settings
-from src.models.database import Base, Member, Lead, WebhookLog, EmailLog, MembershipStatusDB, LeadStatusDB
+from src.models.database import Base, Member, Lead, WebhookLog, EmailLog, MembershipStatusDB, LeadStatusDB, LeadNurturingStateDB
 from src.models.wodify import WodifyMembershipCreated, WodifyLeadCreated, WodifyWebhookPayload
 
 
@@ -260,6 +260,199 @@ class DatabaseService:
         except Exception as e:
             session.rollback()
             logger.error(f"Error marking nurturing email as sent: {str(e)}")
+            raise
+        finally:
+            session.close()
+    
+    async def update_lead_nurturing_state(
+        self,
+        lead_id: str,
+        state: str,
+        response_email_sent: bool = False,
+        nurturing_2_sent: bool = False,
+        nurturing_5_sent: bool = False,
+        nurturing_7_sent: bool = False,
+        message_id: Optional[str] = None
+    ):
+        """
+        Update lead nurturing state and email tracking
+        
+        Args:
+            lead_id: Lead ID
+            state: New nurturing state (NEW, RESPONDED, NURTURING_2, NURTURING_5, NURTURING_7, CONVERTED, OPTED_OUT)
+            response_email_sent: Whether response email was sent
+            nurturing_2_sent: Whether nurturing 2 email was sent
+            nurturing_5_sent: Whether nurturing 5 email was sent
+            nurturing_7_sent: Whether nurturing 7 email was sent
+            message_id: SendGrid message ID (optional)
+        """
+        session = self.get_session()
+        try:
+            lead = session.query(Lead).filter(Lead.lead_id == lead_id).first()
+            if lead:
+                # Update state
+                lead.nurturing_state = LeadNurturingStateDB(state)
+                
+                # Update email tracking flags
+                if response_email_sent:
+                    lead.response_email_sent = True
+                    lead.response_email_sent_at = datetime.utcnow()
+                if nurturing_2_sent:
+                    lead.nurturing_2_sent = True
+                    lead.nurturing_2_sent_at = datetime.utcnow()
+                if nurturing_5_sent:
+                    lead.nurturing_5_sent = True
+                    lead.nurturing_5_sent_at = datetime.utcnow()
+                if nurturing_7_sent:
+                    lead.nurturing_7_sent = True
+                    lead.nurturing_7_sent_at = datetime.utcnow()
+                
+                lead.updated_at = datetime.utcnow()
+                session.commit()
+                logger.info(f"Updated nurturing state for {lead_id} to {state}")
+            else:
+                logger.warning(f"Lead {lead_id} not found for state update")
+            
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Error updating lead nurturing state: {str(e)}")
+            raise
+        finally:
+            session.close()
+    
+    async def mark_welcome_email_sent(self, client_id: str, message_id: str):
+        """
+        Mark welcome email as sent for a member
+        
+        Args:
+            client_id: Member client ID
+            message_id: SendGrid message ID
+        """
+        session = self.get_session()
+        try:
+            member = session.query(Member).filter(Member.client_id == client_id).first()
+            if member:
+                member.welcome_email_sent = True
+                member.welcome_email_sent_at = datetime.utcnow()
+                session.commit()
+                logger.info(f"Marked welcome email as sent for {client_id}")
+            
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Error marking welcome email as sent: {str(e)}")
+            raise
+        finally:
+            session.close()
+    
+    async def opt_out_lead(self, lead_id: str, email: str) -> bool:
+        """
+        Opt out a lead from nurturing emails
+        
+        Args:
+            lead_id: Lead ID (optional, can be None)
+            email: Lead email address
+        
+        Returns:
+            True if opt-out was successful, False otherwise
+        """
+        session = self.get_session()
+        try:
+            # Try to find lead by ID first, then by email
+            lead = None
+            if lead_id:
+                lead = session.query(Lead).filter(Lead.lead_id == lead_id).first()
+            
+            if not lead and email:
+                lead = session.query(Lead).filter(Lead.email == email).first()
+            
+            if lead:
+                lead.opted_out = True
+                lead.opted_out_at = datetime.utcnow()
+                lead.nurturing_state = LeadNurturingStateDB.OPTED_OUT
+                session.commit()
+                logger.info(f"Lead opted out: {lead_id or email}")
+                return True
+            else:
+                logger.warning(f"Lead not found for opt-out: {lead_id or email}")
+                return False
+            
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Error opting out lead: {str(e)}")
+            raise
+        finally:
+            session.close()
+    
+    async def cancel_nurturing_jobs(self, lead_id: str):
+        """
+        Cancel all scheduled nurturing jobs for a lead
+        
+        Args:
+            lead_id: Lead ID
+        """
+        try:
+            from src.services.scheduler_service import scheduler_service
+            
+            # Get all jobs for this lead
+            jobs = scheduler_service.get_all_jobs()
+            cancelled_count = 0
+            
+            for job in jobs:
+                job_id = job.get("job_id", "")
+                if f"nurturing_" in job_id and lead_id in job_id:
+                    if scheduler_service.remove_job(job_id):
+                        cancelled_count += 1
+                        logger.info(f"Cancelled nurturing job: {job_id}")
+            
+            logger.info(f"Cancelled {cancelled_count} nurturing jobs for lead {lead_id}")
+            
+        except Exception as e:
+            logger.error(f"Error cancelling nurturing jobs for {lead_id}: {str(e)}")
+    
+    async def mark_lead_as_converted(self, email: str, client_id: Optional[str] = None):
+        """
+        Mark a lead as converted to member when membership is created
+        
+        This method:
+        1. Finds the lead by email
+        2. Updates the lead state to CONVERTED
+        3. Cancels all scheduled nurturing jobs
+        4. Sets conversion timestamp
+        
+        Args:
+            email: Lead email address
+            client_id: Member client ID (optional, for reference)
+        
+        Returns:
+            Lead ID if found and converted, None otherwise
+        """
+        session = self.get_session()
+        try:
+            # Find lead by email
+            lead = session.query(Lead).filter(Lead.email == email).first()
+            
+            if lead:
+                # Update lead state to CONVERTED
+                lead.nurturing_state = LeadNurturingStateDB.CONVERTED
+                lead.lead_status = LeadStatusDB.CONVERTED
+                lead.converted_to_member = True
+                lead.converted_at = datetime.utcnow()
+                lead.updated_at = datetime.utcnow()
+                
+                session.commit()
+                logger.info(f"Marked lead {lead.lead_id} as converted (Email: {email}, Client ID: {client_id})")
+                
+                # Cancel all scheduled nurturing jobs for this lead
+                await self.cancel_nurturing_jobs(lead.lead_id)
+                
+                return lead.lead_id
+            else:
+                logger.info(f"No lead found for email {email} - may be a direct membership signup")
+                return None
+                
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Error marking lead as converted: {str(e)}")
             raise
         finally:
             session.close()

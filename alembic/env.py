@@ -27,7 +27,10 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Import all models to ensure they are registered with Base.metadata
-from src.models.database import Member, Lead, WebhookLog, EmailLog, User
+from src.models.database import (
+    Member, Lead, WebhookLog, EmailLog, User, Product, CartItem, Order, OrderItem,
+    ProductReview, WishlistItem
+)
 
 # Set target_metadata for autogenerate support
 target_metadata = Base.metadata

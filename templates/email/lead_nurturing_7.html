@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letzte Chance: Spezielles Angebot - G3 CrossFit</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .content p {
+            margin: 16px 0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .content h3 {
+            color: #2A5D3C;
+            font-size: 22px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+        .offer-box {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 24px 0;
+            text-align: center;
+        }
+        .offer-box h2 {
+            margin: 0 0 16px 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        .offer-box p {
+            margin: 8px 0;
+            font-size: 18px;
+        }
+        .button {
+            display: inline-block;
+            background: #2A5D3C;
+            color: white !important;
+            padding: 20px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .button:hover {
+            background: #224A30;
+        }
+        .benefits-box {
+            background: #E8F3ED;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+        .benefits-box ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        .benefits-box li {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 0 0 8px 8px;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer a {
+            color: #2A5D3C;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Letzte Chance: Spezielles Angebot</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hallo {{ first_name }},</p>
+            
+            <p>wir haben bemerkt, dass du dich für G3 CrossFit interessierst, aber noch nicht den Schritt gemacht hast. Deshalb haben wir ein spezielles Angebot für dich:</p>
+            
+            <div class="offer-box">
+                <h2>🎁 Spezielles Einsteiger-Angebot</h2>
+                <p><strong>Erste 3 Monate mit 20% Rabatt!</strong></p>
+                <p>Gültig nur für die nächsten 7 Tage</p>
+            </div>
+            
+            <h3>Was du bekommst:</h3>
+            
+            <div class="benefits-box">
+                <ul>
+                    <li><strong>20% Rabatt</strong> auf deine ersten 3 Monate</li>
+                    <li><strong>Kostenloses Probetraining</strong> inklusive</li>
+                    <li><strong>Alle Kurse:</strong> CrossFit, Olympic Weightlifting, Gymnastics und mehr</li>
+                    <li><strong>Persönliche Betreuung:</strong> Unsere Trainer unterstützen dich auf deinem Weg</li>
+                    <li><strong>Moderne Ausstattung:</strong> Top-ausgestattetes Studio</li>
+                    <li><strong>Gemeinschaft:</strong> Eine unterstützende Community</li>
+                </ul>
+            </div>
+            
+            <h3>Warum jetzt?</h3>
+            
+            <p>Jeder Tag, den du wartest, ist ein Tag, an dem du deine Fitnessziele nicht erreichst. Starte jetzt und werde Teil der G3 CrossFit Familie!</p>
+            
+            <p><strong>Dieses Angebot ist nur für die nächsten 7 Tage gültig.</strong> Nutze die Gelegenheit und starte noch heute!</p>
+            
+            <div style="text-align: center; margin: 32px 0;">
+                <a href="{{ g3_website }}/pricing" class="button">Jetzt Mitgliedschaft abschließen</a>
+            </div>
+            
+            <p>Oder buche zuerst ein kostenloses Probetraining:</p>
+            <div style="text-align: center;">
+                <a href="{{ g3_website }}/trial" class="button" style="background: #FF6B35;">Probetraining buchen</a>
+            </div>
+            
+            <p>Bei Fragen stehen wir dir jederzeit zur Verfügung. Ruf uns einfach an oder antworte auf diese E-Mail.</p>
+            
+            <p>Wir freuen uns darauf, dich kennenzulernen!</p>
+            
+            <p>Sportliche Grüße,<br>
+            <strong>Dein G3 CrossFit Team</strong></p>
+            
+            <p style="font-size: 12px; color: #666; margin-top: 32px; padding-top: 16px; border-top: 1px solid #ddd;">
+                <strong>Hinweis:</strong> Falls du keine weiteren E-Mails von uns erhalten möchtest, kannst du dich <a href="{{ g3_website }}/unsubscribe?email={{ email }}&lead_id={{ lead_id }}" style="color: #2A5D3C;">hier abmelden</a>.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>G3 CrossFit Berlin</strong></p>
+            <p>{{ g3_address }}</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            <p><a href="{{ g3_website }}">{{ g3_website }}</a></p>
+        </div>
+    </div>
+</body>
+</html>
+

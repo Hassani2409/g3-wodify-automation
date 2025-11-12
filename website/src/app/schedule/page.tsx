@@ -443,14 +443,13 @@ export default function SchedulePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch courses from API on mount
+  // Fetch courses from API on mount and set up auto-refresh
   useEffect(() => {
     const fetchCourses = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        // TODO: Replace with your actual backend URL
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
         const response = await fetch(`${apiUrl}/api/schedule/classes`);
 
@@ -460,8 +459,13 @@ export default function SchedulePage() {
 
         const data = await response.json();
 
-        if (data.success && data.classes) {
+        if (data.success && data.classes && data.classes.length > 0) {
           setCourses(data.classes);
+          setError(null);
+        } else {
+          // Fallback to mock data if API returns empty
+          setCourses(coursesData);
+          setError('Keine Kurse gefunden. Verwende Beispiel-Daten.');
         }
       } catch (err) {
         console.error('Error fetching courses:', err);
@@ -473,7 +477,16 @@ export default function SchedulePage() {
       }
     };
 
+    // Initial fetch
     fetchCourses();
+
+    // Auto-refresh every 30 seconds for real-time availability
+    const refreshInterval = setInterval(() => {
+      fetchCourses();
+    }, 30000); // 30 seconds
+
+    // Cleanup interval on unmount
+    return () => clearInterval(refreshInterval);
   }, []);
 
   // Filter courses based on selected filters

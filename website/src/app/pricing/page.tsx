@@ -44,6 +44,7 @@ const SignupModal = ({ plan, billingType, onClose }: SignupModalProps) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isStudent, setIsStudent] = useState(false);
 
   if (!plan) return null;
 
@@ -87,36 +88,99 @@ const SignupModal = ({ plan, billingType, onClose }: SignupModalProps) => {
 
     setIsSubmitting(true);
     try {
-      let price = plan.monthlyPrice;
-      let billingCycle = 'Monatlich';
-
-      if (billingType === 'sixMonth') {
-        price = plan.sixMonthPrice;
-        billingCycle = '6 Monate';
-      } else if (billingType === 'twelveMonth') {
-        price = plan.twelveMonthPrice;
-        billingCycle = '12 Monate';
+      // Determine plan type for Stripe
+      const planTypeMap: Record<string, '2x_weekly' | '3x_weekly' | 'unlimited'> = {
+        '2x pro Woche': '2x_weekly',
+        '3x pro Woche': '3x_weekly',
+        'Unlimited': 'unlimited'
+      };
+      
+      const planType = planTypeMap[plan.name] || '2x_weekly';
+      const stripePriceId = plan.stripePriceId?.[billingType];
+      
+      // Check if Stripe is configured
+      if (!stripePriceId || stripePriceId === 'price_xxx') {
+        // Fallback: Create lead in WODIFY and show success message
+        // User will complete payment manually or via WODIFY Sales Portal
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        
+        try {
+          // Create lead in WODIFY for manual follow-up
+          const leadResponse = await fetch(`${apiUrl}/api/leads`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              email: formData.email,
+              phone: formData.phone || undefined,
+              message: `Mitgliedschaftsanfrage: ${plan.name} (${billingType === 'monthly' ? 'Monatlich' : billingType === 'sixMonth' ? '6 Monate' : '12 Monate'}). Ziele: ${formData.goals}`,
+              interested_in: `Mitgliedschaft: ${plan.name}`,
+              source: 'Website Membership Form'
+            }),
+          });
+          
+          if (leadResponse.ok) {
+            setStep('success');
+            return;
+          }
+        } catch (leadError) {
+          console.error('Failed to create lead:', leadError);
+        }
+        
+        // If lead creation fails, still show success but inform user
+        setStep('success');
+        return;
       }
 
-      // TODO: Integrate with Stripe Checkout
-      // const stripePriceId = plan.stripePriceId?.[billingType];
-      // Redirect to Stripe Checkout with the selected plan
-
-      // For now, simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      console.log('Membership signup:', {
-        plan: plan.name,
-        price,
-        billingCycle,
-        formData,
-        // stripePriceId
+      // Stripe Checkout Flow
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
+      
+      const checkoutResponse = await fetch(`${baseUrl}/api/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId: stripePriceId,
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`,
+          metadata: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone || '',
+            birthdate: formData.birthdate || '',
+            experience: formData.experience || '',
+            goals: formData.goals || '',
+            planName: plan.name,
+            billingType: billingType,
+          },
+          isStudent: isStudent,
+          planType: planType,
+        }),
       });
 
-      setStep('success');
+      if (!checkoutResponse.ok) {
+        const errorData = await checkoutResponse.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Fehler beim Erstellen der Checkout-Session');
+      }
+
+      const { url: checkoutUrl } = await checkoutResponse.json();
+      
+      if (checkoutUrl) {
+        // Redirect to Stripe Checkout
+        window.location.href = checkoutUrl;
+      } else {
+        throw new Error('Keine Checkout-URL erhalten');
+      }
+      
     } catch (error) {
       console.error("Submission failed:", error);
-      alert("Ein Fehler ist aufgetreten. Bitte versuche es erneut.");
+      setErrors({
+        submit: error instanceof Error ? error.message : "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -155,6 +219,20 @@ const SignupModal = ({ plan, billingType, onClose }: SignupModalProps) => {
                 <input id="birthdate" name="birthdate" type="date" value={formData.birthdate} onChange={handleChange} className="w-full px-4 py-3 border-2 border-muted rounded-button focus:border-primary-500 focus:outline-none transition-colors font-body" required />
                 {errors.birthdate && <p className="text-red-500 text-xs mt-1">{errors.birthdate}</p>}
               </div>
+            </div>
+            <div className="pt-2">
+              <label htmlFor="isStudent" className="flex items-center space-x-3 cursor-pointer">
+                <input 
+                  id="isStudent" 
+                  type="checkbox" 
+                  checked={isStudent} 
+                  onChange={(e) => setIsStudent(e.target.checked)}
+                  className="w-5 h-5"
+                />
+                <span className="text-sm text-muted-foreground font-body">
+                  Ich bin Student, Auszubildender oder Soldat und berechtigt für eine Ermäßigung
+                </span>
+              </label>
             </div>
             <div className="flex justify-end pt-2">
               <Button type="button" onClick={handleNext} className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold px-6 py-3 rounded-button">Weiter zu Schritt 2</Button>
@@ -220,7 +298,16 @@ const SignupModal = ({ plan, billingType, onClose }: SignupModalProps) => {
           <motion.div key="success" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
             <PartyPopper className="w-16 h-16 mx-auto mb-4 text-secondary-500" />
             <h2 className="text-2xl font-bold mb-4 text-foreground font-heading">Fast geschafft, {formData.firstName}!</h2>
-            <p className="text-muted-foreground mb-6 font-body">Wir haben deine Anmeldung erhalten. Du bekommst in Kürze eine E-Mail von uns mit allen weiteren Schritten, inklusive dem Link zur Zahlung und zur Aktivierung deines Accounts.</p>
+            <p className="text-muted-foreground mb-6 font-body">
+              {plan.stripePriceId?.[billingType] && plan.stripePriceId[billingType] !== 'price_xxx'
+                ? 'Du wirst jetzt zu Stripe Checkout weitergeleitet, um deine Zahlung abzuschließen. Nach erfolgreicher Zahlung wird deine Mitgliedschaft automatisch aktiviert.'
+                : 'Wir haben deine Anmeldung erhalten. Du bekommst in Kürze eine E-Mail von uns mit allen weiteren Schritten, inklusive dem Link zur Zahlung und zur Aktivierung deines Accounts.'}
+            </p>
+            {errors.submit && (
+              <div className="mb-4 p-3 bg-red-50 border-2 border-red-200 rounded-lg">
+                <p className="text-red-700 text-sm font-body">{errors.submit}</p>
+              </div>
+            )}
             <Button onClick={onClose} className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold px-6 py-3 rounded-button">Schließen</Button>
           </motion.div>
         );

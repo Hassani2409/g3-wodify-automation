@@ -47,6 +47,11 @@ from src.api.webhooks import router as webhooks_router
 from src.api.admin import router as admin_router
 from src.api.schedule import router as schedule_router
 from src.api.auth import router as auth_router
+from src.api.ai import router as ai_router
+from src.api.shop import router as shop_router
+from src.api.leads import router as leads_router
+from src.api.membership import router as membership_router
+from src.api.sync import router as sync_router
 
 
 # Configure logging
@@ -97,7 +102,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
     allow_headers=["*"],
 )
 
@@ -107,6 +112,11 @@ app.include_router(webhooks_router)
 app.include_router(admin_router)
 app.include_router(schedule_router)
 app.include_router(auth_router)
+app.include_router(ai_router)
+app.include_router(shop_router)
+app.include_router(leads_router)
+app.include_router(membership_router)
+app.include_router(sync_router)
 
 
 @app.on_event("startup")

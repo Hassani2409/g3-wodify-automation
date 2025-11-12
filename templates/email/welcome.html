@@ -143,9 +143,22 @@
                 <p><strong>Typ:</strong> {{ membership_type }}</p>
                 <p><strong>Startdatum:</strong> {{ start_date }}</p>
                 <p><strong>Monatlicher Preis:</strong> {{ monthly_price }}€</p>
+                {% if is_first_membership %}
+                <p style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">
+                    <strong>🎉 Herzlichen Glückwunsch!</strong> Dies ist deine erste Mitgliedschaft bei G3 CrossFit. Wir freuen uns riesig, dich in unserer Community begrüßen zu dürfen!
+                </p>
+                {% endif %}
             </div>
             
-            <p>Bei Fragen stehen wir dir jederzeit zur Verfügung. Ruf uns einfach an oder antworte auf diese E-Mail.</p>
+            <h3>Was dich erwartet:</h3>
+            <ul>
+                <li><strong>Vielfältiges Training:</strong> CrossFit, Strength & Conditioning, Mobility und mehr</li>
+                <li><strong>Erfahrene Coaches:</strong> Unser Team unterstützt dich bei jedem Schritt</li>
+                <li><strong>Community-Spirit:</strong> Trainiere mit motivierten Menschen in einer unterstützenden Atmosphäre</li>
+                <li><strong>Flexible Zeiten:</strong> Kurse von früh morgens bis spät abends</li>
+            </ul>
+            
+            <p>Bei Fragen stehen wir dir jederzeit zur Verfügung. Ruf uns einfach an unter {{ g3_phone }} oder antworte auf diese E-Mail.</p>
             
             <p>Wir freuen uns auf dich beim Training!</p>
             

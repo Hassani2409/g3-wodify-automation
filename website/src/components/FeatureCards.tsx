@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Users, Award, Clock, Heart, TrendingUp, Dumbbell } from "lucide-react";
 
 const features = [
@@ -145,9 +146,11 @@ export default function FeatureCards() {
           <p className="text-lg text-muted-foreground mb-6 font-body">
             Überzeuge dich selbst von unserer Community
           </p>
-          <button className="px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-all duration-300">
-            Jetzt kostenloses Probetraining buchen
-          </button>
+          <Link href="/contact#booking">
+            <button className="px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-all duration-300">
+              Jetzt kostenloses Probetraining buchen
+            </button>
+          </Link>
         </motion.div>
       </div>
     </section>

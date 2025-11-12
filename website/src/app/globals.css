@@ -1,19 +1,25 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* G3 CrossFit Brand Colors */
+  /* G3 CrossFit Brand Colors - Offizielle Logo-Farben */
   --color-primary-*: initial;
   --color-primary-50: #E8F3ED;
   --color-primary-100: #D1E7DB;
   --color-primary-200: #A3CFB7;
   --color-primary-300: #75B793;
   --color-primary-400: #479F6F;
-  --color-primary-500: #2A5D3C;
-  --color-primary-600: #224A30;
-  --color-primary-700: #193824;
-  --color-primary-800: #112518;
-  --color-primary-900: #08130C;
+  --color-primary-500: #247532; /* Hellgrün aus Logo */
+  --color-primary-600: #1d5d28;
+  --color-primary-700: #13401e; /* Dunkelgrün aus Logo */
+  --color-primary-800: #0d2a13;
+  --color-primary-900: #030508; /* Anthrazit/Schwarz aus Logo */
   --color-primary: var(--color-primary-500);
+  
+  /* Logo-Farben als separate Variablen */
+  --color-logo-light-green: #247532;
+  --color-logo-dark-green: #13401e;
+  --color-logo-anthracite: #030508;
+  --color-logo-white: #FFFFFF;
 
   --color-secondary-*: initial;
   --color-secondary-50: #F0F8F2;
@@ -50,9 +56,35 @@
   --font-sans: 'Open Sans', system-ui, -apple-system, sans-serif;
   --font-heading: 'Barlow Condensed', sans-serif;
   --font-button: 'Montserrat', sans-serif;
+  --font-agency-bold: 'Agency FB', 'Arial', sans-serif;
+  --font-agency-regular: 'Agency FB', 'Arial', sans-serif;
 
   --radius-button: 8px;
   --radius-card: 12px;
+
+  /* Breakpoints (for reference, Tailwind handles these automatically) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* Agency Font Face Declarations (optional - loaded from public/fonts) */
+@font-face {
+  font-family: 'Agency FB';
+  src: url('/fonts/agencyb.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Agency FB';
+  src: url('/fonts/agencyr.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 @layer base {
@@ -60,6 +92,8 @@
     background: #F9F5F0;
     color: #1F2937;
     font-family: var(--font-sans);
+    /* Improve touch scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -69,5 +103,17 @@
 
   button {
     font-family: var(--font-button);
+  }
+
+  /* Touch optimization for mobile */
+  button, a {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Improve text rendering */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }

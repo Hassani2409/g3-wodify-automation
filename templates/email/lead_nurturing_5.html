@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erfolgsgeschichten & Tipps - G3 CrossFit</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #2A5D3C 0%, #6BAF7E 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .content p {
+            margin: 16px 0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .content h3 {
+            color: #2A5D3C;
+            font-size: 22px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+        .button {
+            display: inline-block;
+            background: #FF6B35;
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #e55a28;
+        }
+        .testimonial-box {
+            background: #F0F8F2;
+            border-left: 4px solid #6BAF7E;
+            padding: 20px;
+            margin: 24px 0;
+            font-style: italic;
+        }
+        .testimonial-box p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .testimonial-box strong {
+            color: #2A5D3C;
+            font-style: normal;
+        }
+        .tips-box {
+            background: #E8F3ED;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+        .tips-box ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        .tips-box li {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 0 0 8px 8px;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer a {
+            color: #2A5D3C;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Erfolgsgeschichten & Tipps</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hallo {{ first_name }},</p>
+            
+            <p>wir möchten dir heute einige Erfolgsgeschichten und Tipps von unseren Mitgliedern teilen, die dir vielleicht bei deiner Entscheidung helfen:</p>
+            
+            <h3>Erfolgsgeschichten</h3>
+            
+            <div class="testimonial-box">
+                <p>"Als ich bei G3 CrossFit angefangen habe, konnte ich kaum 5 Liegestütze machen. Heute, nach 6 Monaten, mache ich 50+ am Stück! Die Trainer haben mich immer unterstützt und motiviert."</p>
+                <p><strong>- Sarah, Mitglied seit 6 Monaten</strong></p>
+            </div>
+            
+            <div class="testimonial-box">
+                <p>"Ich habe durch CrossFit nicht nur körperlich, sondern auch mental so viel Stärke gewonnen. Die Community hier ist einfach unglaublich unterstützend!"</p>
+                <p><strong>- Michael, Mitglied seit 1 Jahr</strong></p>
+            </div>
+            
+            <h3>Tipps für den Einstieg</h3>
+            
+            <div class="tips-box">
+                <p><strong>5 Tipps für deinen CrossFit-Start:</strong></p>
+                <ul>
+                    <li><strong>Starte langsam:</strong> Jeder fängt mal an - lass dir Zeit, die Bewegungen zu lernen</li>
+                    <li><strong>Konsistenz ist wichtiger als Intensität:</strong> Regelmäßiges Training bringt mehr als gelegentliche Intensität</li>
+                    <li><strong>Hör auf deinen Körper:</strong> Pausen sind wichtig für deine Regeneration</li>
+                    <li><strong>Stelle Fragen:</strong> Unsere Trainer sind da, um dir zu helfen</li>
+                    <li><strong>Genieße den Prozess:</strong> Es geht nicht nur um Ergebnisse, sondern auch um Spaß!</li>
+                </ul>
+            </div>
+            
+            <h3>Bereit für deinen Start?</h3>
+            
+            <p>Wenn du bereit bist, deine eigene Erfolgsgeschichte zu schreiben, buche jetzt dein kostenloses Probetraining:</p>
+            <a href="{{ g3_website }}/trial" class="button">Jetzt Probetraining buchen</a>
+            
+            <p>Oder schaue dir unsere Mitgliedschafts-Optionen an:</p>
+            <a href="{{ g3_website }}/pricing" class="button" style="background: #2A5D3C;">Mitgliedschaften ansehen</a>
+            
+            <p>Bei Fragen stehen wir dir jederzeit zur Verfügung. Ruf uns einfach an oder antworte auf diese E-Mail.</p>
+            
+            <p>Wir freuen uns darauf, dich kennenzulernen!</p>
+            
+            <p>Sportliche Grüße,<br>
+            <strong>Dein G3 CrossFit Team</strong></p>
+            
+            {% if lead_id %}
+            <p style="font-size: 12px; color: #666; margin-top: 32px; padding-top: 16px; border-top: 1px solid #ddd;">
+                <strong>Hinweis:</strong> Falls du keine weiteren E-Mails von uns erhalten möchtest, kannst du dich <a href="{{ g3_website }}/unsubscribe?email={{ email }}&lead_id={{ lead_id }}" style="color: #2A5D3C;">hier abmelden</a>.
+            </p>
+            {% endif %}
+        </div>
+        
+        <div class="footer">
+            <p><strong>G3 CrossFit Berlin</strong></p>
+            <p>{{ g3_address }}</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            <p><a href="{{ g3_website }}">{{ g3_website }}</a></p>
+        </div>
+    </div>
+</body>
+</html>
+

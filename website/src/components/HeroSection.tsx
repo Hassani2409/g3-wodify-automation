@@ -1,14 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Award, Users, Calendar, Dumbbell, ChevronDown } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 pt-20">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-linear-to-br from-primary-700 via-primary-600 to-primary-800">
       {/* Decorative Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-10 z-10">
         <div 
           className="absolute inset-0" 
           style={{
@@ -17,41 +19,32 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Animated Background Gradients */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-0 w-96 h-96 bg-secondary-500/30 rounded-full blur-3xl"
-          animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-96 h-96 bg-accent-500/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, -100, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      </div>
-
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+        {/* G3 CrossFit Logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          className="mb-8 flex justify-center"
+        >
+          <div className="relative w-64 md:w-80 lg:w-96 h-auto">
+            <Image
+              src="/logo.png"
+              alt="G3 CrossFit Berlin Logo"
+              width={400}
+              height={200}
+              className="object-contain drop-shadow-2xl"
+              priority
+            />
+          </div>
+        </motion.div>
+
         {/* Urgency Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-500/20 border border-accent-500/40 mb-6"
         >
           <span className="relative flex h-2 w-2">
@@ -65,11 +58,11 @@ export default function HeroSection() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           className="text-5xl md:text-7xl font-bold text-white mb-6 font-heading"
         >
           Dein CrossFit Gym im{" "}
-          <span className="bg-gradient-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent">
             Herzen Berlins
           </span>
         </motion.h1>
@@ -112,21 +105,25 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
         >
-          <Button 
-            size="lg" 
-            className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-button text-base h-14 px-8 rounded-button"
-          >
-            <Dumbbell className="mr-2 h-5 w-5" />
-            Kostenloses Probetraining
-          </Button>
-          <Button 
-            size="lg" 
-            variant="outline" 
-            className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-button text-base h-14 px-8 rounded-button"
-          >
-            Zum Kursplan
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <Link href="/contact#booking">
+            <Button 
+              size="lg" 
+              className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-button text-base h-14 px-8 rounded-button"
+            >
+              <Dumbbell className="mr-2 h-5 w-5" />
+              Kostenloses Probetraining
+            </Button>
+          </Link>
+          <Link href="/schedule">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-button text-base h-14 px-8 rounded-button"
+            >
+              Zum Kursplan
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Social Proof */}

@@ -128,7 +128,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden pt-20">
+      <section className="relative py-20 md:py-32 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden pt-20" id="story">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{
@@ -182,7 +182,7 @@ export default function AboutPage() {
       </section>
 
       {/* Team Filter & Grid */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" id="team">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground font-heading">
@@ -264,7 +264,7 @@ export default function AboutPage() {
       </section>
 
       {/* Team Values & Philosophy */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-background" id="values">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground font-heading">
@@ -305,7 +305,7 @@ export default function AboutPage() {
       </section>
 
       {/* Behind the Scenes */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" id="community">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div

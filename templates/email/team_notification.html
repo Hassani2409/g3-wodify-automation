@@ -116,6 +116,13 @@
                 <p><strong>Mitgliedschaft:</strong> {{ membership_type }}</p>
                 <p><strong>Startdatum:</strong> {{ start_date }}</p>
                 <p><strong>Monatlicher Wert:</strong> {{ monthly_price }}€</p>
+                {% if is_first_membership %}
+                <p style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd; color: #FF6B35; font-weight: bold;">
+                    🎉 Erste Mitgliedschaft - Besondere Aufmerksamkeit empfohlen!
+                </p>
+                {% endif %}
+                <p><strong>Quelle:</strong> {{ referral_source }}</p>
+                <p><strong>WODIFY Client ID:</strong> {{ client_id }}</p>
             </div>
             
             <div class="checklist">

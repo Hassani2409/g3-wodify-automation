@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vielen Dank für dein Interesse - G3 CrossFit</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #2A5D3C 0%, #6BAF7E 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .content p {
+            margin: 16px 0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .content h3 {
+            color: #2A5D3C;
+            font-size: 22px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+        .button {
+            display: inline-block;
+            background: #FF6B35;
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #e55a28;
+        }
+        .highlight-box {
+            background: #f9f9f9;
+            border-left: 4px solid #2A5D3C;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .highlight-box p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 0 0 8px 8px;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer a {
+            color: #2A5D3C;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Vielen Dank für dein Interesse!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hallo {{ first_name }},</p>
+            
+            <p>vielen Dank, dass du dich für G3 CrossFit interessierst! Wir freuen uns riesig, dass du den ersten Schritt gemacht hast.</p>
+            
+            <div class="highlight-box">
+                <p><strong>⚡ Schnelle Antwort!</strong></p>
+                <p>Wir haben deine Nachricht erhalten und werden uns <strong>innerhalb der nächsten 24 Stunden</strong> bei dir melden, um alle deine Fragen zu beantworten und dir zu zeigen, wie wir dir helfen können, deine Fitnessziele zu erreichen.</p>
+                {% if interested_in %}
+                <p style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">
+                    <strong>Dein Interesse:</strong> {{ interested_in }}
+                </p>
+                {% endif %}
+            </div>
+            
+            <h3>Warum G3 CrossFit?</h3>
+            
+            <p>Bei G3 CrossFit bieten wir:</p>
+            <ul>
+                <li><strong>Erfahrene Trainer:</strong> Unser Team besteht aus zertifizierten CrossFit-Coaches mit jahrelanger Erfahrung</li>
+                <li><strong>Individuelle Betreuung:</strong> Jeder Athlet bekommt die Aufmerksamkeit, die er verdient</li>
+                <li><strong>Moderne Ausstattung:</strong> Top-ausgestattetes Studio mit allem, was du brauchst</li>
+                <li><strong>Gemeinschaft:</strong> Eine unterstützende Community, die dich motiviert</li>
+                <li><strong>Flexible Mitgliedschaften:</strong> Von Basic bis Unlimited - für jeden das Richtige</li>
+            </ul>
+            
+            <h3>💪 Erlebe G3 CrossFit jetzt!</h3>
+            
+            <p>Du musst nicht warten - buche jetzt dein <strong>kostenloses Probetraining</strong> und erlebe G3 CrossFit hautnah:</p>
+            
+            <h3>Kostenloses Probetraining</h3>
+            
+            <p>Möchtest du G3 CrossFit direkt erleben? Buche jetzt dein kostenloses Probetraining:</p>
+            <a href="{{ g3_website }}/trial" class="button">Jetzt Probetraining buchen</a>
+            
+            <p>Oder schaue dir unseren Kursplan an:</p>
+            <a href="{{ g3_website }}/schedule" class="button" style="background: #2A5D3C;">Zum Kursplan</a>
+            
+            <p>Bei Fragen stehen wir dir jederzeit zur Verfügung. Ruf uns einfach an oder antworte auf diese E-Mail.</p>
+            
+            <p>Wir freuen uns darauf, dich kennenzulernen!</p>
+            
+            <p>Sportliche Grüße,<br>
+            <strong>Dein G3 CrossFit Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>G3 CrossFit Berlin</strong></p>
+            <p>{{ g3_address }}</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            <p><a href="{{ g3_website }}">{{ g3_website }}</a></p>
+        </div>
+    </div>
+</body>
+</html>
+

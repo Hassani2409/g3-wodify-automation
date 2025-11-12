@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erinnerung: Dein Probetraining morgen - G3 CrossFit</title>
+    <style>
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            background: white;
+            padding: 40px 30px;
+        }
+        .content p {
+            margin: 16px 0;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .reminder-box {
+            background: #FFF3EF;
+            border: 2px solid #FF6B35;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+            text-align: center;
+        }
+        .reminder-box h2 {
+            color: #FF6B35;
+            margin: 0 0 16px 0;
+            font-size: 24px;
+        }
+        .booking-info {
+            background: #f9f9f9;
+            border-left: 4px solid #2A5D3C;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .booking-info p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .booking-info strong {
+            color: #2A5D3C;
+        }
+        .button {
+            display: inline-block;
+            background: #2A5D3C;
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #224A30;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 0 0 8px 8px;
+        }
+        .footer p {
+            margin: 8px 0;
+        }
+        .footer a {
+            color: #2A5D3C;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏰ Erinnerung: Dein Probetraining morgen!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hallo {{ first_name }},</p>
+            
+            <div class="reminder-box">
+                <h2>Morgen ist es soweit!</h2>
+                <p>Wir freuen uns darauf, dich bei deinem Probetraining zu begrüßen.</p>
+            </div>
+            
+            <div class="booking-info">
+                <p><strong>Dein Probetraining:</strong></p>
+                <p><strong>Kurs:</strong> {{ class_name }}</p>
+                <p><strong>Datum:</strong> {{ class_date }}</p>
+                <p><strong>Uhrzeit:</strong> {{ class_time }}</p>
+                <p><strong>Trainer:</strong> {{ coach_name }}</p>
+                <p><strong>Adresse:</strong> {{ g3_address }}</p>
+            </div>
+            
+            <h3>Wichtige Hinweise</h3>
+            
+            <p><strong>⏰ Komme bitte 10-15 Minuten früher</strong>, damit wir dir alles zeigen können und du dich umziehen kannst.</p>
+            
+            <p><strong>📦 Was du mitbringen solltest:</strong></p>
+            <ul>
+                <li>Sportkleidung</li>
+                <li>Sportschuhe</li>
+                <li>Handtuch</li>
+                <li>Wasserflasche</li>
+            </ul>
+            
+            <p><strong>📍 So findest du uns:</strong></p>
+            <p>{{ g3_address }}</p>
+            
+            <p>Falls du Fragen hast oder dein Probetraining verschieben möchtest, melde dich einfach bei uns:</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            
+            <p>Wir freuen uns darauf, dich morgen zu sehen!</p>
+            
+            <p>Sportliche Grüße,<br>
+            <strong>Dein G3 CrossFit Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>G3 CrossFit Berlin</strong></p>
+            <p>{{ g3_address }}</p>
+            <p>Tel: {{ g3_phone }} | E-Mail: {{ g3_email }}</p>
+            <p><a href="{{ g3_website }}">{{ g3_website }}</a></p>
+        </div>
+    </div>
+</body>
+</html>
+

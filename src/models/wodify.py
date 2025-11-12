@@ -25,6 +25,17 @@ class LeadStatus(str, Enum):
     LOST = "Lost"
 
 
+class LeadNurturingState(str, Enum):
+    """Lead nurturing state enum"""
+    NEW = "NEW"
+    RESPONDED = "RESPONDED"  # Lead-Response gesendet
+    NURTURING_2 = "NURTURING_2"  # Tag 2 E-Mail gesendet
+    NURTURING_5 = "NURTURING_5"  # Tag 5 E-Mail gesendet
+    NURTURING_7 = "NURTURING_7"  # Tag 7 E-Mail gesendet
+    CONVERTED = "CONVERTED"  # Zu Mitglied konvertiert
+    OPTED_OUT = "OPTED_OUT"  # Opt-out
+
+
 class WodifyMembershipCreated(BaseModel):
     """WODIFY Webhook: New Membership Created"""
     
