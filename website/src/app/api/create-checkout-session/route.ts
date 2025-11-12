@@ -120,10 +120,19 @@ export async function POST(request: NextRequest) {
       }
     }, { status: 501 }); // 501 Not Implemented
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating checkout session:', error);
+    
+    // Return a proper error response instead of crashing
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { 
+        error: 'Failed to create checkout session',
+        message: error?.message || 'An unexpected error occurred',
+        debug: {
+          note: 'Stripe integration pending. This is a temporary response.',
+          error: process.env.NODE_ENV === 'development' ? error?.toString() : undefined
+        }
+      },
       { status: 500 }
     );
   }
