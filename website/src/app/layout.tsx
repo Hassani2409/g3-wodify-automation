@@ -3,6 +3,7 @@ import { Barlow_Condensed, Open_Sans, Montserrat } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // G3 CrossFit Fonts
 const barlowCondensed = Barlow_Condensed({
@@ -41,9 +42,11 @@ export default function RootLayout({
       <body
         className={`${barlowCondensed.variable} ${openSans.variable} ${montserrat.variable} antialiased`}
       >
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

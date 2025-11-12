@@ -150,3 +150,34 @@ class EmailLog(Base):
     
     # Timestamps
     created_at = Column(DateTime, server_default=func.now())
+
+
+class User(Base):
+    """User database model for authentication"""
+    __tablename__ = "users"
+    
+    # Primary Key
+    id = Column(String, primary_key=True, index=True)
+    
+    # User Information
+    email = Column(String, unique=True, nullable=False, index=True)
+    username = Column(String, unique=True, nullable=True, index=True)
+    hashed_password = Column(String, nullable=False)
+    
+    # Profile Information
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    
+    # Account Status
+    is_active = Column(Boolean, default=True)
+    is_verified = Column(Boolean, default=False)
+    is_admin = Column(Boolean, default=False)
+    
+    # WODIFY Integration (optional)
+    wodify_client_id = Column(String, nullable=True, index=True)
+    
+    # Timestamps
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    last_login = Column(DateTime, nullable=True)

@@ -1,0 +1,85 @@
+# G3 CrossFit WODIFY Automation - Docker Compose
+# 
+# Verwendung:
+#   docker-compose up -d          # Startet alle Services
+#   docker-compose down           # Stoppt alle Services
+#   docker-compose logs -f app    # Zeigt Logs an
+#   docker-compose restart app    # Startet App neu
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: g3-wodify-automation
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      # Logs-Verzeichnis für persistente Logs
+      - ./logs:/app/logs
+      # SQLite-Datenbank (für Entwicklung)
+      - ./g3_wodify.db:/app/g3_wodify.db
+      # Optional: Für Hot-Reload in Entwicklung
+      # - .:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/webhooks/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - g3-network
+    depends_on:
+      - postgres
+    # Für Production: PostgreSQL verwenden
+    # environment:
+    #   - DATABASE_URL=postgresql://g3crossfit:${POSTGRES_PASSWORD}@postgres:5432/g3_wodify
+
+  # PostgreSQL Database (Optional für Production)
+  postgres:
+    image: postgres:15-alpine
+    container_name: g3-wodify-postgres
+    environment:
+      POSTGRES_DB: g3_wodify
+      POSTGRES_USER: g3crossfit
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - g3-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U g3crossfit"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Redis für Distributed Tasks
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: g3-wodify-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - g3-network
+
+networks:
+  g3-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  # redis_data:
+  #   driver: local
+

@@ -12,11 +12,41 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from loguru import logger
 import sys
+from pathlib import Path
 
 from config.settings import settings
+
+# Initialize Sentry error tracking if DSN is configured
+if settings.sentry_dsn:
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.fastapi import FastApiIntegration
+        from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+        from sentry_sdk.integrations.logging import LoggingIntegration
+        
+        sentry_sdk.init(
+            dsn=settings.sentry_dsn,
+            integrations=[
+                FastApiIntegration(),
+                SqlalchemyIntegration(),
+                LoggingIntegration(level=None, event_level=None),
+            ],
+            traces_sample_rate=1.0,
+            environment=settings.app_env,
+            debug=settings.debug,
+        )
+        logger.info("Sentry error tracking initialized")
+    except ImportError:
+        logger.warning("Sentry SDK not installed. Install with: pip install sentry-sdk[fastapi]")
+    except Exception as e:
+        logger.error(f"Failed to initialize Sentry: {str(e)}")
+
+# Create logs directory if it doesn't exist
+Path("logs").mkdir(exist_ok=True)
 from src.api.webhooks import router as webhooks_router
 from src.api.admin import router as admin_router
 from src.api.schedule import router as schedule_router
+from src.api.auth import router as auth_router
 
 
 # Configure logging
@@ -76,6 +106,7 @@ app.add_middleware(
 app.include_router(webhooks_router)
 app.include_router(admin_router)
 app.include_router(schedule_router)
+app.include_router(auth_router)
 
 
 @app.on_event("startup")

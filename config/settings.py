@@ -60,6 +60,15 @@ class Settings(BaseSettings):
     # Monitoring & Error Tracking
     sentry_dsn: Optional[str] = Field(default=None, env="SENTRY_DSN")
 
+    # Authentication & Security
+    jwt_secret_key: str = Field(
+        default="your-secret-key-change-in-production-min-32-chars",
+        env="JWT_SECRET_KEY"
+    )
+    jwt_algorithm: str = Field(default="HS256", env="JWT_ALGORITHM")
+    jwt_access_token_expire_minutes: int = Field(default=30, env="JWT_ACCESS_TOKEN_EXPIRE_MINUTES")
+    jwt_refresh_token_expire_days: int = Field(default=7, env="JWT_REFRESH_TOKEN_EXPIRE_DAYS")
+
     # Feature Flags
     enable_welcome_email: bool = Field(default=True, env="ENABLE_WELCOME_EMAIL")
     enable_team_notification: bool = Field(default=True, env="ENABLE_TEAM_NOTIFICATION")

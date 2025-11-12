@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Clock, User, BarChart, Calendar, CheckCircle, Info, Loader2, ListPlus 
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -270,8 +272,7 @@ const CourseDetailModal = ({ course, onClose, onBook, onJoinWaitlist, isBooking,
   const isCourseFull = spotsLeft === 0;
 
   const handleLogin = () => {
-    // TODO: Implement authentication
-    alert('Bitte melde dich an, um Kurse zu buchen. Authentication wird noch implementiert.');
+    router.push('/login');
   };
 
   return (
@@ -432,10 +433,11 @@ const SuccessModal = ({ isOpen, onClose, type, courseName }: SuccessModalProps) 
 };
 
 export default function SchedulePage() {
+  const { user, token } = useAuth();
+  const router = useRouter();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isBooking, setIsBooking] = useState(false);
   const [showSuccess, setShowSuccess] = useState({ isOpen: false, type: '', courseName: '' });
-  const [user, setUser] = useState<any>(null); // TODO: Replace with proper auth
   const [filters, setFilters] = useState({ day: 'Alle', level: 'Alle', type: 'Alle', timeSlot: 'Alle' });
   const [courses, setCourses] = useState<Course[]>(coursesData); // Start with mock data
   const [isLoading, setIsLoading] = useState(false);
@@ -521,7 +523,10 @@ export default function SchedulePage() {
   }, [filteredCourses]);
 
   const handleBookCourse = async (course: Course) => {
-    if (!user) return;
+    if (!user || !token) {
+      router.push('/login');
+      return;
+    }
 
     setIsBooking(true);
 
@@ -531,12 +536,13 @@ export default function SchedulePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           class_id: course.id,
-          user_id: user.id || 'demo_user',
-          user_email: user.email || 'demo@example.com',
-          user_name: user.name || 'Demo User',
+          user_id: user.id,
+          user_email: user.email,
+          user_name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
         }),
       });
 
@@ -565,7 +571,10 @@ export default function SchedulePage() {
   };
 
   const handleJoinWaitlist = async (course: Course) => {
-    if (!user) return;
+    if (!user || !token) {
+      router.push('/login');
+      return;
+    }
 
     setIsBooking(true);
 
@@ -575,12 +584,13 @@ export default function SchedulePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           class_id: course.id,
-          user_id: user.id || 'demo_user',
-          user_email: user.email || 'demo@example.com',
-          user_name: user.name || 'Demo User',
+          user_id: user.id,
+          user_email: user.email,
+          user_name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
         }),
       });
 
