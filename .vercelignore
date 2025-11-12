@@ -1,0 +1,26 @@
+# Ignore Python Backend für Vercel Deployment
+main.py
+requirements.txt
+*.py
+src/
+config/
+alembic/
+tests/
+scripts/
+templates/
+*.db
+*.sqlite
+venv/
+__pycache__/
+*.pyc
+.env
+.env.local
+coverage.xml
+htmlcov/
+logs/
+*.log
+docker-compose.yml
+Dockerfile
+*.md
+!website/README.md
+
