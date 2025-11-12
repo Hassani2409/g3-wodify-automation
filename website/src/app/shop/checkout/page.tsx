@@ -25,7 +25,7 @@ export default function CheckoutPage() {
 
     // Form state
     const [formData, setFormData] = useState<CreateOrderRequest>({
-        shipping_name: user?.name || '',
+        shipping_name: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || '' : '',
         shipping_email: user?.email || '',
         shipping_phone: '',
         shipping_address_line1: '',

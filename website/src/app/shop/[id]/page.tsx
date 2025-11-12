@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import Link from 'next/link';
 
 export default function ProductDetailPage() {
     const router = useRouter();
+    const pathname = usePathname();
     const params = useParams();
     const { user, token } = useAuth();
     const [product, setProduct] = useState<Product | null>(null);
@@ -68,7 +69,7 @@ export default function ProductDetailPage() {
 
     const handleToggleWishlist = async () => {
         if (!product || !token) {
-            router.push('/login?redirect=' + router.asPath);
+            router.push('/login?redirect=' + encodeURIComponent(pathname));
             return;
         }
 
@@ -94,7 +95,7 @@ export default function ProductDetailPage() {
 
     const handleAddToCart = async () => {
         if (!product || !token) {
-            router.push('/login?redirect=' + router.asPath);
+            router.push('/login?redirect=' + encodeURIComponent(pathname));
             return;
         }
 

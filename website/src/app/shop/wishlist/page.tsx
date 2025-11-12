@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Heart, ShoppingBag, ArrowLeft, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { getWishlist, removeFromWishlist, Product } from '@/lib/api/wishlist';
+import { getWishlist, removeFromWishlist } from '@/lib/api/wishlist';
+import { Product } from '@/lib/api/products';
 import { addToCart } from '@/lib/api/cart';
 import Link from 'next/link';
 

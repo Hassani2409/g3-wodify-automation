@@ -266,6 +266,8 @@ interface SuccessModalProps {
 
 // Course Detail Modal Component
 const CourseDetailModal = ({ course, onClose, onBook, onJoinWaitlist, isBooking, user }: CourseDetailModalProps) => {
+  const router = useRouter();
+  
   if (!course) return null;
   const typeInfo = courseTypes[course.type];
   const spotsLeft = course.spotsTotal - course.spotsBooked;

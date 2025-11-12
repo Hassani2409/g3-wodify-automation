@@ -6,15 +6,15 @@ import TrainingPrograms from "@/components/TrainingPrograms";
 import AboutPreview from "@/components/AboutPreview";
 import CoachPreview from "@/components/CoachPreview";
 import Testimonials from "@/components/Testimonials";
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 export default function Home() {
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
     }
   };
 
