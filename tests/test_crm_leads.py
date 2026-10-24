@@ -35,6 +35,8 @@ def sessions(tmp_path):
 @pytest.fixture
 def cfg():
     return SimpleNamespace(
+        lead_ingest_key="",
+        lead_process_on_submit=False,
         crm_provider="hubspot",
         crm_sync_mode="test",
         hubspot_access_token="",
@@ -414,3 +416,53 @@ def test_admin_cannot_requeue_processing_job(client, sessions, cfg, data):
     assert result.status_code == 409
     with sessions() as s:
         assert s.scalar(select(SyncJob)).lease_token == "worker-token"
+
+
+def test_ingest_requires_server_key(client, cfg, data):
+    cfg.lead_ingest_key = "s" * 40
+    payload = data.model_dump(mode="json")
+    assert client.post("/api/leads", json=payload).status_code == 401
+    assert (
+        client.post(
+            "/api/leads",
+            json=payload,
+            headers={"X-Lead-Ingest-Key": cfg.lead_ingest_key},
+        ).status_code
+        == 202
+    )
+
+
+def test_persistent_rate_limit_preserves_idempotent_replay(sessions, cfg, data):
+    from src.leads.service import IntakeRateLimit
+
+    cfg.lead_intake_limit = 1
+    key = str(uuid.uuid4())
+    first = accept_inquiry(sessions, data, key, cfg)
+    assert accept_inquiry(sessions, data, key, cfg) == first
+    with pytest.raises(IntakeRateLimit):
+        accept_inquiry(sessions, data, str(uuid.uuid4()), cfg)
+
+
+@pytest.mark.asyncio
+async def test_hubspot_inquiry_contains_latest_message_and_date(data):
+    captured = []
+
+    def handler(request):
+        captured.append(json.loads(request.content))
+        return httpx.Response(
+            200, json={"status": "COMPLETE", "results": [{"id": "1234"}]}
+        )
+
+    adapter = HubSpotAdapter(
+        "secret", transport=httpx.MockTransport(handler), inquiry_property="g3_anfrage"
+    )
+    payload = data.model_dump(mode="json")
+    payload.update(
+        request_id="request-123", booking_date="2026-10-26", message="Testnachricht"
+    )
+    assert (await adapter.upsert_contact(payload)).remote_id == "1234"
+    fields = captured[0]["inputs"][0]["properties"]
+    assert "2026-10-26" in fields["g3_anfrage"]
+    assert "Testnachricht" in fields["g3_anfrage"]
+    assert "request-123" in fields["g3_anfrage"]
+    assert "lifecyclestage" not in fields

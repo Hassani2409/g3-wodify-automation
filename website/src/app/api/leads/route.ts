@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Ungültiger Anfrageschlüssel. Bitte lade die Seite neu." }, { status: 422, headers: noStore });
     }
     const response = await fetch(`${endpoint.replace(/\/$/, "")}/api/leads`, {
-      method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+      method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": key, ...(process.env.LEAD_INGEST_KEY ? { "X-Lead-Ingest-Key": process.env.LEAD_INGEST_KEY } : {}) },
       body, cache: "no-store", redirect: "error", signal: AbortSignal.timeout(10000),
     });
     if (!response.ok) {

@@ -31,7 +31,8 @@ class TestAdapter:
 
 
 class HubSpotAdapter:
-    def __init__(self, token: str, transport=None):
+    def __init__(self, token: str, transport=None, inquiry_property: str = ""):
+        self.inquiry_property = inquiry_property
         self.token = token
         self.transport = transport
 
@@ -45,6 +46,17 @@ class HubSpotAdapter:
         }
         if payload.get("phone"):
             properties["phone"] = payload["phone"]
+        if self.inquiry_property:
+            properties[self.inquiry_property] = (
+                f"Anfrage: {payload.get('request_id', '')}\n"
+                f"Quelle: Website Contact Form\n"
+                f"Interesse: {payload.get('interested_in', '')}\n"
+                f"Wunschtermin: {payload.get('booking_date') or 'offen'}\n"
+                f"Uhrzeitwunsch: {payload.get('booking_time') or 'offen'}\n"
+                f"Erfahrung: {payload.get('experience_level') or 'offen'}\n"
+                f"Nachricht:\n{payload.get('message') or ''}\n"
+                "Status: Anfrage eingegangen, Termin noch nicht bestaetigt."
+            )
         # No lifecycle, subscription, marketing or workflow enrollment changes.
         body = {
             "inputs": [
@@ -93,11 +105,13 @@ class HubSpotAdapter:
         return SyncResult(remote_id)
 
 
-def get_adapter(provider: str, mode: str, token: str = "") -> CRMAdapter:
+def get_adapter(
+    provider: str, mode: str, token: str = "", inquiry_property: str = ""
+) -> CRMAdapter:
     if provider != "hubspot":
         raise SyncError("unknown_provider", retryable=False)
     if mode == "test":
         return TestAdapter()
     if mode != "live":
         raise SyncError("unknown_mode", retryable=False)
-    return HubSpotAdapter(token)
+    return HubSpotAdapter(token, inquiry_property=inquiry_property)

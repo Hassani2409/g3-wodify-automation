@@ -70,3 +70,9 @@ class AutomationPreview(Base):
     subject = Column(String(200), nullable=False)
     body = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+
+
+class IntakeWindow(Base):
+    __tablename__ = "crm_intake_windows"
+    bucket = Column(String(12), primary_key=True)
+    count = Column(Integer, nullable=False)
