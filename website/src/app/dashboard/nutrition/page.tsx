@@ -16,11 +16,11 @@ export default function MyNutrition() {
                 </header>
 
                 <div className="mt-8">
-                    <Card className="min-h-[400px] flex items-center justify-center bg-gray-50">
+                    <Card className="min-h-[400px] flex items-center justify-center bg-neutral-50">
                         <CardContent className="text-center py-12">
-                            <HeartPulse className="mx-auto h-12 w-12 text-gray-400" />
-                            <h2 className="mt-6 text-xl font-semibold text-gray-700 font-heading">Coming Soon</h2>
-                            <p className="mt-2 text-gray-500 font-body">
+                            <HeartPulse className="mx-auto h-12 w-12 text-neutral-400" />
+                            <h2 className="mt-6 text-xl font-semibold text-neutral-700 font-heading">Coming Soon</h2>
+                            <p className="mt-2 text-neutral-500 font-body">
                                 Hier findest du bald personalisierte Ernährungsempfehlungen und einen KI-gestützten Meal-Tracker.
                             </p>
                         </CardContent>

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { 
   CheckCircle2, 
   Mail, 
-  Calendar, 
+  Calendar,
   Download, 
   ArrowRight,
   Loader2,
@@ -16,10 +16,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+interface CheckoutSession {
+  id: string;
+  customer_email?: string;
+  customer_name?: string;
+  amount_total: number;
+  amount_subtotal?: number;
+  line_items?: { description: string; amount_total: number; quantity: number }[];
+  created?: number;
+  currency: string;
+  payment_status?: string;
+  status?: string;
+  metadata?: { plan_name?: string; billing_type?: string; plan_type?: string };
+}
+
 function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
-  const [sessionData, setSessionData] = useState<any>(null);
+  const [sessionData, setSessionData] = useState<CheckoutSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -107,7 +121,7 @@ function SuccessContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-svh bg-background flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-primary-500 mx-auto mb-4" />
           <p className="text-lg text-muted-foreground font-body">
@@ -120,7 +134,7 @@ function SuccessContent() {
 
   if (error || !sessionData) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="min-h-svh bg-background flex items-center justify-center px-4">
         <Card className="max-w-md w-full">
           <CardHeader>
             <div className="flex items-center justify-center mb-4">
@@ -153,7 +167,7 @@ function SuccessContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 bg-linear-to-br from-primary-500 to-secondary-500 overflow-hidden">
         {/* Background Pattern */}
@@ -349,7 +363,7 @@ function SuccessContent() {
 export default function SuccessPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-svh bg-background flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-primary-500 mx-auto mb-4" />
           <p className="text-lg text-muted-foreground font-body">

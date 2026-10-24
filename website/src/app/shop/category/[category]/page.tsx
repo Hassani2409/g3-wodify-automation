@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -21,21 +23,20 @@ export default function CategoryPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        const loadProducts = async () => {
+            setIsLoading(true);
+            try {
+                const allProducts = await listProducts();
+                const categoryProducts = allProducts.filter(p => p.category === category);
+                setProducts(categoryProducts);
+            } catch (error) {
+                console.error('Error loading products:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
         loadProducts();
     }, [category]);
-
-    const loadProducts = async () => {
-        setIsLoading(true);
-        try {
-            const allProducts = await listProducts();
-            const categoryProducts = allProducts.filter(p => p.category === category);
-            setProducts(categoryProducts);
-        } catch (error) {
-            console.error('Error loading products:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleAddToCart = async (product: Product) => {
         if (!user || !token) {
@@ -78,17 +79,17 @@ export default function CategoryPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-svh bg-background flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                    <p className="mt-4 text-gray-600 font-body">Produkte werden geladen...</p>
+                    <p className="mt-4 text-neutral-600 font-body">Produkte werden geladen...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-svh bg-background">
             {/* Hero Section */}
             <section className="relative py-20 text-white" style={{background: 'linear-gradient(135deg, #2A5D3C 0%, #1a3a26 100%)'}}>
                 <div 
@@ -112,7 +113,7 @@ export default function CategoryPage() {
                         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white font-heading">
                             {getCategoryName(category)}
                         </h1>
-                        <p className="text-xl md:text-2xl text-gray-200 max-w-3xl font-body">
+                        <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl font-body">
                             {getCategoryDescription(category)}
                         </p>
                     </motion.div>
@@ -124,8 +125,8 @@ export default function CategoryPage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {products.length === 0 ? (
                         <div className="text-center py-16">
-                            <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                            <h3 className="text-2xl font-semibold mb-2 text-gray-600 font-heading">
+                            <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-neutral-400" />
+                            <h3 className="text-2xl font-semibold mb-2 text-neutral-600 font-heading">
                                 Keine Produkte in dieser Kategorie
                             </h3>
                             <Link href="/shop">
@@ -136,7 +137,7 @@ export default function CategoryPage() {
                         </div>
                     ) : (
                         <>
-                            <p className="text-gray-600 mb-8 font-body">
+                            <p className="text-neutral-600 mb-8 font-body">
                                 {products.length} {products.length === 1 ? 'Produkt' : 'Produkte'} gefunden
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -147,13 +148,13 @@ export default function CategoryPage() {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.5 }}
                                     >
-                                        <Card className="group overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-full flex flex-col">
+                                        <Card className="group overflow-hidden shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out transform hover:scale-105 h-full flex flex-col">
                                             <div className="relative cursor-pointer" onClick={() => router.push(`/shop/${product.id}`)}>
-                                                <img 
+                                                <Image
                                                     src={product.images?.[0] || "https://images.unsplash.com/photo-1594882645126-14020914d58d?auto=format&fit=crop&w=600&q=80"}
                                                     alt={product.name}
                                                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                                                />
+                                                width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                                 {product.featured && (
                                                     <Badge className="absolute top-3 left-3 bg-accent-500 text-white">
                                                         <Star className="w-3 h-3 mr-1" />
@@ -174,7 +175,7 @@ export default function CategoryPage() {
                                                             {product.name}
                                                         </h3>
                                                     </Link>
-                                                    <p className="text-sm text-gray-600 line-clamp-2 mb-3 font-body">
+                                                    <p className="text-sm text-neutral-600 line-clamp-2 mb-3 font-body">
                                                         {product.description}
                                                     </p>
                                                 </div>

@@ -8,18 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { 
   Check, 
-  X,
-  Star,
+    Star,
   Users,
-  Calendar,
-  Award,
+    Award,
   Heart,
   ArrowRight,
   Zap,
   Shield,
   Clock,
-  TrendingUp
-} from "lucide-react";
+  } from "lucide-react";
 
 export default function MembershipPage() {
   const memberships = [
@@ -115,7 +112,7 @@ export default function MembershipPage() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-svh">
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 pt-20">
         {/* Background Pattern */}
@@ -342,7 +339,7 @@ export default function MembershipPage() {
               <Link href="/pricing">
                 <Button 
                   size="lg" 
-                  className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-button text-base h-14 px-8 rounded-button"
+                  className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out font-button text-base h-14 px-8 rounded-button"
                 >
                   Mitgliedschaft wählen
                   <ArrowRight className="ml-2 h-5 w-5" />

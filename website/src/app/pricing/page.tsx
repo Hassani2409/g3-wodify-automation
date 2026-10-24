@@ -422,7 +422,7 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       <AnimatePresence>
         {selectedPlan && (
           <SignupModal plan={selectedPlan} billingType={billingType} onClose={() => setSelectedPlan(null)} />
@@ -459,7 +459,7 @@ export default function PricingPage() {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
             <button
               onClick={() => setBillingType('monthly')}
-              className={`px-6 py-3 rounded-button font-button font-semibold transition-all ${
+              className={`px-6 py-3 rounded-button font-button font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] ${
                 billingType === 'monthly'
                   ? 'bg-accent-500 text-white shadow-lg'
                   : 'bg-transparent border-2 border-muted text-muted-foreground hover:bg-muted'
@@ -469,7 +469,7 @@ export default function PricingPage() {
             </button>
             <button
               onClick={() => setBillingType('sixMonth')}
-              className={`px-6 py-3 rounded-button font-button font-semibold transition-all relative ${
+              className={`px-6 py-3 rounded-button font-button font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] relative ${
                 billingType === 'sixMonth'
                   ? 'bg-accent-500 text-white shadow-lg'
                   : 'bg-transparent border-2 border-muted text-muted-foreground hover:bg-muted'
@@ -480,7 +480,7 @@ export default function PricingPage() {
             </button>
             <button
               onClick={() => setBillingType('twelveMonth')}
-              className={`px-6 py-3 rounded-button font-button font-semibold transition-all relative ${
+              className={`px-6 py-3 rounded-button font-button font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] relative ${
                 billingType === 'twelveMonth'
                   ? 'bg-accent-500 text-white shadow-lg'
                   : 'bg-transparent border-2 border-muted text-muted-foreground hover:bg-muted'
@@ -509,7 +509,7 @@ export default function PricingPage() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <Card
-                  className={`flex flex-col shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 relative ${plan.isPopular ? 'border-2 border-accent-500' : 'border-2 border-primary-500/20'}`}
+                  className={`flex flex-col shadow-lg transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:shadow-2xl hover:-translate-y-2 relative ${plan.isPopular ? 'border-2 border-accent-500' : 'border-2 border-primary-500/20'}`}
                 >
                   {plan.isPopular && (
                     <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 text-sm bg-accent-500 text-white hover:bg-accent-600">
@@ -577,7 +577,7 @@ export default function PricingPage() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5 }}
             >
-              <Card className="flex flex-col justify-between p-6 h-full border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300">
+              <Card className="flex flex-col justify-between p-6 h-full border-2 border-primary-500/20 hover:border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out">
                 <div>
                   <CardTitle className="mb-2 font-heading text-foreground">Drop-In</CardTitle>
                   <p className="mb-4 text-muted-foreground font-body">
@@ -601,7 +601,7 @@ export default function PricingPage() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <Card className="flex flex-col justify-between p-6 h-full border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300">
+              <Card className="flex flex-col justify-between p-6 h-full border-2 border-primary-500/20 hover:border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out">
                 <div>
                   <CardTitle className="mb-2 font-heading text-foreground">10er-Karte</CardTitle>
                   <p className="mb-4 text-muted-foreground font-body">
@@ -625,7 +625,7 @@ export default function PricingPage() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Card className="flex flex-col justify-between p-6 h-full border-2 border-accent-500 hover:border-accent-600 transition-all duration-300 bg-accent-50">
+              <Card className="flex flex-col justify-between p-6 h-full border-2 border-accent-500 hover:border-accent-600 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out bg-accent-50">
                 <div>
                   <CardTitle className="mb-2 font-heading text-foreground">Kostenloses Probetraining</CardTitle>
                   <p className="mb-4 text-muted-foreground font-body">

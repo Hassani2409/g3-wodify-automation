@@ -201,7 +201,7 @@ export default function ContactPage() {
     
     try {
       // Split name into first and last name if needed
-      const [firstName, ...lastNameParts] = bookingFormData.firstName.split(' ');
+      const [, ...lastNameParts] = bookingFormData.firstName.split(' ');
       const lastName = lastNameParts.join(' ') || bookingFormData.lastName || '';
       
       // Prepare data for WODIFY API
@@ -266,7 +266,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden pt-20">
         <div className="absolute inset-0 opacity-10">
@@ -358,7 +358,7 @@ export default function ContactPage() {
                         setStep(1);
                         setErrors({});
                       }}
-                      className={`flex-1 transition-all font-button ${
+                      className={`flex-1 transition-[color,background-color,border-color,box-shadow,transform,opacity] font-button ${
                         bookingType === 'trial' 
                           ? 'bg-primary-500 hover:bg-primary-600 text-white' 
                           : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -373,7 +373,7 @@ export default function ContactPage() {
                         setStep(1);
                         setErrors({});
                       }}
-                      className={`flex-1 transition-all font-button ${
+                      className={`flex-1 transition-[color,background-color,border-color,box-shadow,transform,opacity] font-button ${
                         bookingType === 'drop-in' 
                           ? 'bg-primary-500 hover:bg-primary-600 text-white' 
                           : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -720,7 +720,7 @@ export default function ContactPage() {
                             </Button>
                             <Button 
                               type="submit" 
-                              className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold text-lg px-8 py-3 rounded-button shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2" 
+                              className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold text-lg px-8 py-3 rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-105 flex items-center gap-2"
                               disabled={isSubmitting}
                             >
                               {isSubmitting ? (
@@ -766,7 +766,7 @@ export default function ContactPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="text-center border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300 hover:shadow-xl h-full">
+                <Card className="text-center border-2 border-primary-500/20 hover:border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:shadow-xl h-full">
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold mb-2 text-primary-700 font-heading">
                       {person.name}
@@ -950,7 +950,7 @@ export default function ContactPage() {
             </p>
             <Link
               href="#booking"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-105"
             >
               Jetzt buchen
             </Link>

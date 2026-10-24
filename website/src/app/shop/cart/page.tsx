@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import Image from "next/image";
+
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,15 +19,7 @@ export default function CartPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!user || !token) {
-            router.push('/login?redirect=/shop/cart');
-            return;
-        }
-        loadCart();
-    }, [user, token]);
-
-    const loadCart = async () => {
+    const loadCart = useCallback(async () => {
         if (!token) return;
         
         setIsLoading(true);
@@ -37,7 +31,15 @@ export default function CartPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        if (!user || !token) {
+            router.push('/login?redirect=/shop/cart');
+            return;
+        }
+        loadCart();
+    }, [user, token, router, loadCart]);
 
     const handleUpdateQuantity = async (itemId: string, newQuantity: number) => {
         if (!token || newQuantity < 1) return;
@@ -73,10 +75,10 @@ export default function CartPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-svh bg-background flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                    <p className="mt-4 text-gray-600 font-body">Warenkorb wird geladen...</p>
+                    <p className="mt-4 text-neutral-600 font-body">Warenkorb wird geladen...</p>
                 </div>
             </div>
         );
@@ -84,14 +86,14 @@ export default function CartPage() {
 
     if (!cart || cart.items.length === 0) {
         return (
-            <div className="min-h-screen bg-background">
+            <div className="min-h-svh bg-background">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <div className="text-center py-16">
-                        <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                        <h2 className="text-2xl font-bold mb-2 text-gray-600 font-heading">
+                        <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-neutral-400" />
+                        <h2 className="text-2xl font-bold mb-2 text-neutral-600 font-heading">
                             Dein Warenkorb ist leer
                         </h2>
-                        <p className="text-gray-500 mb-6 font-body">
+                        <p className="text-neutral-500 mb-6 font-body">
                             Füge Produkte hinzu, um zu beginnen.
                         </p>
                         <Link href="/shop">
@@ -106,7 +108,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-svh bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 {/* Header */}
                 <div className="mb-8">
@@ -136,11 +138,11 @@ export default function CartPage() {
                                         <div className="flex gap-4">
                                             {/* Product Image */}
                                             <div className="w-24 h-24 flex-shrink-0">
-                                                <img
+                                                <Image
                                                     src={item.product_image || "https://images.unsplash.com/photo-1594882645126-14020914d58d?auto=format&fit=crop&w=200&q=80"}
                                                     alt={item.product_name}
                                                     className="w-full h-full object-cover rounded-lg"
-                                                />
+                                                width={96} height={96} sizes="96px" />
                                             </div>
 
                                             {/* Product Info */}
@@ -149,7 +151,7 @@ export default function CartPage() {
                                                     {item.product_name}
                                                 </h3>
                                                 {item.size && (
-                                                    <p className="text-sm text-gray-500 mb-2 font-body">
+                                                    <p className="text-sm text-neutral-500 mb-2 font-body">
                                                         Größe: {item.size}
                                                     </p>
                                                 )}
@@ -215,11 +217,11 @@ export default function CartPage() {
                                 </h2>
                                 
                                 <div className="space-y-3 mb-6">
-                                    <div className="flex justify-between text-gray-600 font-body">
+                                    <div className="flex justify-between text-neutral-600 font-body">
                                         <span>Zwischensumme</span>
                                         <span>{cart.subtotal.toFixed(2)}€</span>
                                     </div>
-                                    <div className="flex justify-between text-gray-600 font-body">
+                                    <div className="flex justify-between text-neutral-600 font-body">
                                         <span>Versand</span>
                                         <span>
                                             {cart.shipping_cost === 0 ? (
@@ -230,7 +232,7 @@ export default function CartPage() {
                                         </span>
                                     </div>
                                     {cart.subtotal < 50 && (
-                                        <p className="text-sm text-gray-500 font-body">
+                                        <p className="text-sm text-neutral-500 font-body">
                                             Noch {(50 - cart.subtotal).toFixed(2)}€ für kostenlosen Versand!
                                         </p>
                                     )}

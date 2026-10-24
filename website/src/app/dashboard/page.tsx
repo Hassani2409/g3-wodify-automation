@@ -105,7 +105,7 @@ export default function DashboardPage() {
               const Icon = action.icon;
               return (
                 <Link key={index} href={action.href}>
-                  <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full">
+                  <Card className="hover:shadow-lg transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:-translate-y-1 cursor-pointer h-full">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
                         <div className={`p-3 rounded-lg ${action.color} text-white`}>

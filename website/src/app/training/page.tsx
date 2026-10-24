@@ -114,13 +114,13 @@ const getLevelColor = (level: string) => {
     case "Fortgeschritten":
       return "bg-primary-100 text-primary-700 border-primary-300";
     default:
-      return "bg-blue-100 text-blue-700 border-blue-300";
+      return "bg-primary-100 text-primary-700 border-primary-300";
   }
 };
 
 export default function TrainingPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden">
         {/* Background Pattern */}
@@ -167,11 +167,11 @@ export default function TrainingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-card rounded-card border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300 hover:shadow-2xl overflow-hidden scroll-mt-20"
+                className="group bg-card rounded-card border-2 border-primary-500/20 hover:border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:shadow-2xl overflow-hidden scroll-mt-20"
               >
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden">
-                  <Image 
+                  <Image
                     src={program.image}
                     alt={program.title}
                     fill
@@ -270,7 +270,7 @@ export default function TrainingPage() {
             </p>
             <Link 
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-105"
             >
               Kostenloses Probetraining buchen
               <ArrowRight className="w-5 h-5" />

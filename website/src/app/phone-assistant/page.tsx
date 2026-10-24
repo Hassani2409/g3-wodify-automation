@@ -106,10 +106,10 @@ Antworte immer natürlich, kurz und hilfsbereit.
     ];
 
     return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="min-h-svh bg-neutral-900 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Phone Interface */}
-                <Card className="bg-black rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-700">
+                <Card className="bg-black rounded-3xl shadow-2xl overflow-hidden border-4 border-neutral-700">
                     <div className="p-6">
                         <div className="text-center mb-8">
                             <motion.div 
@@ -139,7 +139,7 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                     className="mb-6"
                                 >
                                     {/* Transcript */}
-                                    <div className="bg-gray-800 rounded-lg p-4 h-64 overflow-y-auto mb-4">
+                                    <div className="bg-neutral-800 rounded-lg p-4 h-64 overflow-y-auto mb-4">
                                         {transcript.map((msg) => (
                                             <motion.div 
                                                 key={msg.id}
@@ -149,7 +149,7 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                             >
                                                 <div className={`inline-block px-3 py-2 rounded-lg max-w-[80%] ${
                                                     msg.sender === 'user' 
-                                                        ? 'bg-blue-600 text-white' 
+                                                        ? 'bg-primary-600 text-white'
                                                         : 'bg-green-600 text-white'
                                                 }`}>
                                                     <span className="text-xs opacity-75 block mb-1 font-body">
@@ -170,7 +170,7 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                                 key={option.id}
                                                 onClick={() => handleUserPrompt(option.text)}
                                                 disabled={isListening || isSpeaking}
-                                                className="w-full text-left justify-start bg-gray-700 hover:bg-gray-600 text-white text-sm font-button"
+                                                className="w-full text-left justify-start bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-button"
                                                 size="sm"
                                             >
                                                 {option.text}
@@ -216,10 +216,10 @@ Antworte immer natürlich, kurz und hilfsbereit.
 
                 {/* Info Section */}
                 <div className="mt-6 text-center">
-                    <p className="text-gray-400 text-sm mb-2 font-body">
+                    <p className="text-neutral-400 text-sm mb-2 font-body">
                         Demo des KI-gestützten Telefonassistenten
                     </p>
-                    <p className="text-gray-500 text-xs font-body">
+                    <p className="text-neutral-500 text-xs font-body">
                         Echte Telefonnummer: <strong className="text-white">+49 30 12345678</strong>
                     </p>
                 </div>

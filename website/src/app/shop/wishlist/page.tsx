@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import Image from "next/image";
+
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, ShoppingBag, ArrowLeft, Trash2 } from 'lucide-react';
+import { Heart, ShoppingBag, ArrowLeft, } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getWishlist, removeFromWishlist } from '@/lib/api/wishlist';
 import { Product } from '@/lib/api/products';
@@ -20,15 +22,7 @@ export default function WishlistPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [removingId, setRemovingId] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!user || !token) {
-            router.push('/login?redirect=/shop/wishlist');
-            return;
-        }
-        loadWishlist();
-    }, [user, token]);
-
-    const loadWishlist = async () => {
+    const loadWishlist = useCallback(async () => {
         if (!token) return;
         
         setIsLoading(true);
@@ -40,7 +34,15 @@ export default function WishlistPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        if (!user || !token) {
+            router.push('/login?redirect=/shop/wishlist');
+            return;
+        }
+        loadWishlist();
+    }, [user, token, router, loadWishlist]);
 
     const handleRemove = async (productId: string) => {
         if (!token) return;
@@ -84,10 +86,10 @@ export default function WishlistPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-svh bg-background flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                    <p className="mt-4 text-gray-600 font-body">Wunschliste wird geladen...</p>
+                    <p className="mt-4 text-neutral-600 font-body">Wunschliste wird geladen...</p>
                 </div>
             </div>
         );
@@ -95,14 +97,14 @@ export default function WishlistPage() {
 
     if (products.length === 0) {
         return (
-            <div className="min-h-screen bg-background">
+            <div className="min-h-svh bg-background">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <div className="text-center py-16">
-                        <Heart className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                        <h2 className="text-2xl font-bold mb-2 text-gray-600 font-heading">
+                        <Heart className="w-16 h-16 mx-auto mb-4 text-neutral-400" />
+                        <h2 className="text-2xl font-bold mb-2 text-neutral-600 font-heading">
                             Deine Wunschliste ist leer
                         </h2>
-                        <p className="text-gray-500 mb-6 font-body">
+                        <p className="text-neutral-500 mb-6 font-body">
                             Füge Produkte hinzu, die du später kaufen möchtest.
                         </p>
                         <Link href="/shop">
@@ -117,7 +119,7 @@ export default function WishlistPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-svh bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 {/* Header */}
                 <div className="mb-8">
@@ -132,7 +134,7 @@ export default function WishlistPage() {
                             <h1 className="text-3xl font-bold text-primary-700 font-heading">
                                 Meine Wunschliste
                             </h1>
-                            <p className="text-gray-600 mt-2 font-body">
+                            <p className="text-neutral-600 mt-2 font-body">
                                 {products.length} {products.length === 1 ? 'Produkt' : 'Produkte'}
                             </p>
                         </div>
@@ -148,14 +150,14 @@ export default function WishlistPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <Card className="group overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-full flex flex-col">
+                            <Card className="group overflow-hidden shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out transform hover:scale-105 h-full flex flex-col">
                                 <div className="relative">
                                     <Link href={`/shop/${product.id}`}>
-                                        <img
+                                        <Image
                                             src={product.images?.[0] || "https://images.unsplash.com/photo-1594882645126-14020914d58d?auto=format&fit=crop&w=600&q=80"}
                                             alt={product.name}
                                             className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
-                                        />
+                                        width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                     </Link>
                                     <button
                                         onClick={() => handleRemove(product.id)}
@@ -186,7 +188,7 @@ export default function WishlistPage() {
                                                 {product.name}
                                             </h3>
                                         </Link>
-                                        <p className="text-sm text-gray-600 line-clamp-2 mb-3 font-body">
+                                        <p className="text-sm text-neutral-600 line-clamp-2 mb-3 font-body">
                                             {product.description}
                                         </p>
                                     </div>

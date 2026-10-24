@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,22 +61,22 @@ export default function Blog() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-24 text-white" style={{background: 'linear-gradient(135deg, #2A5D3C 0%, #6BAF7E 100%)'}}>
         <div className="absolute inset-0 bg-cover bg-center opacity-15" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1434626881859-194d67b2b86f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80")' }}/>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">CrossFit Blog Berlin</h1>
-          <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto mb-8">
+          <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto mb-8">
             Trainingstipps, Ernährungsberatung und Erfolgsgeschichten von G3 CrossFit in Berlin-Mitte
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400" />
               <input
                 type="text"
                 placeholder="Suche nach Artikeln, Tipps oder Themen..."
-                className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full pl-10 pr-4 py-3 rounded-lg text-neutral-900 border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -99,10 +101,10 @@ export default function Blog() {
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 text-sm font-medium transition-all ${
+                className={`px-4 py-2 text-sm font-medium transition-[color,background-color,border-color,box-shadow,transform,opacity] ${
                   selectedCategory === category
                     ? 'bg-accent-500 text-white hover:bg-accent-600'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    : 'border-neutral-300 text-neutral-700 hover:bg-neutral-50'
                 }`}
               >
                 {category === 'all' ? 'Alle Kategorien' : category}
@@ -123,13 +125,13 @@ export default function Blog() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
+                <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out group h-full flex flex-col">
                   <div className="relative h-48 overflow-hidden">
-                    <img 
+                    <Image
                       src={post.image}
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                     <div className="absolute top-4 left-4">
                       <Badge className="bg-accent-500 text-white">
                         {post.category}
@@ -138,7 +140,7 @@ export default function Blog() {
                   </div>
                   
                   <CardContent className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-center text-sm text-gray-500 mb-3 flex-wrap gap-2">
+                    <div className="flex items-center text-sm text-neutral-500 mb-3 flex-wrap gap-2">
                       <div className="flex items-center">
                         <Calendar className="w-4 h-4 mr-1" />
                         <span>{new Date(post.date).toLocaleDateString('de-DE')}</span>
@@ -159,7 +161,7 @@ export default function Blog() {
                       {post.title}
                     </h3>
                     
-                    <p className="text-gray-600 mb-4 line-clamp-3 flex-1">
+                    <p className="text-neutral-600 mb-4 line-clamp-3 flex-1">
                       {post.excerpt}
                     </p>
                     
@@ -174,7 +176,7 @@ export default function Blog() {
                     <Button
                       asChild
                       variant="outline"
-                      className="group-hover:bg-accent-500 group-hover:text-white group-hover:border-accent-500 transition-all"
+                      className="group-hover:bg-accent-500 group-hover:text-white group-hover:border-accent-500 transition-[color,background-color,border-color,box-shadow,transform,opacity]"
                     >
                       <Link href={`/blog/${post.id}`}>
                         Artikel lesen
@@ -192,7 +194,7 @@ export default function Blog() {
               <h3 className="text-2xl font-bold mb-4 text-primary-600">
                 Keine Artikel gefunden
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-neutral-600 mb-6">
                 Versuche andere Suchbegriffe oder wähle eine andere Kategorie.
               </p>
               <Button onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}>
@@ -209,20 +211,20 @@ export default function Blog() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-primary-600">
             Bleib auf dem Laufenden
           </h2>
-          <p className="text-xl mb-8 text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 text-neutral-600 max-w-2xl mx-auto">
             Erhalte unsere neuesten CrossFit Tipps, Trainingsartikel und Erfolgsgeschichten aus Berlin-Mitte direkt in dein Postfach.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Deine E-Mail Adresse"
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="flex-1 px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             <Button className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3">
               Newsletter abonnieren
             </Button>
           </div>
-          <p className="text-sm text-gray-500 mt-3">
+          <p className="text-sm text-neutral-500 mt-3">
             Kostenlos und jederzeit abbestellbar. Deine Daten sind bei uns sicher.
           </p>
         </div>

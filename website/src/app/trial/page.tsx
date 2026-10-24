@@ -6,19 +6,14 @@ import { Button } from "@/components/ui/button";
 import { trackCTAClick, trackTrialBooking } from "@/lib/analytics";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { 
-  Check, 
-  Calendar, 
-  Clock, 
-  Users, 
+    Calendar,
+    Users,
   Award, 
   ArrowRight,
   Dumbbell,
   Heart,
-  Star,
-  Phone,
-  Mail
-} from "lucide-react";
-import Image from "next/image";
+    Phone,
+  } from "lucide-react";
 
 export default function TrialPage() {
   const benefits = [
@@ -68,7 +63,7 @@ export default function TrialPage() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-svh">
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 pt-20">
         {/* Background Pattern */}
@@ -125,7 +120,7 @@ export default function TrialPage() {
             <Link href="/contact#booking">
               <Button 
                 size="lg" 
-                className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-button text-base h-14 px-8 rounded-button"
+                className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out font-button text-base h-14 px-8 rounded-button"
                 onClick={() => {
                   trackCTAClick('trial_booking_hero', 'trial_page');
                   trackTrialBooking();
@@ -204,7 +199,7 @@ export default function TrialPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-heading">
-              So funktioniert's
+              So funktioniert&apos;s
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-body">
               In 4 einfachen Schritten zu deinem Probetraining
@@ -261,7 +256,7 @@ export default function TrialPage() {
               <Link href="/contact#booking">
                 <Button 
                   size="lg" 
-                  className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-button text-base h-14 px-8 rounded-button"
+                  className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out font-button text-base h-14 px-8 rounded-button"
                 >
                   <Calendar className="mr-2 h-5 w-5" />
                   Jetzt buchen

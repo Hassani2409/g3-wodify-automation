@@ -19,7 +19,14 @@ export interface AnalyticsEventData {
   event_category?: string;
   event_label?: string;
   value?: number;
-  [key: string]: any;
+  [key: string]: unknown;
+}
+
+declare global {
+  interface Window {
+    gtag?: (command: 'event', name: AnalyticsEvent, data: AnalyticsEventData) => void;
+    fbq?: (command: 'track', name: 'CustomEvent', data: AnalyticsEventData) => void;
+  }
 }
 
 /**
@@ -30,16 +37,16 @@ export interface AnalyticsEventData {
  */
 export function trackEvent(eventName: AnalyticsEvent, eventData?: AnalyticsEventData) {
   // Google Analytics 4
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', eventName, {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', eventName, {
       ...eventData,
       event_category: eventData?.event_category || 'engagement',
     });
   }
 
   // Facebook Pixel (optional)
-  if (typeof window !== 'undefined' && (window as any).fbq) {
-    (window as any).fbq('track', 'CustomEvent', {
+  if (typeof window !== 'undefined' && window.fbq) {
+    window.fbq('track', 'CustomEvent', {
       eventName,
       ...eventData,
     });

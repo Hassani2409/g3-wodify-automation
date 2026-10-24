@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Package, Truck, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react';
+import { type LucideIcon, Package, Truck, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getOrders, Order } from '@/lib/api/orders';
 import Link from 'next/link';
@@ -17,15 +17,7 @@ export default function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        if (!user || !token) {
-            router.push('/login?redirect=/shop/orders');
-            return;
-        }
-        loadOrders();
-    }, [user, token]);
-
-    const loadOrders = async () => {
+    const loadOrders = useCallback(async () => {
         if (!token) return;
         
         setIsLoading(true);
@@ -37,10 +29,18 @@ export default function OrdersPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        if (!user || !token) {
+            router.push('/login?redirect=/shop/orders');
+            return;
+        }
+        loadOrders();
+    }, [user, token, router, loadOrders]);
 
     const getStatusBadge = (status: string) => {
-        const statusConfig: Record<string, { label: string; variant: 'default' | 'destructive' | 'outline'; icon: any }> = {
+        const statusConfig: Record<string, { label: string; variant: 'default' | 'destructive' | 'outline'; icon: LucideIcon }> = {
             pending: { label: 'Ausstehend', variant: 'outline', icon: Clock },
             processing: { label: 'In Bearbeitung', variant: 'default', icon: Package },
             shipped: { label: 'Versendet', variant: 'default', icon: Truck },
@@ -63,28 +63,28 @@ export default function OrdersPage() {
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'border-yellow-500',
-            processing: 'border-blue-500',
+            processing: 'border-primary-500',
             shipped: 'border-purple-500',
             delivered: 'border-green-500',
             cancelled: 'border-red-500',
-            refunded: 'border-gray-500',
+            refunded: 'border-neutral-500',
         };
-        return colors[status.toLowerCase()] || 'border-gray-300';
+        return colors[status.toLowerCase()] || 'border-neutral-300';
     };
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-svh bg-background flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                    <p className="mt-4 text-gray-600 font-body">Bestellungen werden geladen...</p>
+                    <p className="mt-4 text-neutral-600 font-body">Bestellungen werden geladen...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-svh bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 {/* Header */}
                 <div className="mb-8">
@@ -102,11 +102,11 @@ export default function OrdersPage() {
                 {orders.length === 0 ? (
                     <Card>
                         <CardContent className="p-12 text-center">
-                            <Package className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                            <h2 className="text-2xl font-bold mb-2 text-gray-600 font-heading">
+                            <Package className="w-16 h-16 mx-auto mb-4 text-neutral-400" />
+                            <h2 className="text-2xl font-bold mb-2 text-neutral-600 font-heading">
                                 Noch keine Bestellungen
                             </h2>
-                            <p className="text-gray-500 mb-6 font-body">
+                            <p className="text-neutral-500 mb-6 font-body">
                                 Du hast noch keine Bestellungen aufgegeben.
                             </p>
                             <Link href="/shop">
@@ -138,7 +138,7 @@ export default function OrdersPage() {
                                                 
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                                     <div>
-                                                        <p className="text-sm text-gray-500 font-body">Bestelldatum</p>
+                                                        <p className="text-sm text-neutral-500 font-body">Bestelldatum</p>
                                                         <p className="font-semibold font-body">
                                                             {new Date(order.created_at).toLocaleDateString('de-DE', {
                                                                 year: 'numeric',
@@ -150,7 +150,7 @@ export default function OrdersPage() {
                                                         </p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm text-gray-500 font-body">Artikel</p>
+                                                        <p className="text-sm text-neutral-500 font-body">Artikel</p>
                                                         <p className="font-semibold font-body">
                                                             {order.items.length} {order.items.length === 1 ? 'Artikel' : 'Artikel'}
                                                         </p>
@@ -158,13 +158,13 @@ export default function OrdersPage() {
                                                 </div>
 
                                                 <div className="mb-4">
-                                                    <p className="text-sm text-gray-500 mb-2 font-body">Bestellte Artikel:</p>
+                                                    <p className="text-sm text-neutral-500 mb-2 font-body">Bestellte Artikel:</p>
                                                     <ul className="space-y-1">
                                                         {order.items.map((item, index) => (
                                                             <li key={index} className="text-sm font-body">
                                                                 {item.product_name} x{item.quantity}
                                                                 {item.size && ` (Größe: ${item.size})`}
-                                                                <span className="text-gray-500 ml-2">
+                                                                <span className="text-neutral-500 ml-2">
                                                                     - {(item.price * item.quantity).toFixed(2)}€
                                                                 </span>
                                                             </li>
@@ -175,21 +175,21 @@ export default function OrdersPage() {
 
                                             <div className="lg:text-right">
                                                 <div className="mb-2">
-                                                    <p className="text-sm text-gray-500 font-body">Zwischensumme</p>
+                                                    <p className="text-sm text-neutral-500 font-body">Zwischensumme</p>
                                                     <p className="text-lg font-semibold font-heading">
                                                         {order.subtotal.toFixed(2)}€
                                                     </p>
                                                 </div>
                                                 {order.shipping_cost > 0 && (
                                                     <div className="mb-2">
-                                                        <p className="text-sm text-gray-500 font-body">Versand</p>
+                                                        <p className="text-sm text-neutral-500 font-body">Versand</p>
                                                         <p className="text-lg font-semibold font-heading">
                                                             {order.shipping_cost.toFixed(2)}€
                                                         </p>
                                                     </div>
                                                 )}
                                                 <div className="pt-2 border-t">
-                                                    <p className="text-sm text-gray-500 font-body">Gesamt</p>
+                                                    <p className="text-sm text-neutral-500 font-body">Gesamt</p>
                                                     <p className="text-2xl font-bold text-accent-600 font-heading">
                                                         {order.total.toFixed(2)}€
                                                     </p>

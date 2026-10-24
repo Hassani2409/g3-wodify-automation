@@ -1,47 +1,30 @@
-import type { Metadata } from "next";
-import { Barlow_Condensed, Open_Sans, Montserrat } from "next/font/google";
-import localFont from "next/font/local";
+import type { Metadata, Viewport } from "next";
+import { Barlow_Condensed, Open_Sans } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import StructuredData from "@/components/StructuredData";
-import FloatingPhoneButton from "@/components/FloatingPhoneButton";
-import FloatingChatButton from "@/components/FloatingChatButton";
+import ContactButton from "@/components/ContactButton";
+import MotionProvider from "@/components/MotionProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 // G3 CrossFit Fonts
 const barlowCondensed = Barlow_Condensed({
-  variable: "--font-heading",
+  variable: "--font-barlow",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 const openSans = Open_Sans({
-  variable: "--font-sans",
+  variable: "--font-open-sans",
   subsets: ["latin"],
   weight: ["300", "400", "600", "700"],
   display: "swap",
 });
 
-const montserrat = Montserrat({
-  variable: "--font-button",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  display: "swap",
-});
-
-// G3 CrossFit Brand Font (Agency - optional)
-// Note: Agency fonts are loaded via CSS @font-face in globals.css
-// to avoid Turbopack compatibility issues with localFont
-const agencyBold = {
-  variable: "--font-agency-bold",
-};
-
-const agencyRegular = {
-  variable: "--font-agency-regular",
-};
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 export const metadata: Metadata = {
   title: {
@@ -118,16 +101,17 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body
-        className={`${barlowCondensed.variable} ${openSans.variable} ${montserrat.variable} ${agencyBold.variable} ${agencyRegular.variable} antialiased`}
+        className={`${barlowCondensed.variable} ${openSans.variable} antialiased`}
       >
         <StructuredData />
         <AuthProvider>
-          <Header />
+          <MotionProvider>
+          <SiteHeader />
           <Breadcrumbs />
           <main>{children}</main>
           <Footer />
-          <FloatingPhoneButton />
-          <FloatingChatButton />
+          <ContactButton />
+          </MotionProvider>
         </AuthProvider>
       </body>
     </html>

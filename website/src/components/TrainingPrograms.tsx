@@ -1,13 +1,12 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { Dumbbell, Trophy, TrendingUp, Clock, Users, Zap, ArrowRight } from "lucide-react";
+import { Dumbbell, Trophy, Clock, Users, Zap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import { specificUnsplashPhotos } from "@/lib/unsplash";
 
 const programs = [
   {
+    id: "crossfit-advanced",
     icon: Dumbbell,
     title: "CrossFit",
     tagline: "Constantly varied, high-intensity, functional movement",
@@ -30,6 +29,7 @@ const programs = [
     image: specificUnsplashPhotos.crossfitMain,
   },
   {
+    id: "olympic-lifting",
     icon: Trophy,
     title: "Olympic Weightlifting",
     tagline: "Snatch & Clean & Jerk Technik",
@@ -52,6 +52,7 @@ const programs = [
     image: specificUnsplashPhotos.weightliftingMain,
   },
   {
+    id: "strength-conditioning",
     icon: Zap,
     title: "Strength & Conditioning",
     tagline: "Maximalkraft und Muskelaufbau",
@@ -81,24 +82,16 @@ export default function TrainingPrograms() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <h2
             className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-heading"
           >
             Unsere Trainingsprogramme
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          </h2>
+          <p
             className="text-xl text-muted-foreground max-w-2xl mx-auto font-body"
           >
             Finde das perfekte Programm für deine Fitnessziele
-          </motion.p>
+          </p>
         </div>
 
         {/* Programs */}
@@ -106,27 +99,23 @@ export default function TrainingPrograms() {
           {programs.map((program, index) => {
             const Icon = program.icon;
             const isEven = index % 2 === 0;
-            
+
             return (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
                 className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 items-center`}
               >
                 {/* Image Section */}
-                <div className="flex-1 relative h-96 rounded-card overflow-hidden group">
+                <div className="program-image w-full lg:w-auto lg:flex-1 relative h-96 rounded-card overflow-hidden group">
                   <Image
                     src={program.image}
-                    alt={`${program.title} Training bei G3 CrossFit`}
+                    alt={`Symbolbild: ${program.title} Training`}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover transition-transform duration-400 "
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${program.gradient} opacity-40 group-hover:opacity-30 transition-opacity duration-300`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${program.gradient} opacity-40`} />
 
                   {/* Icon Badge */}
                   <div className="absolute top-6 left-6 p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
@@ -135,7 +124,7 @@ export default function TrainingPrograms() {
                 </div>
 
                 {/* Content Section */}
-                <div className="flex-1 space-y-6">
+                <div className="flex-1 min-w-0 space-y-6">
                   {/* Title & Tagline */}
                   <div>
                     <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2 font-heading">
@@ -209,23 +198,21 @@ export default function TrainingPrograms() {
                   </div>
 
                   {/* Example Workout */}
-                  <div className="p-4 bg-muted rounded-card border-l-4 border-primary-500">
+                  <div className="p-4 bg-muted rounded-card border border-border">
                     <p className="text-sm text-muted-foreground mb-1">Beispiel-Workout:</p>
                     <p className="font-mono text-foreground">{program.exampleWorkout}</p>
                   </div>
 
                   {/* CTAs */}
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button className={`${program.iconBg} hover:opacity-90 text-white font-button`}>
+                    <Button asChild className="font-button"><Link href="/contact#booking">
                       Probetraining buchen
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" className="border-2 font-button">
-                      Mehr erfahren
-                    </Button>
+                    </Link></Button>
+                    <Button asChild variant="outline" className="border-2 font-button"><Link href={`/training#${program.id}`}>Mehr erfahren</Link></Button>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

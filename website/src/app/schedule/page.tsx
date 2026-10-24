@@ -224,9 +224,9 @@ const courseTypes: Record<string, { label: string; color: string; lightColor: st
   foundations: { label: 'Foundations', color: 'bg-secondary-500', lightColor: 'bg-secondary-100', textColor: 'text-secondary-800' },
   olympic: { label: 'Olympic Lifting', color: 'bg-red-500', lightColor: 'bg-red-100', textColor: 'text-red-800' },
   gymnastics: { label: 'Gymnastics', color: 'bg-purple-500', lightColor: 'bg-purple-100', textColor: 'text-purple-800' },
-  strength: { label: 'Strength', color: 'bg-blue-500', lightColor: 'bg-blue-100', textColor: 'text-blue-800' },
+  strength: { label: 'Strength', color: 'bg-primary-500', lightColor: 'bg-primary-100', textColor: 'text-primary-800' },
   yoga: { label: 'Yoga', color: 'bg-teal-500', lightColor: 'bg-teal-100', textColor: 'text-teal-800' },
-  open: { label: 'Open Gym', color: 'bg-gray-500', lightColor: 'bg-gray-100', textColor: 'text-gray-800' }
+  open: { label: 'Open Gym', color: 'bg-neutral-500', lightColor: 'bg-neutral-100', textColor: 'text-neutral-800' }
 };
 
 const levels = ['Alle', 'Anfänger', 'Mittelstufe', 'Fortgeschritten', 'Alle Level'];
@@ -254,7 +254,7 @@ interface CourseDetailModalProps {
   onBook: (course: Course) => void;
   onJoinWaitlist: (course: Course) => void;
   isBooking: boolean;
-  user: any;
+  user: ReturnType<typeof useAuth>["user"];
 }
 
 interface SuccessModalProps {
@@ -299,7 +299,7 @@ const CourseDetailModal = ({ course, onClose, onBook, onJoinWaitlist, isBooking,
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-3 right-3 z-10 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full"
+              className="absolute top-3 right-3 z-10 text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 rounded-full"
               onClick={onClose}
             >
               <X className="w-5 h-5" />
@@ -311,7 +311,7 @@ const CourseDetailModal = ({ course, onClose, onBook, onJoinWaitlist, isBooking,
               <h2 className="text-3xl font-bold mb-3 text-primary-500 font-heading">
                 {course.name}
               </h2>
-              <p className="text-lg text-gray-600 mb-6 font-body">
+              <p className="text-lg text-neutral-600 mb-6 font-body">
                 {course.description}
               </p>
 
@@ -377,7 +377,7 @@ const CourseDetailModal = ({ course, onClose, onBook, onJoinWaitlist, isBooking,
                   <Button onClick={handleLogin} className="w-full text-lg py-3 font-semibold font-button">
                     Anmelden zum Buchen
                   </Button>
-                  <p className="text-center text-sm text-gray-600 font-body">
+                  <p className="text-center text-sm text-neutral-600 font-body">
                     Du musst angemeldet sein, um Kurse zu buchen
                   </p>
                 </div>
@@ -627,7 +627,7 @@ export default function SchedulePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 text-white bg-linear-to-br from-primary-500 to-secondary-500 overflow-hidden">
         <div
@@ -640,7 +640,7 @@ export default function SchedulePage() {
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white font-heading">
             Kursplan & Buchung
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto font-body">
+          <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto font-body">
             Finde dein nächstes Workout. Buche direkt online oder nutze unser Wodify-System.
           </p>
         </div>
@@ -665,7 +665,7 @@ export default function SchedulePage() {
                 <h3 className="text-3xl font-bold mb-4 text-primary-500 font-heading">
                   Wodify Kursplan
                 </h3>
-                <p className="text-lg text-gray-700 mb-8 leading-relaxed font-body">
+                <p className="text-lg text-neutral-700 mb-8 leading-relaxed font-body">
                   Hier wird der offizielle Wodify-Kursplan eingebettet. Mit dem iFrame-Code aus dem
                   Wodify-Adminbereich erhalten deine Mitglieder direkten Zugang zum Live-System mit:
                 </p>
@@ -673,28 +673,28 @@ export default function SchedulePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-sm">
                   <div className="bg-white rounded-lg p-4 shadow-sm">
                     <div className="font-semibold text-secondary-700 mb-2 font-heading">✓ Live-Synchronisation</div>
-                    <div className="text-gray-600 font-body">Alle Änderungen sofort sichtbar</div>
+                    <div className="text-neutral-600 font-body">Alle Änderungen sofort sichtbar</div>
                   </div>
                   <div className="bg-white rounded-lg p-4 shadow-sm">
                     <div className="font-semibold text-secondary-700 mb-2 font-heading">✓ Direkte Buchungen</div>
-                    <div className="text-gray-600 font-body">Kurse buchen ohne Umwege</div>
+                    <div className="text-neutral-600 font-body">Kurse buchen ohne Umwege</div>
                   </div>
                   <div className="bg-white rounded-lg p-4 shadow-sm">
                     <div className="font-semibold text-secondary-700 mb-2 font-heading">✓ Wartelisten</div>
-                    <div className="text-gray-600 font-body">Automatische Verwaltung voller Kurse</div>
+                    <div className="text-neutral-600 font-body">Automatische Verwaltung voller Kurse</div>
                   </div>
                   <div className="bg-white rounded-lg p-4 shadow-sm">
                     <div className="font-semibold text-secondary-700 mb-2 font-heading">✓ Mitglieder-Login</div>
-                    <div className="text-gray-600 font-body">Zugang zu persönlichen Buchungen</div>
+                    <div className="text-neutral-600 font-body">Zugang zu persönlichen Buchungen</div>
                   </div>
                 </div>
 
-                <div className="bg-gray-100 p-6 rounded-lg text-left">
-                  <div className="text-sm font-semibold text-gray-700 mb-3 font-heading">
+                <div className="bg-neutral-100 p-6 rounded-lg text-left">
+                  <div className="text-sm font-semibold text-neutral-700 mb-3 font-heading">
                     📋 Für die Integration benötigt:
                   </div>
-                  <div className="bg-white p-4 rounded border font-mono text-sm text-gray-700 overflow-x-auto">
-                    <div className="text-secondary-600 mb-2">// Beispiel iFrame-Code aus Wodify:</div>
+                  <div className="bg-white p-4 rounded border font-mono text-sm text-neutral-700 overflow-x-auto">
+                    <div className="text-secondary-600 mb-2">{"// Beispiel iFrame-Code aus Wodify:"}</div>
                     <code>
                       &lt;iframe
                       <br />
@@ -709,7 +709,7 @@ export default function SchedulePage() {
                       &lt;/iframe&gt;
                     </code>
                   </div>
-                  <div className="text-xs text-gray-600 mt-2 font-body">
+                  <div className="text-xs text-neutral-600 mt-2 font-body">
                     Zu finden in: Wodify Admin → Settings → Website Integration
                   </div>
                 </div>
@@ -720,6 +720,11 @@ export default function SchedulePage() {
       </section>
 
       {/* Interactive Schedule Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6" aria-live="polite">
+        {isLoading && <p className="text-muted-foreground font-body" role="status">Kursplan wird aktualisiert…</p>}
+        {error && <p className="text-muted-foreground font-body">{error}</p>}
+      </div>
+
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -832,7 +837,7 @@ export default function SchedulePage() {
                           transition={{ duration: 0.3 }}
                         >
                           <Card
-                            className="h-full hover:shadow-lg transition-all duration-300 cursor-pointer border-l-4"
+                            className="h-full hover:shadow-lg transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out cursor-pointer border-l-4"
                             style={{borderLeftColor: typeInfo.color.replace('bg-', '')}}
                             onClick={() => setSelectedCourse(course)}
                           >
@@ -872,19 +877,19 @@ export default function SchedulePage() {
                                 </div>
                               </div>
 
-                              <p className="text-sm text-gray-600 mb-4 line-clamp-2 font-body">
+                              <p className="text-sm text-neutral-600 mb-4 line-clamp-2 font-body">
                                 {course.description}
                               </p>
 
                               <div className="flex items-center justify-between">
                                 <div className="flex-1">
-                                  <div className="bg-gray-200 rounded-full h-2 mr-4">
+                                  <div className="bg-neutral-200 rounded-full h-2 mr-4">
                                     <div
                                       className={`h-2 rounded-full ${typeInfo.color}`}
                                       style={{width: `${Math.min((course.spotsBooked / course.spotsTotal) * 100, 100)}%`}}
                                     />
                                   </div>
-                                  <div className="text-xs text-gray-500 mt-1 font-body">
+                                  <div className="text-xs text-neutral-500 mt-1 font-body">
                                     {course.spotsBooked}/{course.spotsTotal} gebucht
                                   </div>
                                 </div>
@@ -943,9 +948,9 @@ export default function SchedulePage() {
           {filteredCourses.length === 0 && (
             <Card className="py-12">
               <CardContent className="text-center">
-                <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <Calendar className="w-16 h-16 mx-auto mb-4 text-neutral-400" />
                 <h3 className="text-xl font-semibold mb-2 font-heading">Keine Kurse gefunden</h3>
-                <p className="text-gray-600 font-body">
+                <p className="text-neutral-600 font-body">
                   Versuche andere Filter-Einstellungen oder kontaktiere uns für weitere Optionen.
                 </p>
               </CardContent>

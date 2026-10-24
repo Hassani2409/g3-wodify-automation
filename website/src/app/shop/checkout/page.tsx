@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -36,15 +36,7 @@ export default function CheckoutPage() {
         customer_notes: '',
     });
 
-    useEffect(() => {
-        if (!user || !token) {
-            router.push('/login?redirect=/shop/checkout');
-            return;
-        }
-        loadCart();
-    }, [user, token]);
-
-    const loadCart = async () => {
+    const loadCart = useCallback(async () => {
         if (!token) return;
         
         setIsLoading(true);
@@ -60,7 +52,15 @@ export default function CheckoutPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [token, router]);
+
+    useEffect(() => {
+        if (!user || !token) {
+            router.push('/login?redirect=/shop/checkout');
+            return;
+        }
+        loadCart();
+    }, [user, token, router, loadCart]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -90,10 +90,10 @@ export default function CheckoutPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-svh bg-background flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                    <p className="mt-4 text-gray-600 font-body">Wird geladen...</p>
+                    <p className="mt-4 text-neutral-600 font-body">Wird geladen...</p>
                 </div>
             </div>
         );
@@ -101,7 +101,7 @@ export default function CheckoutPage() {
 
     if (orderSuccess) {
         return (
-            <div className="min-h-screen bg-background">
+            <div className="min-h-svh bg-background">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -114,7 +114,7 @@ export default function CheckoutPage() {
                         <h1 className="text-3xl font-bold mb-4 text-primary-700 font-heading">
                             Bestellung erfolgreich!
                         </h1>
-                        <p className="text-lg text-gray-600 mb-2 font-body">
+                        <p className="text-lg text-neutral-600 mb-2 font-body">
                             Vielen Dank für deine Bestellung.
                         </p>
                         {orderNumber && (
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-svh bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 {/* Header */}
                 <div className="mb-8">
@@ -313,7 +313,7 @@ export default function CheckoutPage() {
                                     <div className="space-y-2 mb-4">
                                         {cart.items.map((item) => (
                                             <div key={item.id} className="flex justify-between text-sm font-body">
-                                                <span className="text-gray-600">
+                                                <span className="text-neutral-600">
                                                     {item.product_name} x{item.quantity}
                                                 </span>
                                                 <span className="font-medium">
@@ -324,11 +324,11 @@ export default function CheckoutPage() {
                                     </div>
 
                                     <div className="space-y-3 mb-6 border-t pt-4">
-                                        <div className="flex justify-between text-gray-600 font-body">
+                                        <div className="flex justify-between text-neutral-600 font-body">
                                             <span>Zwischensumme</span>
                                             <span>{cart.subtotal.toFixed(2)}€</span>
                                         </div>
-                                        <div className="flex justify-between text-gray-600 font-body">
+                                        <div className="flex justify-between text-neutral-600 font-body">
                                             <span>Versand</span>
                                             <span>
                                                 {cart.shipping_cost === 0 ? (

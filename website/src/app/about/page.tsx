@@ -126,7 +126,7 @@ export default function AboutPage() {
     : coaches.filter(coach => coach.specializations.includes(selectedFilter));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden pt-20" id="story">
         <div 
@@ -170,7 +170,7 @@ export default function AboutPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative h-96 rounded-2xl overflow-hidden shadow-2xl"
             >
-              <Image 
+              <Image
                 src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop&q=80"
                 alt="G3 CrossFit Team in Aktion"
                 fill
@@ -200,7 +200,7 @@ export default function AboutPage() {
                   key={option.value}
                   type="button"
                   onClick={() => setSelectedFilter(option.value)}
-                  className={`px-4 py-2 text-sm font-medium transition-all font-button ${
+                  className={`px-4 py-2 text-sm font-medium transition-[color,background-color,border-color,box-shadow,transform,opacity] font-button ${
                     selectedFilter === option.value
                       ? 'bg-accent-500 text-white hover:bg-accent-600'
                       : 'bg-transparent border-2 border-muted text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -221,9 +221,9 @@ export default function AboutPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group border-2 border-primary-500/20 hover:border-primary-500">
+                <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out group border-2 border-primary-500/20 hover:border-primary-500">
                   <div className="relative h-80">
-                    <Image 
+                    <Image
                       src={coach.image}
                       alt={coach.name}
                       fill
@@ -286,7 +286,7 @@ export default function AboutPage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Card className="text-center p-8 border-2 border-primary-500/20 hover:border-primary-500 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  <Card className="text-center p-8 border-2 border-primary-500/20 hover:border-primary-500 hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-105">
                     <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 bg-accent-50">
                       <IconComponent className="w-8 h-8 text-accent-500" />
                     </div>
@@ -414,7 +414,7 @@ export default function AboutPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 asChild
-                className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold text-lg px-8 py-4 rounded-button shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold text-lg px-8 py-4 rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-105"
               >
                 <Link href="/contact">
                   Kostenloses Probetraining buchen
@@ -422,7 +422,7 @@ export default function AboutPage() {
               </Button>
               <Button
                 asChild
-                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary-800 font-button font-semibold text-lg px-8 py-4 rounded-button transition-all duration-300"
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary-800 font-button font-semibold text-lg px-8 py-4 rounded-button transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out"
               >
                 <Link href="/contact">
                   Team kontaktieren

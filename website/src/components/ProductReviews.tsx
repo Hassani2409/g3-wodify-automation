@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,11 +26,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    useEffect(() => {
-        loadReviews();
-    }, [productId]);
-
-    const loadReviews = async () => {
+    const loadReviews = useCallback(async () => {
         setIsLoading(true);
         try {
             const fetchedReviews = await getProductReviews(productId);
@@ -40,7 +36,11 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [productId]);
+
+    useEffect(() => {
+        loadReviews();
+    }, [loadReviews]);
 
     const handleSubmitReview = async () => {
         if (!token || !user) {
@@ -120,7 +120,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
                                     className={`w-5 h-5 ${
                                         star <= Math.round(averageRating)
                                             ? 'fill-yellow-400 text-yellow-400'
-                                            : 'text-gray-300'
+                                            : 'text-neutral-300'
                                     }`}
                                 />
                             ))}
@@ -128,7 +128,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
                         <span className="text-lg font-semibold font-heading">
                             {averageRating.toFixed(1)}
                         </span>
-                        <span className="text-gray-500 font-body">
+                        <span className="text-neutral-500 font-body">
                             ({reviews.length} {reviews.length === 1 ? 'Bewertung' : 'Bewertungen'})
                         </span>
                     </div>
@@ -162,7 +162,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
                                                 className={`w-8 h-8 transition-colors ${
                                                     star <= rating
                                                         ? 'fill-yellow-400 text-yellow-400'
-                                                        : 'text-gray-300'
+                                                        : 'text-neutral-300'
                                                 }`}
                                             />
                                         </button>
@@ -228,13 +228,13 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
                                     <span className="text-sm font-body">{star}</span>
                                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                                 </div>
-                                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                <div className="flex-1 bg-neutral-200 rounded-full h-2">
                                     <div
                                         className="bg-yellow-400 h-2 rounded-full"
                                         style={{ width: `${percentage}%` }}
                                     />
                                 </div>
-                                <span className="text-sm text-gray-600 w-12 text-right font-body">
+                                <span className="text-sm text-neutral-600 w-12 text-right font-body">
                                     {count}
                                 </span>
                             </div>
@@ -251,7 +251,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
             ) : reviews.length === 0 ? (
                 <Card>
                     <CardContent className="p-8 text-center">
-                        <p className="text-gray-500 font-body">
+                        <p className="text-neutral-500 font-body">
                             Noch keine Bewertungen. Sei der Erste!
                         </p>
                     </CardContent>
@@ -287,11 +287,11 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
                                                         className={`w-4 h-4 ${
                                                             star <= review.rating
                                                                 ? 'fill-yellow-400 text-yellow-400'
-                                                                : 'text-gray-300'
+                                                                : 'text-neutral-300'
                                                         }`}
                                                     />
                                                 ))}
-                                                <span className="text-sm text-gray-500 font-body">
+                                                <span className="text-sm text-neutral-500 font-body">
                                                     {new Date(review.created_at).toLocaleDateString('de-DE')}
                                                 </span>
                                             </div>
@@ -303,14 +303,14 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
                                         </h5>
                                     )}
                                     {review.comment && (
-                                        <p className="text-gray-700 mb-4 font-body">
+                                        <p className="text-neutral-700 mb-4 font-body">
                                             {review.comment}
                                         </p>
                                     )}
                                     <div className="flex items-center gap-4">
                                         <button
                                             onClick={() => handleMarkHelpful(review.id)}
-                                            className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors font-body"
+                                            className="flex items-center gap-2 text-sm text-neutral-600 hover:text-primary-600 transition-colors font-body"
                                         >
                                             <ThumbsUp className="w-4 h-4" />
                                             <span>Hilfreich ({review.helpful_count})</span>

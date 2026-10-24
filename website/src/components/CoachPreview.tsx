@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Award, Users, TrendingUp } from "lucide-react";
 import Link from "next/link";
@@ -57,50 +54,42 @@ const stats = [
 
 export default function CoachPreview() {
   return (
-    <section className="py-24 bg-zinc-900 relative overflow-hidden">
+    <section className="py-24 bg-neutral-900 relative overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-5" />
-      
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm font-medium mb-6">
             Unser Team
           </div>
-          
+
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             Lerne von den Besten
           </h2>
-          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
             Unsere zertifizierten Coaches bringen jahrelange Erfahrung und Leidenschaft mit
           </p>
-        </motion.div>
+        </div>
 
+        <p className="text-center text-primary-100 mb-8 text-sm">Porträts als Platzhalter · Originalfotos folgen</p>
         {/* Coaches Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {coaches.map((coach, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group"
             >
-              <div className="h-full p-8 rounded-2xl border border-primary-200 bg-card hover:border-primary-500 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
+              <div className="h-full p-8 rounded-2xl border border-primary-200 bg-card hover:border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out ">
                 {/* Coach Image */}
-                <div className="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary-500 group-hover:border-accent-500 transition-all duration-300">
+                <div className="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary-500  transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out">
                   <Image
                     src={coach.image}
-                    alt={`${coach.name} - ${coach.role} bei G3 CrossFit`}
+                    alt="Platzhalter für ein Coach-Porträt"
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="object-cover  transition-transform duration-500"
                     sizes="128px"
                   />
                 </div>
@@ -139,16 +128,12 @@ export default function CoachPreview() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+        <div
           className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
         >
           {stats.map((stat, index) => {
@@ -156,40 +141,34 @@ export default function CoachPreview() {
             return (
               <div
                 key={index}
-                className="text-center p-8 rounded-2xl bg-zinc-800/30 backdrop-blur-sm border border-zinc-700/50"
+                className="text-center p-8 rounded-2xl bg-neutral-800/30 backdrop-blur-sm border border-neutral-700/50"
               >
-                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <Icon className="w-7 h-7 text-emerald-400" />
+                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center">
+                  <Icon className="w-7 h-7 text-primary-400" />
                 </div>
                 <div className="text-4xl font-bold text-white mb-2">
                   {stat.value}
                 </div>
-                <div className="text-zinc-400">
+                <div className="text-neutral-400">
                   {stat.label}
                 </div>
               </div>
             );
           })}
-        </motion.div>
+        </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+        <div
           className="text-center"
         >
-          <Link href="/coaches">
-            <Button
+          <Button asChild
               size="lg"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all duration-300 group"
-            >
+              className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg shadow-primary-500/50 hover:shadow-primary-500/70 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out group"
+            ><Link href="/coaches">
               Alle Coaches kennenlernen
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-        </motion.div>
+            </Link></Button>
+        </div>
       </div>
     </section>
   );

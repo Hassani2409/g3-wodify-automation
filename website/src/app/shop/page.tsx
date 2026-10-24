@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import Image from "next/image";
+
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +20,6 @@ export default function Shop() {
     const router = useRouter();
     const { user, token } = useAuth();
     const [products, setProducts] = useState<Product[]>([]);
-    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
@@ -32,10 +33,6 @@ export default function Shop() {
     useEffect(() => {
         loadProducts();
     }, []);
-
-    useEffect(() => {
-        filterProducts();
-    }, [products, selectedCategory, searchQuery, sortBy, minPrice, maxPrice, inStockOnly, featuredOnly]);
 
     const loadProducts = async () => {
         setIsLoading(true);
@@ -51,7 +48,7 @@ export default function Shop() {
         }
     };
 
-    const filterProducts = () => {
+    const filteredProducts = useMemo(() => {
         let filtered = [...products];
 
         if (selectedCategory !== 'all') {
@@ -88,8 +85,8 @@ export default function Shop() {
             }
         });
 
-        setFilteredProducts(filtered);
-    };
+        return filtered;
+    }, [products, selectedCategory, searchQuery, sortBy, minPrice, maxPrice, inStockOnly, featuredOnly]);
 
     const handleResetFilters = () => {
         setSelectedCategory('all');
@@ -130,7 +127,7 @@ export default function Shop() {
     };
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-svh bg-background">
             {/* Hero Section */}
             <section className="relative py-20 text-white" style={{background: 'linear-gradient(135deg, #2A5D3C 0%, #1a3a26 100%)'}}>
                 <div 
@@ -146,7 +143,7 @@ export default function Shop() {
                         transition={{ duration: 0.8 }}
                     >
                         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white font-heading">G3 CrossFit Shop</h1>
-                        <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto mb-8 font-body">
+                        <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto mb-8 font-body">
                             Hochwertige CrossFit-Ausrüstung und G3-Merchandise für dein Training
                         </p>
                         <div className="inline-flex items-center space-x-2 bg-white/20 rounded-lg px-4 py-2 backdrop-blur-sm">
@@ -209,11 +206,11 @@ export default function Shop() {
                         </div>
 
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400" />
                             <input
                                 type="text"
                                 placeholder="Produkte suchen..."
-                                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 w-64 font-body"
+                                className="pl-10 pr-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 w-64 font-body"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
@@ -228,7 +225,7 @@ export default function Shop() {
                     {isLoading ? (
                         <div className="text-center py-16">
                             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                            <p className="mt-4 text-gray-600 font-body">Produkte werden geladen...</p>
+                            <p className="mt-4 text-neutral-600 font-body">Produkte werden geladen...</p>
                         </div>
                     ) : (
                         <>
@@ -240,13 +237,13 @@ export default function Shop() {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.5 }}
                                     >
-                                        <Card className="group overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-full flex flex-col">
+                                        <Card className="group overflow-hidden shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out transform hover:scale-105 h-full flex flex-col">
                                             <div className="relative cursor-pointer" onClick={() => router.push(`/shop/${product.id}`)}>
-                                                <img 
+                                                <Image
                                                     src={product.images?.[0] || "https://images.unsplash.com/photo-1594882645126-14020914d58d?auto=format&fit=crop&w=600&q=80"}
                                                     alt={product.name}
                                                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                                                />
+                                                width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                                 {product.featured && (
                                                     <Badge className="absolute top-3 left-3 bg-accent-500 text-white">
                                                         <Star className="w-3 h-3 mr-1" />
@@ -272,7 +269,7 @@ export default function Shop() {
                                                             {product.name}
                                                         </h3>
                                                     </Link>
-                                                    <p className="text-sm text-gray-600 line-clamp-2 mb-3 font-body">
+                                                    <p className="text-sm text-neutral-600 line-clamp-2 mb-3 font-body">
                                                         {product.description}
                                                     </p>
                                                 </div>
@@ -282,7 +279,7 @@ export default function Shop() {
                                                         {product.price.toFixed(2)}€
                                                     </span>
                                                     {product.sizes && product.sizes.length > 0 && (
-                                                        <div className="text-xs text-gray-500 font-body">
+                                                        <div className="text-xs text-neutral-500 font-body">
                                                             Größen: {product.sizes.join(', ')}
                                                         </div>
                                                     )}
@@ -304,11 +301,11 @@ export default function Shop() {
                             
                             {filteredProducts.length === 0 && !isLoading && (
                                 <div className="text-center py-16">
-                                    <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                                    <h3 className="text-2xl font-semibold mb-2 text-gray-600 font-heading">
+                                    <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-neutral-400" />
+                                    <h3 className="text-2xl font-semibold mb-2 text-neutral-600 font-heading">
                                         Keine Produkte gefunden
                                     </h3>
-                                    <p className="text-gray-500 font-body">
+                                    <p className="text-neutral-500 font-body">
                                         Versuche eine andere Suche oder Kategorie.
                                     </p>
                                 </div>

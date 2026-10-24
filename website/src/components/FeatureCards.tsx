@@ -1,7 +1,5 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Users, Award, Clock, Heart, TrendingUp, Dumbbell } from "lucide-react";
 
 const features = [
@@ -52,19 +50,19 @@ const features = [
 const colorClasses = {
   primary: {
     icon: "text-primary-500",
-    border: "border-primary-500/20 hover:border-primary-500",
+    border: "border-primary-500/20",
     bg: "bg-primary-50",
     badge: "bg-primary-100 text-primary-700",
   },
   secondary: {
     icon: "text-secondary-500",
-    border: "border-secondary-500/20 hover:border-secondary-500",
+    border: "border-secondary-500/20",
     bg: "bg-secondary-50",
     badge: "bg-secondary-100 text-secondary-700",
   },
   accent: {
     icon: "text-accent-500",
-    border: "border-accent-500/20 hover:border-accent-500",
+    border: "border-accent-500/20",
     bg: "bg-accent-50",
     badge: "bg-accent-100 text-accent-700",
   },
@@ -76,24 +74,16 @@ export default function FeatureCards() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <h2
             className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-heading"
           >
             Warum G3 CrossFit?
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          </h2>
+          <p
             className="text-xl text-muted-foreground max-w-2xl mx-auto font-body"
           >
             Entdecke, was uns zur besten CrossFit Box in Berlin macht
-          </motion.p>
+          </p>
         </div>
 
         {/* Feature Grid */}
@@ -101,18 +91,14 @@ export default function FeatureCards() {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             const colors = colorClasses[feature.color as keyof typeof colorClasses];
-            
+
             return (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`group relative p-8 bg-card rounded-card border-2 ${colors.border} transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1`}
+                className={`feature-card relative p-8 bg-card rounded-card border-2 ${colors.border} transition-[border-color,box-shadow] duration-200 ease-out  `}
               >
                 {/* Icon */}
-                <div className={`inline-flex p-4 rounded-card ${colors.bg} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`inline-flex p-4 rounded-card ${colors.bg} mb-6  transition-transform duration-300`}>
                   <Icon className={`h-8 w-8 ${colors.icon}`} />
                 </div>
 
@@ -130,28 +116,22 @@ export default function FeatureCards() {
                 <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${colors.badge}`}>
                   ✓ {feature.benefit}
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
         {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+        <div
           className="text-center mt-16"
         >
           <p className="text-lg text-muted-foreground mb-6 font-body">
             Überzeuge dich selbst von unserer Community
           </p>
-          <Link href="/contact#booking">
-            <button className="px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button asChild className="h-auto min-h-12 whitespace-normal px-6 py-4 bg-primary-500 hover:bg-primary-600 text-white font-button font-semibold rounded-button shadow-lg  transition-[border-color,box-shadow] duration-200 ease-out"><Link href="/contact#booking">
               Jetzt kostenloses Probetraining buchen
-            </button>
-          </Link>
-        </motion.div>
+            </Link></Button>
+        </div>
       </div>
     </section>
   );

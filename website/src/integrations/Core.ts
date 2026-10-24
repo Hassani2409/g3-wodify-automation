@@ -94,15 +94,15 @@ export async function InvokeLLM({ prompt, context }: InvokeLLMParams): Promise<s
 
             const data = await response.json();
             return data.response || data.message || fallbackResponse;
-        } catch (fetchError: any) {
+        } catch (fetchError: unknown) {
             // If fetch fails (network error, timeout, etc.), use fallback
             clearTimeout(timeoutId);
-            if (fetchError.name !== 'AbortError') {
-                console.warn("API request failed, using fallback response:", fetchError.message);
+            if (!(fetchError instanceof Error && fetchError.name === 'AbortError')) {
+                console.warn("API request failed, using fallback response:", fetchError instanceof Error ? fetchError.message : String(fetchError));
             }
             return fallbackResponse;
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error invoking LLM:", error);
         // Final fallback
         return fallbackResponse;

@@ -1,14 +1,14 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState, useEffect } from 'react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Minus, Star, ShoppingCart, Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { getProduct, Product } from '@/lib/api/products';
 import { addToCart } from '@/lib/api/cart';
 import { addToWishlist, removeFromWishlist, isInWishlist } from '@/lib/api/wishlist';
@@ -20,7 +20,7 @@ export default function ProductDetailPage() {
     const router = useRouter();
     const pathname = usePathname();
     const params = useParams();
-    const { user, token } = useAuth();
+    const { token } = useAuth();
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedSize, setSelectedSize] = useState<string>('');
@@ -37,9 +37,18 @@ export default function ProductDetailPage() {
     }, [params.id]);
 
     useEffect(() => {
-        if (product && token) {
-            checkWishlistStatus();
-        }
+        let active = true;
+        const checkWishlistStatus = async () => {
+            if (!product || !token) return;
+            try {
+                const inWishlist = await isInWishlist(product.id, token);
+                if (active) setIsInWishlistState(inWishlist);
+            } catch (error) {
+                console.error('Error checking wishlist:', error);
+            }
+        };
+        checkWishlistStatus();
+        return () => { active = false; };
     }, [product, token]);
 
     const loadProduct = async (id: string) => {
@@ -54,16 +63,6 @@ export default function ProductDetailPage() {
             console.error('Error loading product:', error);
         } finally {
             setIsLoading(false);
-        }
-    };
-
-    const checkWishlistStatus = async () => {
-        if (!product || !token) return;
-        try {
-            const inWishlist = await isInWishlist(product.id, token);
-            setIsInWishlistState(inWishlist);
-        } catch (error) {
-            console.error('Error checking wishlist:', error);
         }
     };
 
@@ -137,10 +136,10 @@ export default function ProductDetailPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-svh bg-background flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                    <p className="mt-4 text-gray-600 font-body">Produkt wird geladen...</p>
+                    <p className="mt-4 text-neutral-600 font-body">Produkt wird geladen...</p>
                 </div>
             </div>
         );
@@ -148,10 +147,10 @@ export default function ProductDetailPage() {
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-background">
+            <div className="min-h-svh bg-background">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <div className="text-center py-16">
-                        <h2 className="text-2xl font-bold mb-2 text-gray-600 font-heading">
+                        <h2 className="text-2xl font-bold mb-2 text-neutral-600 font-heading">
                             Produkt nicht gefunden
                         </h2>
                         <Link href="/shop">
@@ -168,7 +167,7 @@ export default function ProductDetailPage() {
     const images = product.images || ["https://images.unsplash.com/photo-1594882645126-14020914d58d?auto=format&fit=crop&w=800&q=80"];
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-svh bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 {/* Back Button */}
                 <Link href="/shop">
@@ -182,11 +181,11 @@ export default function ProductDetailPage() {
                     {/* Product Images */}
                     <div>
                         <div className="mb-4">
-                            <img
+                            <Image
                                 src={images[selectedImage]}
                                 alt={product.name}
                                 className="w-full h-96 object-cover rounded-lg shadow-lg"
-                            />
+                            width={1200} height={800} sizes="(max-width: 768px) 100vw, 50vw" />
                         </div>
                         {images.length > 1 && (
                             <div className="grid grid-cols-4 gap-4">
@@ -200,11 +199,11 @@ export default function ProductDetailPage() {
                                                 : 'border-transparent'
                                         }`}
                                     >
-                                        <img
+                                        <Image
                                             src={img}
                                             alt={`${product.name} ${index + 1}`}
                                             className="w-full h-24 object-cover"
-                                        />
+                                        width={160} height={160} sizes="(max-width: 768px) 25vw, 160px" />
                                     </button>
                                 ))}
                             </div>
@@ -234,7 +233,7 @@ export default function ProductDetailPage() {
                         </p>
 
                         <div className="mb-6">
-                            <p className="text-gray-700 leading-relaxed font-body">
+                            <p className="text-neutral-700 leading-relaxed font-body">
                                 {product.description}
                             </p>
                         </div>
@@ -324,7 +323,7 @@ export default function ProductDetailPage() {
 
                         <div className="mt-8 pt-8 border-t">
                             <h3 className="font-semibold mb-2 font-heading">Versandinformationen</h3>
-                            <ul className="text-sm text-gray-600 space-y-1 font-body">
+                            <ul className="text-sm text-neutral-600 space-y-1 font-body">
                                 <li>• Kostenloser Versand ab 50€</li>
                                 <li>• Standardversand: 5,99€</li>
                                 <li>• Lieferzeit: 2-5 Werktage</li>
