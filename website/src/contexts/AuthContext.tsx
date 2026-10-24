@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useSyncExternalStore, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -25,27 +25,21 @@ interface AuthContextType {
   refreshToken: () => Promise<void>;
 }
 
+const subscribeHydration = () => () => {};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const hydrated = useSyncExternalStore(subscribeHydration, () => true, () => false);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try { return JSON.parse(localStorage.getItem('user') || 'null'); }
+    catch { return null; }
+  });
+  const [token, setToken] = useState<string | null>(() =>
+    typeof window === 'undefined' ? null : localStorage.getItem('access_token'));
+  const isLoading = !hydrated;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem('access_token');
-    const storedUser = localStorage.getItem('user');
-    
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-    }
-    
-    setIsLoading(false);
-  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -162,8 +156,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        user,
-        token,
+        user: hydrated && token ? user : null,
+        token: hydrated ? token : null,
         isLoading,
         login,
         register,

@@ -64,7 +64,7 @@ Das G3 CrossFit Design System bietet eine konsistente Basis für alle UI-Kompone
 - **Verwendung:** Fließtext, Beschreibungen
 - **CSS Variable:** `--font-sans`
 
-#### Button Font: Montserrat
+#### Button Font: Open Sans
 - **Gewichte:** 500, 600, 700
 - **Verwendung:** Buttons, Labels
 - **CSS Variable:** `--font-button`
@@ -283,12 +283,12 @@ shadow-2xl   /* Extrem großer Schatten */
 
 ### Standard Transition
 ```tsx
-className="transition-all duration-300"
+className="transition-[background-color,color,border-color,transform] duration-160 ease-out"
 ```
 
 ### Hover Effects
 ```tsx
-className="hover:scale-105 hover:shadow-lg transition-all duration-300"
+className="active:scale-[0.97] hover:shadow-lg transition-[background-color,color,border-color,transform] duration-160 ease-out"
 ```
 
 ### Framer Motion

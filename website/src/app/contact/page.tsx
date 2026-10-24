@@ -1,54 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { site } from "@/lib/site";
+import Directions from "@/components/Directions";
+
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
-  MapPin, Phone, Mail, Clock, CheckCircle, 
-  Car, Train, Bus, Dumbbell, ArrowRight, ArrowLeft, Loader2, AlertCircle
+  MapPin, Phone, Mail, CheckCircle,
+  Dumbbell, ArrowRight, ArrowLeft, Loader2, AlertCircle
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const contactPeople = [
-  {
-    name: "Denis",
-    role: "Studio-Leitung & Head Coach",
-    email: "denis@g3crossfit.de",
-    phone: "+49 30 1234 5678",
-    specialties: ["Mitgliedschaften", "Personal Training", "Allgemeine Fragen"]
-  },
-  {
-    name: "Sarah",
-    role: "Community Management",
-    email: "sarah@g3crossfit.de", 
-    phone: "+49 30 1234 5679",
-    specialties: ["Events", "Community", "Social Media"]
-  },
-  {
-    name: "Michael",
-    role: "Senior Coach",
-    email: "michael@g3crossfit.de",
-    phone: "+49 30 1234 5680", 
-    specialties: ["CrossFit Classes", "Wettkampfvorbereitung", "Techniktraining"]
-  }
-];
-
-const openingHours = [
-  { day: "Montag", hours: "6:00 - 21:00", highlight: false },
-  { day: "Dienstag", hours: "6:00 - 21:00", highlight: false },
-  { day: "Mittwoch", hours: "6:00 - 21:00", highlight: false },
-  { day: "Donnerstag", hours: "6:00 - 21:00", highlight: false },
-  { day: "Freitag", hours: "6:00 - 21:00", highlight: false },
-  { day: "Samstag", hours: "8:00 - 18:00", highlight: true },
-  { day: "Sonntag", hours: "9:00 - 16:00", highlight: true }
-];
+const contactPeople = [{ name: site.name, role: "Dein Kontakt zur Box", email: site.email, phone: site.phone, specialties: ["Probetraining", "Mitgliedschaft", "Training"] }];
 
 interface FormErrors {
   [key: string]: string;
 }
 
 export default function ContactPage() {
+  const submission = useRef<{ payload: string; key: string } | null>(null);
+  const [requestId, setRequestId] = useState<string | null>(null);
   const [step, setStep] = useState<number | 'success'>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingType, setBookingType] = useState<'trial' | 'drop-in'>('trial');
@@ -114,7 +87,7 @@ export default function ContactPage() {
         // Erlaubt: +, Ziffern, Klammern
         const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[0-9]{4,14}$/;
         if (!phoneRegex.test(cleanedPhone)) {
-          newErrors.phone = "Bitte gib eine gültige Telefonnummer ein (z.B. +49 30 12345678 oder 030 12345678)";
+          newErrors.phone = "Bitte gib eine gültige Telefonnummer ein (z.B. 0160 55 718 66 oder 030 12345678)";
         } else if (cleanedPhone.length < 5) {
           newErrors.phone = "Telefonnummer muss mindestens 5 Zeichen lang sein";
         } else if (bookingFormData.phone.length > 50) {
@@ -157,7 +130,7 @@ export default function ContactPage() {
     
     if (currentStep === 3) {
       if (!bookingFormData.privacy) {
-        newErrors.privacy = "Du musst die Datenschutzerklärung akzeptieren";
+        newErrors.privacy = "Bitte bestätige den Datenschutzhinweis";
       }
     }
     
@@ -201,7 +174,7 @@ export default function ContactPage() {
     
     try {
       // Split name into first and last name if needed
-      const [firstName, ...lastNameParts] = bookingFormData.firstName.split(' ');
+      const [, ...lastNameParts] = bookingFormData.firstName.split(' ');
       const lastName = lastNameParts.join(' ') || bookingFormData.lastName || '';
       
       // Prepare data for WODIFY API
@@ -215,17 +188,22 @@ export default function ContactPage() {
         booking_date: bookingFormData.date || undefined,
         booking_time: bookingFormData.time || undefined,
         experience_level: bookingFormData.experience || undefined,
-        source: 'Website Contact Form'
+        source: 'Website Contact Form',
+        privacy_acknowledged: bookingFormData.privacy
       };
 
-      // Call backend API to create lead in WODIFY
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${apiUrl}/api/leads`, {
+      const payload = JSON.stringify(leadData);
+      if (!submission.current || submission.current.payload !== payload) {
+        submission.current = { payload, key: crypto.randomUUID() };
+      }
+      const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Idempotency-Key': submission.current.key,
         },
-        body: JSON.stringify(leadData),
+        body: payload,
+        signal: AbortSignal.timeout(15000),
       });
 
       if (!response.ok) {
@@ -246,12 +224,12 @@ export default function ContactPage() {
 
       const result = await response.json();
       
-      // Log success (optional, für Debugging)
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Lead created successfully:', result);
+      if (result.success !== true || !result.request_id) {
+        throw new Error("Die Speicherung konnte nicht bestätigt werden. Bitte versuche es erneut.");
       }
       
       // Success - show success screen
+      setRequestId(result.request_id);
       setStep('success');
     } catch (error) {
       console.error('Error submitting booking:', error);
@@ -266,7 +244,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden pt-20">
         <div className="absolute inset-0 opacity-10">
@@ -291,8 +269,8 @@ export default function ContactPage() {
               Wir sind für dich da. Kontaktiere uns für Fragen, Beratung oder dein kostenloses Probetraining.
             </p>
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
-              <CheckCircle className="w-5 h-5 text-accent-500" />
-              <span className="font-medium font-body">Antwort innerhalb von 24 Stunden garantiert</span>
+              <CheckCircle className="w-5 h-5 text-primary-500" />
+              <span className="font-medium font-body">Wir melden uns persönlich bei dir</span>
             </div>
           </motion.div>
         </div>
@@ -302,9 +280,9 @@ export default function ContactPage() {
       <section id="booking" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground font-heading">Direkt buchen</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground font-heading">Probetraining anfragen</h2>
             <p className="text-xl text-muted-foreground font-body">
-              Sichere dir deinen Platz für ein kostenloses Probetraining oder einen Drop-In.
+              Sende uns deinen Terminwunsch. Ein Termin steht erst nach persönlicher Bestätigung fest. E-Mails und Automatisierungen laufen derzeit nur im Testmodus.
             </p>
           </div>
           
@@ -319,7 +297,10 @@ export default function ContactPage() {
                   <CheckCircle className="w-16 h-16 mx-auto mb-6 text-secondary-500" />
                   <h3 className="text-3xl font-bold mb-4 text-secondary-700 font-heading">Anfrage gesendet!</h3>
                   <p className="text-lg mb-8 max-w-lg mx-auto text-muted-foreground font-body">
-                    Vielen Dank, {bookingFormData.firstName}! Wir haben deine Anfrage für den <strong>{new Date(bookingFormData.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong> erhalten und werden uns innerhalb von 24 Stunden bei dir melden.
+                    Vielen Dank, {bookingFormData.firstName}! Wir haben deine Anfrage für den <strong>{new Date(bookingFormData.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong> gespeichert. Dein Wunschtermin ist noch nicht bestätigt.
+                    <br /><br />
+                    <strong>Testmodus:</strong> E-Mails und Automatisierungen werden nur als Vorschau erstellt. Es wurde keine E-Mail verschickt.
+                    {requestId && <span className="block mt-3 text-sm">Anfragenummer: {requestId}</span>}
                     {bookingType === 'drop-in' && (
                       <>
                         <br/><br/>
@@ -330,6 +311,8 @@ export default function ContactPage() {
                   <Button 
                     onClick={() => {
                       setStep(1);
+                      submission.current = null;
+                      setRequestId(null);
                       setBookingFormData({
                         firstName: '',
                         lastName: '',
@@ -356,9 +339,11 @@ export default function ContactPage() {
                       onClick={() => {
                         setBookingType('trial');
                         setStep(1);
+                      submission.current = null;
+                      setRequestId(null);
                         setErrors({});
                       }}
-                      className={`flex-1 transition-all font-button ${
+                      className={`flex-1 transition-[color,background-color,border-color,box-shadow,transform,opacity] font-button ${
                         bookingType === 'trial' 
                           ? 'bg-primary-500 hover:bg-primary-600 text-white' 
                           : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -371,9 +356,11 @@ export default function ContactPage() {
                       onClick={() => {
                         setBookingType('drop-in');
                         setStep(1);
+                      submission.current = null;
+                      setRequestId(null);
                         setErrors({});
                       }}
-                      className={`flex-1 transition-all font-button ${
+                      className={`flex-1 transition-[color,background-color,border-color,box-shadow,transform,opacity] font-button ${
                         bookingType === 'drop-in' 
                           ? 'bg-primary-500 hover:bg-primary-600 text-white' 
                           : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -508,7 +495,7 @@ export default function ContactPage() {
                                 required 
                                 value={bookingFormData.phone} 
                                 onChange={(e) => handleInputChange('phone', e.target.value)} 
-                                placeholder="+49 123 456789"
+                                placeholder="0160 55 718 66"
                               />
                               {errors.phone && (
                                 <p className="text-red-500 text-xs mt-1 font-body">{errors.phone}</p>
@@ -520,7 +507,7 @@ export default function ContactPage() {
                             <Button 
                               type="button"
                               onClick={handleNext}
-                              className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold px-6 py-3 rounded-button flex items-center gap-2"
+                              className="bg-primary-500 hover:bg-primary-600 text-white font-button font-semibold px-6 py-3 rounded-button flex items-center gap-2"
                             >
                               Weiter zu Schritt 2
                               <ArrowRight className="w-4 h-4" />
@@ -634,7 +621,7 @@ export default function ContactPage() {
                             <Button 
                               type="button"
                               onClick={handleNext}
-                              className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold px-6 py-3 rounded-button flex items-center gap-2"
+                              className="bg-primary-500 hover:bg-primary-600 text-white font-button font-semibold px-6 py-3 rounded-button flex items-center gap-2"
                             >
                               Weiter zu Schritt 3
                               <ArrowRight className="w-4 h-4" />
@@ -701,7 +688,7 @@ export default function ContactPage() {
                                 required 
                               />
                               <span className="text-sm text-muted-foreground font-body">
-                                Ich habe die <Link href="/datenschutz" className="underline text-primary-700 hover:text-primary-800">Datenschutzerklärung</Link> gelesen und akzeptiere sie. *
+                                Ich habe die <Link href="/datenschutz" className="underline text-primary-700 hover:text-primary-800">Datenschutzerklärung</Link> gelesen. Meine Angaben werden zur Bearbeitung meiner Anfrage verwendet. *
                               </span>
                             </label>
                             {errors.privacy && (
@@ -720,7 +707,7 @@ export default function ContactPage() {
                             </Button>
                             <Button 
                               type="submit" 
-                              className="bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold text-lg px-8 py-3 rounded-button shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2" 
+                              className="bg-primary-500 hover:bg-primary-600 text-white font-button font-semibold text-lg px-8 py-3 rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-105 flex items-center gap-2"
                               disabled={isSubmitting}
                             >
                               {isSubmitting ? (
@@ -766,7 +753,7 @@ export default function ContactPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="text-center border-2 border-primary-500/20 hover:border-primary-500 transition-all duration-300 hover:shadow-xl h-full">
+                <Card className="text-center border-2 border-primary-500/20 hover:border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:shadow-xl h-full">
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold mb-2 text-primary-700 font-heading">
                       {person.name}
@@ -778,14 +765,14 @@ export default function ContactPage() {
                         href={`mailto:${person.email}`}
                         className="flex items-center justify-center gap-2 text-foreground hover:text-primary-700 transition-colors"
                       >
-                        <Mail className="w-4 h-4 text-accent-500" />
+                        <Mail className="w-4 h-4 text-primary-500" />
                         <span className="text-sm font-body">{person.email}</span>
                       </a>
                       <a
-                        href={`tel:${person.phone}`}
+                        href={site.phoneHref}
                         className="flex items-center justify-center gap-2 text-foreground hover:text-primary-700 transition-colors"
                       >
-                        <Phone className="w-4 h-4 text-accent-500" />
+                        <Phone className="w-4 h-4 text-primary-500" />
                         <span className="text-sm font-body">{person.phone}</span>
                       </a>
                     </div>
@@ -818,119 +805,49 @@ export default function ContactPage() {
               <Card className="border-2 border-primary-500/20 shadow-lg h-full">
                 <CardHeader>
                   <div className="flex items-center gap-3 mb-4">
-                    <MapPin className="w-6 h-6 text-accent-500" />
+                    <MapPin className="w-6 h-6 text-primary-500" />
                     <CardTitle className="text-2xl font-heading">G3 CrossFit Berlin</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
                     <p className="font-semibold mb-1 font-heading">Adresse</p>
-                    <p className="text-muted-foreground font-body">
-                      Musterstraße 123<br />
-                      10115 Berlin-Mitte
-                    </p>
+                    <p className="text-muted-foreground font-body">{site.street}<br />{site.postalCode} {site.city}</p>
                   </div>
 
                   <div>
                     <p className="font-semibold mb-3 font-heading">Kontakt</p>
                     <div className="space-y-2">
                       <a
-                        href="tel:+493012345678"
+                        href={site.phoneHref}
                         className="flex items-center gap-2 text-foreground hover:text-primary-700 transition-colors"
                       >
-                        <Phone className="w-4 h-4 text-accent-500" />
-                        <span className="font-body">+49 30 1234 5678</span>
+                        <Phone className="w-4 h-4 text-primary-500" />
+                        <span className="font-body">{site.phone}</span>
                       </a>
                       <a
-                        href="mailto:info@g3crossfit.de"
+                        href={`mailto:${site.email}`}
                         className="flex items-center gap-2 text-foreground hover:text-primary-700 transition-colors"
                       >
-                        <Mail className="w-4 h-4 text-accent-500" />
-                        <span className="font-body">info@g3crossfit.de</span>
+                        <Mail className="w-4 h-4 text-primary-500" />
+                        <span className="font-body">{site.email}</span>
                       </a>
                     </div>
                   </div>
 
-                  <div>
-                    <p className="font-semibold mb-3 font-heading">Anfahrt</p>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <Car className="w-5 h-5 mt-1 text-accent-500" />
-                        <div>
-                          <p className="font-semibold font-body">Mit dem Auto</p>
-                          <p className="text-sm text-muted-foreground font-body">
-                            Kostenlose Parkplätze direkt vor dem Studio
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Train className="w-5 h-5 mt-1 text-accent-500" />
-                        <div>
-                          <p className="font-semibold font-body">S-Bahn</p>
-                          <p className="text-sm text-muted-foreground font-body">
-                            S1, S2, S25 - Haltestelle Friedrichstraße (5 Min. Fußweg)
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Bus className="w-5 h-5 mt-1 text-accent-500" />
-                        <div>
-                          <p className="font-semibold font-body">Bus</p>
-                          <p className="text-sm text-muted-foreground font-body">
-                            Linie 147, 245 - Haltestelle Musterplatz (2 Min. Fußweg)
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-muted-foreground font-body">{site.entrance}</p>
+                  <a href={site.mapsUrl} className="text-primary-700 underline underline-offset-4">Anfahrt in Google Maps</a>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Opening Hours */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <Card className="border-2 border-primary-500/20 shadow-lg h-full">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-6 h-6 text-accent-500" />
-                    <CardTitle className="text-xl font-heading">Öffnungszeiten</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 mb-6">
-                    {openingHours.map((schedule) => (
-                      <div
-                        key={schedule.day}
-                        className={`flex justify-between py-3 px-4 rounded-lg transition-colors ${
-                          schedule.highlight ? 'bg-accent-50' : 'hover:bg-muted'
-                        }`}
-                      >
-                        <span className="font-medium font-body">{schedule.day}</span>
-                        <span className="text-muted-foreground font-body">{schedule.hours}</span>
-                      </div>
-                    ))}
-                  </div>
+            <Card className="border border-border h-full"><CardHeader><CardTitle className="text-2xl font-heading">Aktuelle Trainingszeiten</CardTitle></CardHeader><CardContent><p className="text-muted-foreground mb-4">Bitte prüfe die aktuellen Kurse im Kursplan oder frage uns direkt. Allgemeine Öffnungszeiten sind derzeit nicht bestätigt.</p><Button asChild variant="outline"><a href={site.scheduleUrl}>Zum Kursplan</a></Button></CardContent></Card>
 
-                  <div className="p-4 bg-secondary-50 border-2 border-secondary-200 rounded-lg">
-                    <p className="text-sm font-semibold text-secondary-800 mb-2 font-heading">Open Gym Zeiten:</p>
-                    <p className="text-sm text-secondary-700 font-body">
-                      Mo-Fr: 12:00-14:00 & 16:00-18:00<br />
-                      Sa-So: Nach Kursende bis Schließung
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
           </div>
         </div>
       </section>
+
+      <Directions />
 
       {/* CTA Section */}
       <section className="py-20 bg-linear-to-br from-primary-50 to-secondary-50">
@@ -941,7 +858,7 @@ export default function ContactPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Dumbbell className="w-16 h-16 mx-auto mb-6 text-accent-500" />
+            <Dumbbell className="w-16 h-16 mx-auto mb-6 text-primary-500" />
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 font-heading">
               Bereit für dein erstes Training?
             </h2>
@@ -950,7 +867,7 @@ export default function ContactPage() {
             </p>
             <Link
               href="#booking"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary-500 hover:bg-primary-600 text-white font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-105"
             >
               Jetzt buchen
             </Link>

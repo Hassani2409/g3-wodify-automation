@@ -41,7 +41,7 @@ export default function PortalLayout({ children }: PortalLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Portal Header */}
       <header className="bg-white border-b border-muted sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

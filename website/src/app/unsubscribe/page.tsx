@@ -6,18 +6,17 @@ import Link from 'next/link';
 
 function UnsubscribeContent() {
   const searchParams = useSearchParams();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState<string>('');
-
   const email = searchParams.get('email');
   const leadId = searchParams.get('lead_id');
+  return <UnsubscribeRequest key={JSON.stringify([email, leadId])} email={email} leadId={leadId} />;
+}
+
+function UnsubscribeRequest({ email, leadId }: { email: string | null; leadId: string | null }) {
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>(email ? 'loading' : 'error');
+  const [message, setMessage] = useState(email ? '' : 'E-Mail-Adresse fehlt.');
 
   useEffect(() => {
-    if (!email) {
-      setStatus('error');
-      setMessage('E-Mail-Adresse fehlt.');
-      return;
-    }
+    if (!email) return;
 
     const unsubscribe = async () => {
       try {
@@ -42,7 +41,7 @@ function UnsubscribeContent() {
           setStatus('error');
           setMessage('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
         }
-      } catch (error) {
+      } catch {
         setStatus('error');
         setMessage('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
       }
@@ -52,16 +51,16 @@ function UnsubscribeContent() {
   }, [email, leadId]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-orange-50 flex items-center justify-center p-4">
+    <div className="min-h-svh bg-gradient-to-br from-green-50 to-orange-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <div className="text-center">
           {status === 'loading' && (
             <>
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-neutral-900 mb-2">
                 Abmeldung wird verarbeitet...
               </h1>
-              <p className="text-gray-600">
+              <p className="text-neutral-600">
                 Bitte warte einen Moment.
               </p>
             </>
@@ -84,10 +83,10 @@ function UnsubscribeContent() {
                   />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-neutral-900 mb-2">
                 Erfolgreich abgemeldet
               </h1>
-              <p className="text-gray-600 mb-6">
+              <p className="text-neutral-600 mb-6">
                 {message}
               </p>
               <Link
@@ -116,10 +115,10 @@ function UnsubscribeContent() {
                   />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-neutral-900 mb-2">
                 Fehler
               </h1>
-              <p className="text-gray-600 mb-6">
+              <p className="text-neutral-600 mb-6">
                 {message}
               </p>
               <div className="space-y-3">
@@ -131,7 +130,7 @@ function UnsubscribeContent() {
                 </Link>
                 <Link
                   href="/"
-                  className="block text-gray-600 hover:text-gray-900 text-center"
+                  className="block text-neutral-600 hover:text-neutral-900 text-center"
                 >
                   Zur Startseite
                 </Link>
@@ -140,11 +139,11 @@ function UnsubscribeContent() {
           )}
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-500 text-center">
+        <div className="mt-8 pt-6 border-t border-neutral-200">
+          <p className="text-sm text-neutral-500 text-center">
             Falls du Fragen hast oder Hilfe benötigst, kontaktiere uns gerne unter{' '}
-            <a href="mailto:info@g3crossfit.de" className="text-green-600 hover:underline">
-              info@g3crossfit.de
+            <a href="mailto:info@g3crossfit.com" className="text-green-600 hover:underline">
+              info@g3crossfit.com
             </a>
           </p>
         </div>
@@ -156,13 +155,13 @@ function UnsubscribeContent() {
 export default function UnsubscribePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-orange-50 flex items-center justify-center p-4">
+      <div className="min-h-svh bg-gradient-to-br from-green-50 to-orange-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-neutral-900 mb-2">
             Abmeldung wird verarbeitet...
           </h1>
-          <p className="text-gray-600">
+          <p className="text-neutral-600">
             Bitte warte einen Moment.
           </p>
         </div>

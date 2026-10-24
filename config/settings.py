@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     wodify_tenant: str = Field(default="g3crossfit", env="WODIFY_TENANT")
     wodify_app_url: str = Field(default="https://app.wodify.com", env="WODIFY_APP_URL")
     wodify_schedule_url: str = Field(
-        default="https://g3-cross-fit-53cc52df.base44.app/Schedule",
+        default="https://g3crossfit.com/Schedule",
         env="WODIFY_SCHEDULE_URL"
     )
     wodify_sales_portal_url: Optional[str] = Field(
@@ -55,13 +55,13 @@ class Settings(BaseSettings):
     sendgrid_from_name: str = Field(default="G3 CrossFit", env="SENDGRID_FROM_NAME")
     
     # G3 CrossFit Information
-    g3_phone: str = Field(default="+49 30 12345678", env="G3_PHONE")
+    g3_phone: str = Field(default="+491605571866", env="G3_PHONE")
     g3_email: str = Field(default="info@g3crossfit.com", env="G3_EMAIL")
     g3_website: str = Field(
-        default="https://g3-cross-fit-53cc52df.base44.app",
+        default="https://g3crossfit.com",
         env="G3_WEBSITE"
     )
-    g3_address: str = Field(default="Musterstraße 123, 10115 Berlin", env="G3_ADDRESS")
+    g3_address: str = Field(default="Tempelhofer Ufer 36, 10963 Berlin, 2. Hinterhaus, 1. Etage", env="G3_ADDRESS")
     g3_facebook_group: str = Field(
         default="https://facebook.com/groups/g3crossfit",
         env="G3_FACEBOOK_GROUP"

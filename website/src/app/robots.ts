@@ -1,3 +1,4 @@
+import { site } from "@/lib/site";
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -9,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard/', '/admin/'],
       },
     ],
-    sitemap: 'https://www.g3crossfit.de/sitemap.xml',
+    sitemap: `${site.url}/sitemap.xml`,
   };
 }
 

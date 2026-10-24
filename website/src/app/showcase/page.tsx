@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
@@ -50,7 +52,7 @@ export default function Showcase() {
     };
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen">
+        <div className="bg-neutral-900 text-white min-h-svh">
             <style>
                 {`
                     @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Open+Sans:wght@400&display=swap');
@@ -60,7 +62,7 @@ export default function Showcase() {
             </style>
 
             {/* Header */}
-            <header className="py-4 px-6 md:px-12 flex justify-between items-center bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
+            <header className="py-4 px-6 md:px-12 flex justify-between items-center bg-neutral-900/80 backdrop-blur-sm sticky top-0 z-50">
                 <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundColor: '#2A5D3C'}}>
                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -81,24 +83,24 @@ export default function Showcase() {
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white leading-tight">
                             Eine neue Ära des digitalen Fitnesserlebnisses
                         </h1>
-                        <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+                        <p className="text-lg md:text-xl text-neutral-300 max-w-3xl mx-auto mb-8">
                             Eine Präsentation des G3 CrossFit Web-Projekts, entwickelt mit modernster Technologie und künstlicher Intelligenz auf der base44-Plattform.
                         </p>
                     </motion.div>
                 </section>
 
                 {/* Features Section */}
-                <section className="py-20 md:py-28 bg-gray-800">
+                <section className="py-20 md:py-28 bg-neutral-800">
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-3xl md:text-4xl font-bold text-white">Kernfunktionen im Überblick</h2>
-                            <p className="text-gray-400 mt-4">Innovative Lösungen für ein herausragendes Nutzererlebnis.</p>
+                            <p className="text-neutral-400 mt-4">Innovative Lösungen für ein herausragendes Nutzererlebnis.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {features.map((feature, index) => (
                                 <motion.div 
                                     key={index}
-                                    className="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 hover:border-orange-500 transition-colors duration-300 flex flex-col"
+                                    className="bg-neutral-900 p-8 rounded-xl shadow-lg border border-neutral-700 hover:border-orange-500 transition-colors duration-300 flex flex-col"
                                     variants={fadeIn}
                                     initial="hidden"
                                     whileInView="visible"
@@ -108,7 +110,7 @@ export default function Showcase() {
                                         {feature.icon}
                                     </div>
                                     <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
-                                    <p className="text-gray-400 flex-grow">{feature.description}</p>
+                                    <p className="text-neutral-400 flex-grow">{feature.description}</p>
                                     {feature.link && (
                                         <Button asChild variant="ghost" className="mt-4 text-orange-400 hover:text-orange-300 self-start p-0 h-auto">
                                             <Link href={feature.link} className="flex items-center text-sm font-semibold">
@@ -127,29 +129,29 @@ export default function Showcase() {
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-3xl md:text-4xl font-bold text-white">Einblicke in die Anwendung</h2>
-                            <p className="text-gray-400 mt-4">Screenshots ausgewählter Bereiche der G3 CrossFit Plattform.</p>
+                            <p className="text-neutral-400 mt-4">Screenshots ausgewählter Bereiche der G3 CrossFit Plattform.</p>
                         </div>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                             <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
                                 <h3 className="text-2xl font-bold mb-4 text-orange-400">Personalisiertes Mitglieder-Dashboard</h3>
-                                <p className="text-gray-300 mb-6">Die Kommandozentrale für jedes Mitglied. Hier sehen Nutzer ihre anstehenden Kurse, verfolgen ihre Trainings-Performance mit visuellen Diagrammen und erhalten von der KI generierte Pläne, die auf ihre individuellen Ziele zugeschnitten sind.</p>
-                                <div className="aspect-video bg-gray-800 rounded-lg shadow-2xl p-2 border border-gray-700">
-                                    <img 
+                                <p className="text-neutral-300 mb-6">Die Kommandozentrale für jedes Mitglied. Hier sehen Nutzer ihre anstehenden Kurse, verfolgen ihre Trainings-Performance mit visuellen Diagrammen und erhalten von der KI generierte Pläne, die auf ihre individuellen Ziele zugeschnitten sind.</p>
+                                <div className="aspect-video bg-neutral-800 rounded-lg shadow-2xl p-2 border border-neutral-700">
+                                    <Image
                                         src="https://images.unsplash.com/photo-1554284126-aa88f22d8b74?q=80&w=2094&auto=format&fit=crop" 
                                         alt="Dashboard Mockup" 
                                         className="w-full h-full object-cover rounded-md"
-                                    />
+                                    width={1200} height={675} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                 </div>
                             </motion.div>
                             <motion.div variants={fadeIn} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
                                 <h3 className="text-2xl font-bold mb-4 text-orange-400">Intelligenter Chat-Assistent</h3>
-                                <p className="text-gray-300 mb-6">Der virtuelle Assistent steht rund um die Uhr zur Verfügung, beantwortet Fragen zu Preisen und Kursen, hilft bei der Buchung von Probetrainings und bietet eine natürliche, dialogorientierte Benutzererfahrung. Alles angetrieben durch eine leistungsstarke LLM-Integration.</p>
-                                <div className="aspect-video bg-gray-800 rounded-lg shadow-2xl p-2 border border-gray-700">
-                                    <img 
+                                <p className="text-neutral-300 mb-6">Der virtuelle Assistent steht rund um die Uhr zur Verfügung, beantwortet Fragen zu Preisen und Kursen, hilft bei der Buchung von Probetrainings und bietet eine natürliche, dialogorientierte Benutzererfahrung. Alles angetrieben durch eine leistungsstarke LLM-Integration.</p>
+                                <div className="aspect-video bg-neutral-800 rounded-lg shadow-2xl p-2 border border-neutral-700">
+                                    <Image
                                         src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1769&auto=format&fit=crop" 
                                         alt="Chatbot Mockup" 
                                         className="w-full h-full object-cover rounded-md"
-                                    />
+                                    width={1200} height={675} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                 </div>
                             </motion.div>
                         </div>
@@ -157,15 +159,15 @@ export default function Showcase() {
                 </section>
 
                 {/* Tech Stack */}
-                <section className="py-20 md:py-28 bg-gray-800">
+                <section className="py-20 md:py-28 bg-neutral-800">
                     <div className="container mx-auto px-6 text-center">
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Technologie & Innovation</h2>
-                        <p className="text-gray-400 mt-4 max-w-2xl mx-auto">Gebaut auf einem modernen, performanten und skalierbaren Tech-Stack für eine zukunftssichere Lösung.</p>
+                        <p className="text-neutral-400 mt-4 max-w-2xl mx-auto">Gebaut auf einem modernen, performanten und skalierbaren Tech-Stack für eine zukunftssichere Lösung.</p>
                         <div className="flex flex-wrap justify-center gap-4 mt-8">
                             {techStack.map((tech, index) => (
                                 <motion.div 
                                     key={index}
-                                    className="bg-gray-700 text-white py-2 px-5 rounded-full text-lg font-medium"
+                                    className="bg-neutral-700 text-white py-2 px-5 rounded-full text-lg font-medium"
                                     variants={fadeIn}
                                     initial="hidden"
                                     whileInView="visible"
@@ -184,7 +186,7 @@ export default function Showcase() {
                 <section className="py-20 md:py-28 text-center">
                     <div className="container mx-auto px-6">
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Erleben Sie die Zukunft des CrossFit</h2>
-                        <p className="text-gray-300 max-w-2xl mx-auto mb-8">Entdecken Sie die vollständige Anwendung und sehen Sie, wie G3 CrossFit die digitale Fitnesslandschaft neu definiert.</p>
+                        <p className="text-neutral-300 max-w-2xl mx-auto mb-8">Entdecken Sie die vollständige Anwendung und sehen Sie, wie G3 CrossFit die digitale Fitnesslandschaft neu definiert.</p>
                         <Button asChild size="lg" className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg px-8 py-4">
                             <Link href="/">Live-Anwendung jetzt erkunden</Link>
                         </Button>
@@ -193,8 +195,8 @@ export default function Showcase() {
             </main>
 
             {/* Footer */}
-            <footer className="py-8 border-t border-gray-800">
-                <div className="container mx-auto px-6 text-center text-gray-500">
+            <footer className="py-8 border-t border-neutral-800">
+                <div className="container mx-auto px-6 text-center text-neutral-500">
                     <p>&copy; {new Date().getFullYear()} G3 CrossFit | Projekt-Showcase</p>
                     <p className="text-sm mt-2">
                         Entwickelt auf der{' '}

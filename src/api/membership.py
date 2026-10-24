@@ -4,19 +4,16 @@ G3 CrossFit WODIFY Automation - Membership & Sales Portal API
 API endpoints for membership management and WODIFY Sales Portal integration.
 """
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, HTTPException, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel
 from loguru import logger
 from datetime import datetime
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 
 from config.settings import settings
 from src.services.wodify_api_service import wodify_api_service
-from src.services.automation_service import automation_service
-from src.models.database import Member, MembershipStatus
-from src.services.database_service import database_service
 
 
 router = APIRouter(prefix="/api/membership", tags=["membership"])
@@ -25,6 +22,7 @@ limiter = Limiter(key_func=get_remote_address)
 
 class MembershipPackageResponse(BaseModel):
     """Response model for membership package"""
+
     id: str
     name: str
     description: Optional[str] = None
@@ -38,6 +36,7 @@ class MembershipPackageResponse(BaseModel):
 
 class MembershipPackagesResponse(BaseModel):
     """Response model for membership packages list"""
+
     success: bool
     packages: List[MembershipPackageResponse]
     count: int
@@ -48,16 +47,16 @@ class MembershipPackagesResponse(BaseModel):
 async def get_membership_packages(request: Request):
     """
     Get all available membership packages from WODIFY Sales Portal
-    
+
     Returns:
         List of membership packages with pricing and features
     """
     try:
         logger.info("Fetching membership packages from WODIFY Sales Portal")
-        
+
         # Fetch packages from WODIFY
         wodify_packages = await wodify_api_service.get_membership_packages()
-        
+
         # Transform WODIFY packages to our format
         packages = []
         for pkg in wodify_packages:
@@ -71,10 +70,10 @@ async def get_membership_packages(request: Request):
                 features=pkg.get("features", []),
                 is_popular=pkg.get("is_popular", False),
                 stripe_price_id=pkg.get("stripe_price_id"),
-                wodify_package_id=pkg.get("id")
+                wodify_package_id=pkg.get("id"),
             )
             packages.append(package)
-        
+
         # If no packages from WODIFY, return default packages
         if not packages:
             logger.warning("No packages from WODIFY, returning default packages")
@@ -89,9 +88,9 @@ async def get_membership_packages(request: Request):
                         "2 Trainings pro Woche",
                         "Freier Zugang zum Open Gym",
                         "Community Events",
-                        "Professionelle Betreuung"
+                        "Professionelle Betreuung",
                     ],
-                    is_popular=False
+                    is_popular=False,
                 ),
                 MembershipPackageResponse(
                     id="3x_weekly",
@@ -104,9 +103,9 @@ async def get_membership_packages(request: Request):
                         "Freier Zugang zum Open Gym",
                         "Alle Spezialkurse inklusive",
                         "Community Events",
-                        "Professionelle Betreuung"
+                        "Professionelle Betreuung",
                     ],
-                    is_popular=False
+                    is_popular=False,
                 ),
                 MembershipPackageResponse(
                     id="unlimited",
@@ -120,65 +119,54 @@ async def get_membership_packages(request: Request):
                         "Alle Spezialkurse inklusive",
                         "Community Events",
                         "Professionelle Betreuung",
-                        "Priorität bei Workshops"
+                        "Priorität bei Workshops",
                     ],
-                    is_popular=True
-                )
+                    is_popular=True,
+                ),
             ]
-        
+
         return MembershipPackagesResponse(
-            success=True,
-            packages=packages,
-            count=len(packages)
+            success=True, packages=packages, count=len(packages)
         )
-        
+
     except Exception as e:
         logger.error(f"Error fetching membership packages: {str(e)}")
         raise HTTPException(
-            status_code=500,
-            detail=f"Failed to fetch membership packages: {str(e)}"
+            status_code=500, detail=f"Failed to fetch membership packages: {str(e)}"
         )
 
 
 @router.get("/packages/{package_id}")
 @limiter.limit("60/minute")
-async def get_membership_package(
-    request: Request,
-    package_id: str
-):
+async def get_membership_package(request: Request, package_id: str):
     """
     Get detailed information about a specific membership package
-    
+
     Path Parameters:
         package_id: Package ID
-    
+
     Returns:
         Detailed package information
     """
     try:
         packages_response = await get_membership_packages(request)
-        
+
         # Find the specific package
         package = next(
-            (pkg for pkg in packages_response.packages if pkg.id == package_id),
-            None
+            (pkg for pkg in packages_response.packages if pkg.id == package_id), None
         )
-        
+
         if not package:
             raise HTTPException(status_code=404, detail="Package not found")
-        
-        return {
-            "success": True,
-            "package": package
-        }
-        
+
+        return {"success": True, "package": package}
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error fetching package {package_id}: {str(e)}")
         raise HTTPException(
-            status_code=500,
-            detail=f"Failed to fetch package: {str(e)}"
+            status_code=500, detail=f"Failed to fetch package: {str(e)}"
         )
 
 
@@ -187,7 +175,7 @@ async def get_membership_package(
 async def get_sales_portal_url(request: Request):
     """
     Get WODIFY Sales Portal URL for embedding
-    
+
     Returns:
         Sales Portal URL if configured, otherwise None
     """
@@ -196,22 +184,19 @@ async def get_sales_portal_url(request: Request):
             return {
                 "success": True,
                 "url": settings.wodify_sales_portal_url,
-                "iframe_enabled": True
+                "iframe_enabled": True,
             }
         else:
             return {
                 "success": False,
                 "url": None,
                 "iframe_enabled": False,
-                "message": "Sales Portal URL not configured"
+                "message": "Sales Portal URL not configured",
             }
-            
+
     except Exception as e:
         logger.error(f"Error getting sales portal URL: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail="Failed to get sales portal URL"
-        )
+        raise HTTPException(status_code=500, detail="Failed to get sales portal URL")
 
 
 @router.get("/health")
@@ -221,7 +206,8 @@ async def health_check():
         "status": "healthy",
         "service": "Membership API",
         "timestamp": datetime.utcnow().isoformat(),
-        "wodify_configured": bool(settings.wodify_api_key and settings.wodify_location_id),
-        "sales_portal_configured": bool(settings.wodify_sales_portal_url)
+        "wodify_configured": bool(
+            settings.wodify_api_key and settings.wodify_location_id
+        ),
+        "sales_portal_configured": bool(settings.wodify_sales_portal_url),
     }
-

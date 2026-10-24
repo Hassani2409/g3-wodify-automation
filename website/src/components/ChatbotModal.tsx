@@ -1,9 +1,12 @@
 "use client";
 
+import { assistantFacts } from "@/lib/site";
+
+import * as Dialog from "@radix-ui/react-dialog";
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { MessageSquare, Send, X, Bot } from 'lucide-react';
+import { Send, X, Bot } from 'lucide-react';
 import { InvokeLLM } from '@/integrations/Core';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,8 +21,16 @@ interface ChatbotModalProps {
     onClose: () => void;
 }
 
-export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
+export default function ChatbotModal(props: ChatbotModalProps) {
+    return <ChatSession key={String(props.isOpen)} {...props} />;
+}
+
+function ChatSession({ isOpen, onClose }: ChatbotModalProps) {
+    const [messages, setMessages] = useState<ChatMessage[]>(() => isOpen ? [{
+        text: "Hallo! 👋 Ich bin der G3 CrossFit Assistent. Wie kann ich Ihnen helfen?",
+        sender: 'bot',
+        id: 0,
+    }] : []);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -31,12 +42,7 @@ Du bist ein freundlicher und hilfsbereiter Chatbot-Assistent für G3 CrossFit in
 Deine Aufgabe ist es, Besuchern der Website zu helfen und ihre Fragen zu beantworten.
 
 WICHTIGE INFORMATIONEN:
-- Standort: Musterstraße 123, 10115 Berlin
-- Telefon: +49 30 12345678
-- Öffnungszeiten: Mo-Fr 6:00-21:00, Sa 8:00-18:00, So 9:00-16:00
-- Preise: Starter 89€, Unlimited 139€, Premium 189€
-- Kostenloses Probetraining verfügbar
-- Alle Level willkommen
+${assistantFacts}
 
 GESPRÄCHSFÜHRUNG:
 - Sei freundlich, professionell und hilfsbereit
@@ -52,27 +58,6 @@ Antworte immer natürlich, kurz und hilfsbereit.
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
-
-    useEffect(() => {
-        if (isOpen && messages.length === 0) {
-            // Start message when modal opens
-            const startMessage: ChatMessage = {
-                text: "Hallo! 👋 Ich bin der G3 CrossFit Assistent. Wie kann ich Ihnen helfen?",
-                sender: 'bot',
-                id: Date.now()
-            };
-            setMessages([startMessage]);
-        }
-    }, [isOpen]);
-
-    useEffect(() => {
-        if (!isOpen) {
-            // Reset state when modal closes
-            setMessages([]);
-            setInputValue('');
-            conversationHistoryRef.current = [];
-        }
-    }, [isOpen]);
 
     const handleSend = async () => {
         if (!inputValue.trim() || isTyping) return;
@@ -95,15 +80,15 @@ Antworte immer natürlich, kurz und hilfsbereit.
                 : '';
 
             const fullPrompt = `${chatbotContext}\n\n${conversationContext}Der Nutzer sagt: "${userMessage.text}"`;
-            
+
             const response = await InvokeLLM({
                 prompt: fullPrompt,
                 context: chatbotContext,
             });
-            
+
             // Add bot response to history
             conversationHistoryRef.current.push(`Bot: ${response}`);
-            
+
             // Simulate typing delay
             setTimeout(() => {
                 const botMessage: ChatMessage = {
@@ -141,26 +126,28 @@ Antworte immer natürlich, kurz und hilfsbereit.
     ];
 
     return (
+        <Dialog.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+        <Dialog.Portal forceMount>
         <AnimatePresence>
             {isOpen && (
                 <>
                     {/* Backdrop */}
-                    <motion.div
+                    <Dialog.Overlay asChild forceMount><motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-                    />
-                    
+                        className="fixed inset-0 bg-black/60 z-50"
+                    /></Dialog.Overlay>
+
                     {/* Modal */}
-                    <motion.div
+                    <Dialog.Content asChild forceMount aria-describedby={undefined} onCloseAutoFocus={(event) => { event.preventDefault(); onClose(); }}><motion.div
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="fixed bottom-24 right-6 z-50 w-full max-w-md"
+                        className="fixed bottom-24 right-4 z-50 w-[calc(100vw-2rem)] max-w-md"
                     >
-                        <Card className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 h-[600px] flex flex-col">
+                        <Card className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-neutral-200 h-[min(600px,calc(100svh-8rem))] flex flex-col">
                             {/* Header */}
                             <div className="bg-primary-600 text-white p-4 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -168,11 +155,12 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                         <Bot className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold font-heading">G3 CrossFit Assistent</h3>
+                                        <Dialog.Title className="font-bold font-heading">G3 CrossFit Assistent</Dialog.Title>
                                         <p className="text-xs text-primary-100 font-body">Normalerweise antworten wir sofort</p>
                                     </div>
                                 </div>
                                 <button
+                                    aria-label="Dialog schließen"
                                     onClick={onClose}
                                     className="p-2 rounded-full hover:bg-white/20 transition-colors"
                                 >
@@ -181,7 +169,7 @@ Antworte immer natürlich, kurz und hilfsbereit.
                             </div>
 
                             {/* Messages */}
-                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-50">
                                 {messages.map((msg) => (
                                     <motion.div
                                         key={msg.id}
@@ -192,36 +180,36 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                         <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                                             msg.sender === 'user'
                                                 ? 'bg-primary-600 text-white'
-                                                : 'bg-white text-gray-800 border border-gray-200'
+                                                : 'bg-white text-neutral-800 border border-neutral-200'
                                         }`}>
                                             <p className="text-sm font-body whitespace-pre-wrap">{msg.text}</p>
                                         </div>
                                     </motion.div>
                                 ))}
-                                
+
                                 {isTyping && (
                                     <motion.div
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         className="flex justify-start"
                                     >
-                                        <div className="bg-white border border-gray-200 rounded-2xl px-4 py-2">
+                                        <div className="bg-white border border-neutral-200 rounded-2xl px-4 py-2">
                                             <div className="flex gap-1">
-                                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                                <div className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                                <div className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                                <div className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                                             </div>
                                         </div>
                                     </motion.div>
                                 )}
-                                
+
                                 <div ref={messagesEndRef} />
                             </div>
 
                             {/* Quick Questions */}
                             {messages.length <= 1 && (
-                                <div className="px-4 pt-2 pb-2 border-t border-gray-200">
-                                    <p className="text-xs text-gray-500 mb-2 font-body">Häufige Fragen:</p>
+                                <div className="px-4 pt-2 pb-2 border-t border-neutral-200">
+                                    <p className="text-xs text-neutral-500 mb-2 font-body">Häufige Fragen:</p>
                                     <div className="flex flex-wrap gap-2">
                                         {quickQuestions.map((question, index) => (
                                             <button
@@ -230,7 +218,7 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                                     setInputValue(question);
                                                     setTimeout(() => handleSend(), 100);
                                                 }}
-                                                className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors font-body"
+                                                className="text-xs px-3 py-1 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-colors font-body"
                                             >
                                                 {question}
                                             </button>
@@ -240,7 +228,7 @@ Antworte immer natürlich, kurz und hilfsbereit.
                             )}
 
                             {/* Input */}
-                            <div className="p-4 border-t border-gray-200 bg-white">
+                            <div className="p-4 border-t border-neutral-200 bg-white">
                                 <div className="flex gap-2">
                                     <input
                                         type="text"
@@ -248,7 +236,7 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                         onChange={(e) => setInputValue(e.target.value)}
                                         onKeyPress={handleKeyPress}
                                         placeholder="Schreiben Sie eine Nachricht..."
-                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 font-body"
+                                        className="min-w-0 flex-1 px-4 py-2 border border-neutral-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 font-body"
                                         disabled={isTyping}
                                     />
                                     <Button
@@ -261,10 +249,12 @@ Antworte immer natürlich, kurz und hilfsbereit.
                                 </div>
                             </div>
                         </Card>
-                    </motion.div>
+                    </motion.div></Dialog.Content>
                 </>
             )}
         </AnimatePresence>
+        </Dialog.Portal>
+        </Dialog.Root>
     );
 }
 

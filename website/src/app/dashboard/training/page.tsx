@@ -74,7 +74,7 @@ Verwende fette Überschriften für jeden Abschnitt (Warm-up, Skill/Strength, Met
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center font-heading">
-              <Bot className="mr-3 h-6 w-6 text-accent-500" />
+              <Bot className="mr-3 h-6 w-6 text-primary-500" />
               KI-Trainingsplan-Generator
             </CardTitle>
           </CardHeader>
@@ -86,7 +86,7 @@ Verwende fette Überschriften für jeden Abschnitt (Warm-up, Skill/Strength, Met
             <Button 
               onClick={generatePlan} 
               disabled={isLoading}
-              className="bg-accent-500 hover:bg-accent-600 text-white font-button"
+              className="bg-primary-500 hover:bg-primary-600 text-white font-button"
             >
               {isLoading ? (
                 <>
@@ -110,7 +110,7 @@ Verwende fette Überschriften für jeden Abschnitt (Warm-up, Skill/Strength, Met
                 <p className="font-semibold text-foreground mb-4 font-body">
                   Deine personalisierte Trainingswoche wird zusammengestellt...
                 </p>
-                <div className="w-16 h-16 border-4 border-accent-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
               </div>
             </CardContent>
           </Card>

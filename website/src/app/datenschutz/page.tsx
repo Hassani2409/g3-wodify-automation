@@ -1,5 +1,7 @@
 "use client";
 
+import { site } from "@/lib/site";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +9,7 @@ import { Shield, Lock, Eye, Database, Mail, Server } from "lucide-react";
 
 export default function DatenschutzPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden pt-20">
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -16,7 +18,7 @@ export default function DatenschutzPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Shield className="h-16 w-16 mx-auto mb-6 text-accent-400" />
+            <Shield className="h-16 w-16 mx-auto mb-6 text-primary-400" />
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white font-heading">
               Datenschutzerklärung
             </h1>
@@ -55,20 +57,16 @@ export default function DatenschutzPage() {
                   <div className="bg-muted p-4 rounded-lg mt-4">
                     <p className="font-semibold text-foreground">G3 CrossFit Berlin</p>
                     <p>Denis Boateng</p>
-                    <p>Musterstraße 123</p>
-                    <p>10115 Berlin</p>
+                    <p>{site.street}</p>
+                    <p>{site.postalCode} {site.city}</p>
                     <p>Deutschland</p>
                     <p className="mt-2">
                       <strong>E-Mail:</strong>{" "}
-                      <a href="mailto:info@g3crossfit.de" className="text-primary-600 hover:text-primary-700">
-                        info@g3crossfit.de
-                      </a>
+                      <a href={`mailto:${site.email}`} className="text-primary-600 hover:text-primary-700">{site.email}</a>
                     </p>
                     <p>
                       <strong>Telefon:</strong>{" "}
-                      <a href="tel:+493012345678" className="text-primary-600 hover:text-primary-700">
-                        +49 30 1234 5678
-                      </a>
+                      <a href={site.phoneHref} className="text-primary-600 hover:text-primary-700">{site.phone}</a>
                     </p>
                   </div>
                 </div>
@@ -179,7 +177,7 @@ export default function DatenschutzPage() {
                 <p className="text-muted-foreground font-body">
                   Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte 
                   eine SSL-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile 
-                  des Browsers von "http://" auf "https://" wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.
+                  des Browsers von &quot;http://&quot; auf &quot;https://&quot; wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.
                 </p>
               </div>
 
@@ -194,9 +192,7 @@ export default function DatenschutzPage() {
                 <div className="bg-muted p-4 rounded-lg">
                   <p className="font-body">
                     <strong className="text-foreground">E-Mail:</strong>{" "}
-                    <a href="mailto:datenschutz@g3crossfit.de" className="text-primary-600 hover:text-primary-700">
-                      datenschutz@g3crossfit.de
-                    </a>
+                    <a href={`mailto:${site.email}`} className="text-primary-600 hover:text-primary-700">{site.email}</a>
                   </p>
                 </div>
               </div>

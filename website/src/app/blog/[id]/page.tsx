@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -134,10 +136,10 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-svh bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-4 text-primary-600">Artikel nicht gefunden</h1>
-          <p className="text-gray-600 mb-6">Der gesuchte Blog-Artikel existiert nicht.</p>
+          <p className="text-neutral-600 mb-6">Der gesuchte Blog-Artikel existiert nicht.</p>
           <Button asChild>
             <Link href="/blog">Zurück zum Blog</Link>
           </Button>
@@ -147,22 +149,22 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Image */}
       <section className="relative h-96 overflow-hidden">
-        <img 
+        <Image
           src={post.image}
           alt={post.title}
           className="w-full h-full object-cover"
-        />
+        width={1920} height={800} sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <Badge className="bg-accent-500 text-white mb-4">
+            <Badge className="bg-primary-500 text-white mb-4">
               {post.category}
             </Badge>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
-            <div className="flex items-center text-sm text-gray-200 flex-wrap gap-2">
+            <div className="flex items-center text-sm text-neutral-200 flex-wrap gap-2">
               <div className="flex items-center">
                 <Calendar className="w-4 h-4 mr-1" />
                 <span>{new Date(post.date).toLocaleDateString('de-DE')}</span>
@@ -199,7 +201,7 @@ export default function BlogPost() {
           <Card className="shadow-lg">
             <CardContent className="p-8 md:p-12">
               <div className="prose prose-lg max-w-none">
-                <div className="whitespace-pre-line text-gray-700 leading-relaxed">
+                <div className="whitespace-pre-line text-neutral-700 leading-relaxed">
                   {post.content.split('\n').map((line, index) => {
                     if (line.startsWith('# ')) {
                       return <h1 key={index} className="text-3xl font-bold mb-6 mt-8 text-primary-600">{line.substring(2)}</h1>;
@@ -217,7 +219,7 @@ export default function BlogPost() {
               </div>
 
               {/* Tags */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
+              <div className="mt-12 pt-8 border-t border-neutral-200">
                 <h3 className="text-lg font-semibold mb-4 text-primary-600">Tags</h3>
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag, index) => (
@@ -229,7 +231,7 @@ export default function BlogPost() {
               </div>
 
               {/* Share Section */}
-              <div className="mt-8 pt-8 border-t border-gray-200">
+              <div className="mt-8 pt-8 border-t border-neutral-200">
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -269,25 +271,25 @@ export default function BlogPost() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <Card className="overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
+                  <Card className="overflow-hidden shadow-md hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out group h-full flex flex-col">
                     <div className="relative h-48 overflow-hidden">
-                      <img 
+                      <Image
                         src={relatedPost.image}
                         alt={relatedPost.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                      width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                     </div>
                     <CardContent className="p-6 flex-1 flex flex-col">
-                      <Badge className="bg-accent-500 text-white mb-3 w-fit">
+                      <Badge className="bg-primary-500 text-white mb-3 w-fit">
                         {relatedPost.category}
                       </Badge>
                       <h3 className="text-xl font-bold mb-3 text-primary-600 line-clamp-2">
                         {relatedPost.title}
                       </h3>
-                      <p className="text-gray-600 mb-4 line-clamp-2 flex-1">
+                      <p className="text-neutral-600 mb-4 line-clamp-2 flex-1">
                         {relatedPost.content.substring(0, 150)}...
                       </p>
-                      <Button asChild variant="outline" className="group-hover:bg-accent-500 group-hover:text-white transition-all">
+                      <Button asChild variant="outline" className="group-hover:bg-primary-500 group-hover:text-white transition-[color,background-color,border-color,box-shadow,transform,opacity]">
                         <Link href={`/blog/${relatedPost.id}`}>
                           Weiterlesen
                         </Link>

@@ -119,7 +119,7 @@ export default function AdvancedFilters({
                                         <select
                                             value={selectedCategory}
                                             onChange={(e) => onCategoryChange(e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 font-body"
+                                            className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 font-body"
                                         >
                                             <option value="all">Alle Kategorien</option>
                                             {categories.map(category => (

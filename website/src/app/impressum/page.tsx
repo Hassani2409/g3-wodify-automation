@@ -1,13 +1,15 @@
 "use client";
 
+import { site } from "@/lib/site";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Mail, Phone, MapPin, Building } from "lucide-react";
+import { FileText, Phone, MapPin, Building } from "lucide-react";
 
 export default function ImpressumPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-svh bg-background">
       {/* Hero Section */}
       <section className="relative py-20 text-white bg-linear-to-br from-primary-700 via-primary-600 to-primary-800 overflow-hidden pt-20">
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -16,7 +18,7 @@ export default function ImpressumPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <FileText className="h-16 w-16 mx-auto mb-6 text-accent-400" />
+            <FileText className="h-16 w-16 mx-auto mb-6 text-primary-400" />
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white font-heading">
               Impressum
             </h1>
@@ -32,14 +34,14 @@ export default function ImpressumPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card>
             <CardContent className="p-8 md:p-12 space-y-8">
-              {/* Geschäftsführer */}
+              {/* Vertretung */}
               <div>
                 <h2 className="text-2xl font-bold text-foreground mb-4 font-heading flex items-center gap-2">
                   <Building className="h-6 w-6 text-primary-500" />
-                  Geschäftsführer
+                  Vertretung
                 </h2>
                 <div className="space-y-2 text-muted-foreground font-body">
-                  <p>Denis Boateng</p>
+                  <p>Felix Läufle</p>
                   <p>G3 CrossFit Berlin</p>
                 </div>
               </div>
@@ -52,8 +54,8 @@ export default function ImpressumPage() {
                 </h2>
                 <div className="space-y-2 text-muted-foreground font-body">
                   <p>G3 CrossFit Berlin</p>
-                  <p>Musterstraße 123</p>
-                  <p>10115 Berlin</p>
+                  <p>{site.street}</p>
+                  <p>{site.postalCode} {site.city}</p>
                   <p>Deutschland</p>
                 </div>
               </div>
@@ -67,40 +69,13 @@ export default function ImpressumPage() {
                 <div className="space-y-2 text-muted-foreground font-body">
                   <p>
                     <strong className="text-foreground">Telefon:</strong>{" "}
-                    <a href="tel:+493012345678" className="text-primary-600 hover:text-primary-700">
-                      +49 30 1234 5678
-                    </a>
+                    <a href={site.phoneHref} className="text-primary-600 hover:text-primary-700">{site.phone}</a>
                   </p>
                   <p>
                     <strong className="text-foreground">E-Mail:</strong>{" "}
-                    <a href="mailto:info@g3crossfit.de" className="text-primary-600 hover:text-primary-700">
-                      info@g3crossfit.de
-                    </a>
+                    <a href={`mailto:${site.email}`} className="text-primary-600 hover:text-primary-700">{site.email}</a>
                   </p>
                 </div>
-              </div>
-
-              {/* Umsatzsteuer-ID */}
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4 font-heading">
-                  Umsatzsteuer-ID
-                </h2>
-                <p className="text-muted-foreground font-body">
-                  Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
-                </p>
-                <p className="text-muted-foreground font-body mt-2">
-                  DE123456789
-                </p>
-              </div>
-
-              {/* Aufsichtsbehörde */}
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4 font-heading">
-                  Aufsichtsbehörde
-                </h2>
-                <p className="text-muted-foreground font-body">
-                  Gewerbeaufsichtsamt Berlin
-                </p>
               </div>
 
               {/* Verantwortlich für den Inhalt */}
@@ -109,9 +84,9 @@ export default function ImpressumPage() {
                   Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
                 </h2>
                 <div className="space-y-2 text-muted-foreground font-body">
-                  <p>Denis Boateng</p>
-                  <p>Musterstraße 123</p>
-                  <p>10115 Berlin</p>
+                  <p>Felix Läufle</p>
+                  <p>{site.street}</p>
+                  <p>{site.postalCode} {site.city}</p>
                   <p>Deutschland</p>
                 </div>
               </div>

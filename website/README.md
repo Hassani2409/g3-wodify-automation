@@ -226,3 +226,15 @@ Proprietary - G3 CrossFit Berlin
 
 **Erstellt mit ❤️ für G3 CrossFit Berlin**
 
+
+
+## Public Wodify calendar
+
+The `/schedule` page does not contain sample courses, availability counts or a fallback timetable.
+Until a working public calendar has been verified, it directs members to the Wodify app and the team contact.
+
+To enable an external calendar link, set `NEXT_PUBLIC_WODIFY_CALENDAR_URL` to the verified HTTPS URL
+in the deployment environment and rebuild. Do not use a guessed tenant or the old, unavailable link.
+Without this variable (or with a malformed or non-HTTPS value), the contact/app guidance stays visible.
+
+Run `npm test` for JSON-LD escaping and public calendar configuration regression tests.

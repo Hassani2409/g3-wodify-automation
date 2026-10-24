@@ -32,15 +32,15 @@ export default function LoginPage() {
         await register(email, password, username || undefined, firstName || undefined, lastName || undefined);
       }
       router.push('/schedule');
-    } catch (err: any) {
-      setError(err.message || 'Ein Fehler ist aufgetreten');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-svh bg-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardContent className="p-8">
           <div className="text-center mb-8">
@@ -72,7 +72,7 @@ export default function LoginPage() {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -85,7 +85,7 @@ export default function LoginPage() {
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
+                      className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
                     />
                   </div>
                   <div>
@@ -97,7 +97,7 @@ export default function LoginPage() {
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
+                      className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
                     />
                   </div>
                 </div>
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
               />
             </div>
 
@@ -129,7 +129,7 @@ export default function LoginPage() {
                 minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-body"
               />
               {!isLogin && (
                 <p className="mt-1 text-xs text-muted-foreground font-body">

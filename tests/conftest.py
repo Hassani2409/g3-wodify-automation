@@ -15,21 +15,31 @@ os.environ["ENABLE_WELCOME_EMAIL"] = "False"
 os.environ["ENABLE_TEAM_NOTIFICATION"] = "False"
 os.environ["ENABLE_LEAD_NURTURING"] = "False"
 
-from src.models.database import Base
+from src.models.database import Base  # noqa: E402
 
 
-@pytest.fixture(scope="function")
-def test_db():
-    """Create a test database"""
-    engine = create_engine("sqlite:///:memory:")
-    Base.metadata.create_all(bind=engine)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    session = SessionLocal()
-    
-    yield session
-    
-    session.close()
-    Base.metadata.drop_all(bind=engine)
+@pytest.fixture(autouse=True)
+def isolated_database(tmp_path, monkeypatch):
+    """Use one isolated file database across service instances and request threads."""
+    from config.settings import settings
+    from src.services.database_service import database_service
+
+    url = f"sqlite:///{tmp_path / 'application.db'}"
+    monkeypatch.setattr(settings, "database_url", url)
+    engine = create_engine(url, connect_args={"check_same_thread": False})
+    Base.metadata.create_all(engine)
+    monkeypatch.setattr(database_service, "engine", engine)
+    monkeypatch.setattr(database_service, "SessionLocal", sessionmaker(bind=engine))
+    yield
+    engine.dispose()
+
+
+@pytest.fixture
+def test_db(isolated_database):
+    from src.services.database_service import database_service
+
+    with database_service.get_session() as session:
+        yield session
 
 
 @pytest.fixture
@@ -37,7 +47,7 @@ def sample_membership_data():
     """Sample membership data for testing"""
     from src.models.wodify import WodifyMembershipCreated, MembershipStatus
     from datetime import datetime
-    
+
     return WodifyMembershipCreated(
         client_id="test_client_123",
         first_name="Max",
@@ -49,7 +59,7 @@ def sample_membership_data():
         membership_status=MembershipStatus.ACTIVE,
         monthly_price=129.00,
         start_date=datetime.now(),
-        is_first_membership=True
+        is_first_membership=True,
     )
 
 
@@ -57,8 +67,7 @@ def sample_membership_data():
 def sample_lead_data():
     """Sample lead data for testing"""
     from src.models.wodify import WodifyLeadCreated, LeadStatus
-    from datetime import datetime
-    
+
     return WodifyLeadCreated(
         lead_id="lead_123",
         first_name="Anna",
@@ -66,6 +75,5 @@ def sample_lead_data():
         email="anna@example.com",
         phone="+49 987 654321",
         lead_status=LeadStatus.NEW,
-        interested_in="CrossFit Fundamentals"
+        interested_in="CrossFit Fundamentals",
     )
-

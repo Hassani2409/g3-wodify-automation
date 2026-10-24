@@ -1,0 +1,29 @@
+.section { position: relative; background: var(--color-primary-900); color: white; }
+.stage { position: relative; isolation: isolate; overflow: hidden; }
+.visual { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.image { position: absolute; inset: 0; transform-origin: 72% 50%; }
+.image img { object-fit: cover; object-position: 72% center; }
+.scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(3,5,8,.87), rgba(3,5,8,.65) 36%, rgba(3,5,8,.08) 72%); }
+.copy { position: relative; z-index: 2; max-width: 1280px; margin-inline: auto; padding: 120px 32px 140px; min-height: 100svh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.copy h2 { font: 700 clamp(52px, 5.5vw, 80px)/1.05 var(--font-barlow), sans-serif; margin: 0; max-width: 520px; text-wrap: balance; }
+.copy p { max-width: 410px; font: 17px/1.65 var(--font-open-sans), sans-serif; margin: 24px 0; }
+.copy .eyebrow { font-size: 13px; margin: 0 0 16px; }
+.copy .note { font-size: 13px; margin-bottom: 0; }
+.cta { background: var(--color-accent); color: var(--color-accent-foreground); min-height: 56px; height: auto; white-space: normal; text-align: left; padding: 16px 24px; }
+.cta:hover { background: var(--color-accent-600); }
+.caption { position: absolute; z-index: 2; bottom: 24px; left: max(32px, calc((100% - 1216px) / 2)); right: 160px; font: 11px/1.6 var(--font-open-sans), sans-serif; }
+.section :focus-visible { outline: 3px solid var(--color-accent); outline-offset: 5px; }
+@media (min-width: 900px) and (min-height: 600px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .section[data-animated="true"] { height: 160svh; }
+  .section[data-animated="true"] .stage { position: sticky; top: 0; height: 100svh; }
+}
+@media (max-width: 899px), (max-height: 599px), (hover: none) {
+  .stage { display: flex; flex-direction: column; }
+  .copy { order: 0; min-height: 0; width: 100%; max-width: 640px; padding: 56px 24px 32px; }
+  .copy h2 { font-size: clamp(44px, 10vw, 64px); }
+  .visual { order: 1; position: relative; aspect-ratio: 16 / 9; width: 100%; }
+  .image img { object-fit: contain; }
+  .scrim { display: none; }
+  .caption { order: 2; position: relative; inset: auto; margin: 0; padding: 16px 24px 32px; }
+}
+@media (prefers-reduced-motion: reduce) { .image { transform: none !important; } }

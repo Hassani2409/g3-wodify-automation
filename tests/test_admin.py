@@ -2,7 +2,6 @@
 Tests for admin endpoints
 """
 
-import pytest
 from fastapi.testclient import TestClient
 
 from main import app
@@ -47,4 +46,3 @@ def test_test_lead_webhook():
     data = response.json()
     assert data["status"] == "success"
     assert "lead_id" in data
-

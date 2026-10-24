@@ -5,7 +5,7 @@ This is the main entry point for the FastAPI application.
 It handles WODIFY webhooks and triggers automated workflows.
 """
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -16,6 +16,17 @@ from pathlib import Path
 
 from config.settings import settings
 
+from src.api.webhooks import router as webhooks_router
+from src.api.admin import router as admin_router
+from src.api.schedule import router as schedule_router
+from src.api.auth import router as auth_router
+from src.api.ai import router as ai_router
+from src.api.shop import router as shop_router
+from src.api.leads import router as leads_router
+from src.api.membership import router as membership_router
+from src.api.sync import router as sync_router
+
+
 # Initialize Sentry error tracking if DSN is configured
 if settings.sentry_dsn:
     try:
@@ -23,7 +34,7 @@ if settings.sentry_dsn:
         from sentry_sdk.integrations.fastapi import FastApiIntegration
         from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
         from sentry_sdk.integrations.logging import LoggingIntegration
-        
+
         sentry_sdk.init(
             dsn=settings.sentry_dsn,
             integrations=[
@@ -37,35 +48,27 @@ if settings.sentry_dsn:
         )
         logger.info("Sentry error tracking initialized")
     except ImportError:
-        logger.warning("Sentry SDK not installed. Install with: pip install sentry-sdk[fastapi]")
+        logger.warning(
+            "Sentry SDK not installed. Install with: pip install sentry-sdk[fastapi]"
+        )
     except Exception as e:
         logger.error(f"Failed to initialize Sentry: {str(e)}")
 
 # Create logs directory if it doesn't exist
 Path("logs").mkdir(exist_ok=True)
-from src.api.webhooks import router as webhooks_router
-from src.api.admin import router as admin_router
-from src.api.schedule import router as schedule_router
-from src.api.auth import router as auth_router
-from src.api.ai import router as ai_router
-from src.api.shop import router as shop_router
-from src.api.leads import router as leads_router
-from src.api.membership import router as membership_router
-from src.api.sync import router as sync_router
-
-
 # Configure logging
 logger.remove()
 logger.add(
     sys.stdout,
-    format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> - <level>{message}</level>",
-    level=settings.log_level
+    format=(
+        "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> "
+        "| <cyan>{name}</cyan>:<cyan>{function}</cyan> "
+        "- <level>{message}</level>"
+    ),
+    level=settings.log_level,
 )
 logger.add(
-    "logs/app.log",
-    rotation="1 day",
-    retention="30 days",
-    level=settings.log_level
+    "logs/app.log", rotation="1 day", retention="30 days", level=settings.log_level
 )
 
 
@@ -78,7 +81,7 @@ app = FastAPI(
     title=settings.app_name,
     description="Automated workflows for G3 CrossFit WODIFY integration",
     version="1.0.0",
-    debug=settings.debug
+    debug=settings.debug,
 )
 
 # Add rate limiter to app state
@@ -122,6 +125,9 @@ app.include_router(sync_router)
 @app.on_event("startup")
 async def startup_event():
     """Run on application startup"""
+    from src.services.scheduler_service import scheduler_service
+
+    scheduler_service.start()
     logger.info(f"Starting {settings.app_name}")
     logger.info(f"Environment: {settings.app_env}")
     logger.info(f"Debug mode: {settings.debug}")
@@ -132,6 +138,7 @@ async def startup_event():
 async def shutdown_event():
     """Run on application shutdown"""
     from src.services.scheduler_service import scheduler_service
+
     scheduler_service.shutdown()
     logger.info(f"Shutting down {settings.app_name}")
 
@@ -143,17 +150,17 @@ async def root():
         "service": settings.app_name,
         "version": "1.0.0",
         "status": "running",
-        "environment": settings.app_env
+        "environment": settings.app_env,
     }
 
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     uvicorn.run(
         "main:app",
         host=settings.host,
         port=settings.port,
         reload=settings.debug,
-        log_level=settings.log_level.lower()
+        log_level=settings.log_level.lower(),
     )

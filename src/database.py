@@ -2,7 +2,6 @@
 Database session management for FastAPI
 """
 
-from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from config.settings import settings
@@ -31,4 +30,3 @@ def init_db():
     Initialize database - create all tables
     """
     Base.metadata.create_all(bind=engine)
-

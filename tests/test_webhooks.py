@@ -2,7 +2,6 @@
 Tests for webhook endpoints
 """
 
-import pytest
 from fastapi.testclient import TestClient
 from datetime import datetime
 import json
@@ -20,9 +19,7 @@ def create_webhook_signature(payload: dict) -> str:
     """Create a valid webhook signature for testing"""
     payload_str = json.dumps(payload)
     signature = hmac.new(
-        settings.wodify_webhook_secret.encode(),
-        payload_str.encode(),
-        hashlib.sha256
+        settings.wodify_webhook_secret.encode(), payload_str.encode(), hashlib.sha256
     ).hexdigest()
     return signature
 
@@ -49,17 +46,17 @@ def test_membership_created_webhook():
         "membership_status": "Active",
         "monthly_price": 129.00,
         "start_date": datetime.now().isoformat(),
-        "is_first_membership": True
+        "is_first_membership": True,
     }
-    
+
     signature = create_webhook_signature(payload)
-    
+
     response = client.post(
         "/webhooks/wodify/membership-created",
         json=payload,
-        headers={"X-Wodify-Signature": signature}
+        headers={"X-Wodify-Signature": signature},
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "success"
@@ -79,15 +76,15 @@ def test_membership_created_webhook_invalid_signature():
         "membership_status": "Active",
         "monthly_price": 129.00,
         "start_date": datetime.now().isoformat(),
-        "is_first_membership": True
+        "is_first_membership": True,
     }
-    
+
     response = client.post(
         "/webhooks/wodify/membership-created",
         json=payload,
-        headers={"X-Wodify-Signature": "invalid_signature"}
+        headers={"X-Wodify-Signature": "invalid_signature"},
     )
-    
+
     assert response.status_code == 401
 
 
@@ -100,17 +97,17 @@ def test_lead_created_webhook():
         "email": "anna@example.com",
         "phone": "+49 987 654321",
         "lead_status": "New",
-        "interested_in": "CrossFit Fundamentals"
+        "interested_in": "CrossFit Fundamentals",
     }
-    
+
     signature = create_webhook_signature(payload)
-    
+
     response = client.post(
         "/webhooks/wodify/lead-created",
         json=payload,
-        headers={"X-Wodify-Signature": signature}
+        headers={"X-Wodify-Signature": signature},
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "success"
@@ -124,14 +121,11 @@ def test_generic_webhook():
         "event_id": "evt_123",
         "tenant": "g3crossfit",
         "timestamp": datetime.now().isoformat(),
-        "data": {"test": "data"}
+        "data": {"test": "data"},
     }
-    
-    response = client.post(
-        "/webhooks/wodify/generic",
-        json=payload
-    )
-    
+
+    response = client.post("/webhooks/wodify/generic", json=payload)
+
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "success"
@@ -145,4 +139,3 @@ def test_root_endpoint():
     data = response.json()
     assert data["status"] == "running"
     assert "version" in data
-
