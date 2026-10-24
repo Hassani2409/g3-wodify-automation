@@ -50,3 +50,4 @@ Die beiden bereits verknüpften Vercel-Projekte `g3-wodify-automation` und `webs
 Das Projekt `website` verlangt verifizierte Git-Commits. Diese Schutzregel bleibt aktiv; Vorschau-Commits müssen über eine signierte GitHub-Aktion oder eine eingerichtete lokale Signatur entstehen.
 
 CI-Reparatur: Python-Gesamtsuite mit isolierten Testdatenbanken und gemocktem E-Mail-Client; Scheduler startet erst im ASGI-Startup. Docker nutzt eine für den Nicht-Root-Benutzer zugängliche virtuelle Umgebung und standardmäßig einen Worker (kein mehrfacher Scheduler). Next.js und die zugehörige ESLint-Konfiguration wurden auf 16.4.3 aktualisiert; die Vercel-Sicherheitssperre wird nicht umgangen.
+Signierter Vorschau-Stand: Die GitHub-Weboberfläche erstellt den abschließenden Dokumentations-Commit für die aktivierte Vercel-Prüfung verifizierter Commits.
