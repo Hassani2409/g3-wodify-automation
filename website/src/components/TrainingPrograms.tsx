@@ -1,4 +1,5 @@
 import Image from "next/image";
+import trainingImage from "../../public/images/g3-training.jpg";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { trainingPrograms, site } from "@/lib/site";
@@ -14,7 +15,7 @@ export default function TrainingPrograms({ detailed = false }: { detailed?: bool
     <div className="max-w-7xl mx-auto px-6 lg:px-8 grid gap-12 lg:grid-cols-12 lg:gap-16 items-start">
       <figure className="lg:col-span-5 lg:sticky lg:top-28">
         <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-primary-900">
-          <Image src="/images/g3-training.jpg" alt="Kletterseile vor der dunklen Wand in der G3 Box" fill
+          <Image src={trainingImage} placeholder="blur" alt="Kletterseile vor der dunklen Wand in der G3 Box" fill
             sizes="(min-width: 1280px) 480px, (min-width: 1024px) 40vw, 100vw" className="object-cover object-[22%_center]" />
         </div>
         <figcaption className="mt-3 text-xs text-muted-foreground">In der G3 Box am Gleisdreieck.</figcaption>
