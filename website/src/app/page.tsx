@@ -6,7 +6,6 @@ import FeatureCards from "@/components/FeatureCards";
 import TrainingScroll from "@/components/TrainingScroll";
 import TrainingPrograms from "@/components/TrainingPrograms";
 import AboutPreview from "@/components/AboutPreview";
-import CoachPreview from "@/components/CoachPreview";
 import MotionSection from "@/components/MotionSection";
 
 export default function Home() {
@@ -20,9 +19,6 @@ export default function Home() {
       </MotionSection>
       <MotionSection>
         <AboutPreview />
-      </MotionSection>
-      <MotionSection>
-        <CoachPreview />
       </MotionSection>
       <PodcastSection />
       <Directions />

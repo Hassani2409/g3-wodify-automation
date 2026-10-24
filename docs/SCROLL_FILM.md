@@ -27,27 +27,18 @@ API-Referenzen: [ImageBitmap.close](https://developer.mozilla.org/en-US/docs/Web
 ## Startseiten-Integration
 
 - Gemeinsame Canvas-Engine: `useScrollSequence.ts`; Hero und Technik-Prototyp teilen Laden, begrenzten Bitmap-Cache, Scroll-Mapping und Cleanup.
-- Desktop ab 900 px Breite und 600 px Höhe mit Hover-Eingabe: 240svh Gesamtstrecke, davon 140svh native Scrollbewegung. Die Textebene und der Probetraining-Link bleiben auf ihrer Position; keine Animation dieser Bedienelemente. Pause und „Weiter zum Training“ umgehen den Effekt.
+- Desktop ab 900 px Breite und 600 px Höhe mit Hover-Eingabe: 160svh Gesamtstrecke, davon 60svh native Scrollbewegung (am 24.10.2026 von 240svh gekürzt, damit der Hero nicht mehrere Bildschirmhöhen bindet). Das Poster wird ohne Bildoptimierer und mit Blur-Platzhalter ausgeliefert, damit der erste Eindruck nie schwarz ist. Die Textebene und der Probetraining-Link bleiben auf ihrer Position; keine Animation dieser Bedienelemente. Pause und „Weiter zum Training“ umgehen den Effekt.
 - Mobil und Geräte ohne Hover: normale Dokumenthöhe ohne Pinning. Headline, Erklärung und CTA stehen vor dem Filmfenster. Nur das Poster wird automatisch geladen. Nach explizitem Abspielen lädt ein stummer H.264-Film mit etwa 1 MB statt der ganzen Einzelbildfolge.
 - `prefers-reduced-motion`, Datensparmodus oder fehlgeschlagene Bilddekodierung: Poster und optionale bewusste Filmwiedergabe, keine automatische Canvas-Sequenz. Ein gestarteter Mobilfilm pausiert außerhalb des sichtbaren Bereichs und im versteckten Tab.
 - Vergleichskriterium ist hier Bedienbarkeit und Komposition, kein gemessener Conversion-Uplift. Eine Performance-Aufzeichnung auf echtem Mittelklasse-Handy und langsamem Netz bleibt vor Live-Freigabe erforderlich.
 
 ## Zweiter Abschnitt B1
 
-- Startseite nach „Warum G3?“ und vor der Trainingsauswahl: `TrainingScroll`, 180svh einschließlich sichtbarer Bühne, 144 Einzelbilder aus dem sechssekündigen Nutzerclip `Hanging_climbing_rope_on_rig_1080p_20261024201546.mp4`.
-- WebP 960×540; eigener begrenzter Bitmap-Cache. Die Bildfolge lädt erst innerhalb von 600px Abstand zum Abschnitt. Poster bleibt bei Ladefehlern sichtbar.
-- Mobile/Touch, kleine Fenster, Datensparen und reduzierte Bewegung: normale Dokumenthöhe, Standbild und freiwillige Wiedergabe. Mobile MP4 ist ohne Audiospur; kein Autoplay.
-- Überschrift und Link stehen rechts auf dunkler Fläche; Pause und Sprung zur echten Programmauswahl sind verfügbar. KI-inszenierter Raum ist als Gestaltungskonzept gekennzeichnet.
+- Startseite nach „Warum G3?“ und vor der Trainingsauswahl: `TrainingScroll`. Seit 24.10.2026 ein normaler Abschnitt ohne Pinning und ohne Einzelbildfolge: Die Startseite hat nur noch eine scrollgesteuerte Sequenz (den Hero).
+- Standbild aus der Bildfolge `public/sequences/g3-training/0000.webp` (ohne Bildoptimierer, mit Blur-Platzhalter). Ein stummer Film ohne Audiospur lädt nur nach Klick; kein Autoplay. Er pausiert außerhalb des sichtbaren Bereichs und im versteckten Tab.
+- Die übrigen Einzelbilder unter `public/sequences/g3-training/` werden auf der Startseite nicht mehr geladen.
+- Überschrift und Link stehen rechts auf dunkler Fläche; Sprung zur echten Programmauswahl ist verfügbar. KI-inszenierter Raum ist als Gestaltungskonzept gekennzeichnet.
 
-## Abschluss C1 aus Standbild
+## Bildstimmung
 
-`ClosingInvitation` nach der Anfahrt: vorhandenes, vom Nutzer freigegebenes KI-Bild mit Inhaber. Desktop bei geeigneter Höhe/Breite, Hover und ohne reduzierte Bewegung: 160svh Gesamtstrecke, Bild skaliert scrollabhängig von 1.06 auf 1. Die Text- und CTA-Ebene bleibt unverändert; keine künstliche Personenbewegung. Mobil/Touch und kurze Fenster: normale Dokumenthöhe, Text vor vollständigem Standbild. Reduzierte Bewegung: keine Skalierung und keine zusätzliche Scrollstrecke. Kein zusätzlicher Film oder Canvas nötig; Herkunft sichtbar gekennzeichnet.
-
-## Vercel-Vorschau / CI (24.10.2026)
-
-Die beiden bereits verknüpften Vercel-Projekte `g3-wodify-automation` und `website` bauen die Next.js-Website aus `website/` mit Framework `nextjs`. Root Directory ist eine Projekteinstellung, kein Feld in `vercel.json`. Der FastAPI-Betrieb bleibt im separaten Docker-/Backend-Deployment; diese Vorschauen sind kein Nachweis einer produktiven CRM-Anbindung.
-
-Das Projekt `website` verlangt verifizierte Git-Commits. Diese Schutzregel bleibt aktiv; Vorschau-Commits müssen über eine signierte GitHub-Aktion oder eine eingerichtete lokale Signatur entstehen.
-
-CI-Reparatur: Python-Gesamtsuite mit isolierten Testdatenbanken und gemocktem E-Mail-Client; Scheduler startet erst im ASGI-Startup. Docker nutzt eine für den Nicht-Root-Benutzer zugängliche virtuelle Umgebung und standardmäßig einen Worker (kein mehrfacher Scheduler). Next.js und die zugehörige ESLint-Konfiguration wurden auf 16.4.3 aktualisiert; die Vercel-Sicherheitssperre wird nicht umgangen.
-Signierter Vorschau-Stand: Die GitHub-Weboberfläche erstellt den abschließenden Dokumentations-Commit für die aktivierte Vercel-Prüfung verifizierter Commits.
+- KI-inszenierte Szenen (Hero, Trainingsabschnitt, Abschluss) tragen die gemeinsame Klasse `photo-grade` (leicht entsättigt, etwas mehr Kontrast). Sie gleicht das warme Licht der Renderings an die kühlere Farbstimmung der echten G3-Fotos an. Eine echte Farbkorrektur der Ausgangsdateien bleibt für den Livegang besser.

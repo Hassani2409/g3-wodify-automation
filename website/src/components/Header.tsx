@@ -92,7 +92,7 @@ const navigation = [
     href: "/shop",
     megaMenu: {
       title: "G3 CrossFit Shop",
-      description: "Premium Equipment, Bekleidung und mehr",
+      description: "Bekleidung, Zubehör und mehr mit G3-Logo",
       columns: [
         {
           title: "Kategorien",

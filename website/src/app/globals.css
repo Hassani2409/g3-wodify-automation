@@ -146,3 +146,7 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Shared look for the AI-staged scenes: pulls their warm, golden light towards the
+   cooler, darker grading of the real G3 photos so both read as one visual language. */
+.photo-grade { filter: saturate(0.78) contrast(1.06) brightness(0.96); }

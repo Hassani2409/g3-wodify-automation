@@ -1,94 +1,61 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Target, Heart, Zap } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import AboutImage from "./AboutImage";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-
+// "Familiär. Freudig. Fit." is G3's own philosophy line from g3crossfit.com;
+// the explanations paraphrase what the original site says about each value.
 const values = [
   {
-    icon: Target,
-    title: "Zielorientiert",
-    description: "Wir helfen dir, deine persönlichen Fitnessziele zu erreichen",
+    title: "Familiär.",
+    description: "Man kennt sich und schätzt sich. In kleinen Gruppen bist du nicht einer von vielen.",
   },
   {
-    icon: Heart,
-    title: "Community First",
-    description: "Gemeinsam sind wir stärker – unsere Community ist unser Herz",
+    title: "Freudig.",
+    description: "Hart trainieren und dabei Spaß haben – bei Team-WODs und in jedem Kurs.",
   },
   {
-    icon: Zap,
-    title: "Maximale Intensität",
-    description: "Hochintensives Training für maximale Ergebnisse",
+    title: "Fit.",
+    description: "Die Coaches unterstützen dich bei Technik, Zielen, Ernährung und Motivation.",
   },
 ];
 
 export default function AboutPreview() {
   return (
-    <section className="py-24 bg-neutral-800 relative overflow-hidden">
-      {/* Background Pattern */}
+    <section className="bg-primary-900 text-white py-20 lg:py-28" aria-labelledby="about-heading">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 grid gap-12 lg:grid-cols-12 lg:gap-16 items-center">
+        <figure className="lg:col-span-7">
+          <div className="relative aspect-[3797/2560] overflow-hidden rounded-card">
+            <Image src="/images/g3-team.jpg" alt="Das G3 CrossFit Trainerteam in G3-Shirts vor der dunklen Wand der Box" fill
+              sizes="(min-width: 1280px) 700px, (min-width: 1024px) 56vw, 100vw" className="object-cover" />
+          </div>
+          <figcaption className="mt-3 text-xs text-primary-100">Das Team im G3.</figcaption>
+        </figure>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <AboutImage />
+        <div className="lg:col-span-5">
+          <p className="text-sm font-medium tracking-wide uppercase text-accent">Über uns</p>
+          <h2 id="about-heading" className="mt-4 text-4xl md:text-5xl font-heading font-bold text-balance">Mehr als nur ein Gym</h2>
+          <p className="mt-6 text-lg text-primary-100 leading-relaxed">
+            Unsere Box am Gleisdreieck bringt Menschen aus Mitte, Kreuzberg und Schöneberg zusammen – Anfänger genauso wie erfahrene Athleten.
+          </p>
 
-          {/* Right Column - Content */}
-          <div
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm font-medium mb-6">
-              Über uns
-            </div>
+          <dl className="mt-10 space-y-6">
+            {values.map(value => (
+              <div key={value.title} className="border-l-2 border-accent pl-5">
+                <dt className="text-2xl font-heading font-semibold">{value.title}</dt>
+                <dd className="mt-1 text-primary-100">{value.description}</dd>
+              </div>
+            ))}
+          </dl>
 
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-              Mehr als nur ein Gym
-            </h2>
-
-            <p className="text-xl text-neutral-300 mb-8 leading-relaxed">
-              Unsere Box am Gleisdreieck bringt Menschen aus Mitte, Kreuzberg und Schöneberg zusammen.
-            </p>
-
-            <p className="text-lg text-neutral-400 mb-10 leading-relaxed">
-              Unser Team aus zertifizierten Coaches bietet dir professionelles Training
-              in einer motivierenden Atmosphäre. Egal ob Anfänger oder Profi – bei uns
-              bist du richtig.
-            </p>
-
-            {/* Values */}
-            <div className="space-y-6 mb-10">
-              {values.map((value, index) => {
-                const Icon = value.icon;
-                return (
-                  <div
-                    key={index}
-                    className="flex items-start gap-4"
-                  >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-primary-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white mb-1">
-                        {value.title}
-                      </h3>
-                      <p className="text-neutral-400">
-                        {value.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* CTA */}
-            <Button asChild
-                size="lg"
-                className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg shadow-primary-500/50 hover:shadow-primary-500/70 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out group"
-              ><Link href="/about">
-                Mehr über uns erfahren
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Link></Button>
+          <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
+            <Button asChild size="lg" className="bg-white text-primary-900 hover:bg-primary-50 min-h-12">
+              <Link href="/coaches">Unser Trainerteam kennenlernen <ArrowRight aria-hidden="true" /></Link>
+            </Button>
+            <Link href="/about" className="inline-flex items-center min-h-11 text-white underline underline-offset-4">Mehr über uns</Link>
           </div>
         </div>
       </div>
     </section>
   );
 }
-

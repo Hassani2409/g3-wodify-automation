@@ -52,7 +52,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-primary-200 leading-relaxed font-body">
-              Dein Premium CrossFit Box im Herzen von Berlin. Wir bieten professionelles Training für alle Fitnesslevel in einer familiären Atmosphäre.
+              Deine CrossFit Box am Gleisdreieck. Persönliches Training für alle Fitnesslevel in einer familiären Atmosphäre.
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-4">
