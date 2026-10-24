@@ -1,139 +1,64 @@
+import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Users, Award, Clock, Heart, TrendingUp, Dumbbell } from "lucide-react";
+import { site } from "@/lib/site";
+import styles from "./FeatureCards.module.css";
 
-const features = [
+const benefits = [
   {
-    icon: Users,
-    title: "Kleine Gruppen",
-    description: "Maximal 8 Personen. Bei nur einer Anmeldung: Personal Training ohne Aufpreis.",
-    benefit: "Persönliche Betreuung",
-    color: "primary",
+    title: "Kleine Gruppen. Viel Aufmerksamkeit.",
+    description: `Maximal ${site.maxParticipants} Personen pro Kurs. Wenn du allein angemeldet bist, wird daraus Personal Training – ohne Aufpreis.`,
   },
   {
-    icon: Award,
-    title: "Zertifizierte Coaches",
-    description: "Persönliches Coaching mit Fokus auf deine Ziele und sichere Technik",
-    benefit: "Professionelles Coaching",
-    color: "secondary",
+    title: "Coaching, das genau hinschaut.",
+    description: "Unsere zertifizierten Coaches begleiten dein Training. Technikfeedback, Videoanalyse und Fehlerkorrektur helfen dir, gezielt an deinen Bewegungen zu arbeiten.",
   },
   {
-    icon: Clock,
-    title: "Flexible Kurszeiten",
-    description: "Aktuelle Kurszeiten findest du im WODIFY-Kursplan",
-    benefit: "Maximale Flexibilität",
-    color: "accent",
-  },
-  {
-    icon: Heart,
-    title: "Starke Community",
-    description: "Werde Teil einer motivierenden Familie statt nur einem Fitnessstudio",
-    benefit: "Familiäre Atmosphäre",
-    color: "primary",
-  },
-  {
-    icon: TrendingUp,
-    title: "Alle Fitnesslevel",
-    description: "Individuell skalierte Workouts - vom Anfänger bis zum Athleten",
-    benefit: "Für jeden geeignet",
-    color: "secondary",
-  },
-  {
-    icon: Dumbbell,
-    title: "Videoanalyse und Fehlerkorrektur",
-    description: "Feedback zu deinen Bewegungen für ein gezieltes Techniktraining",
-    benefit: "Technik im Blick",
-    color: "accent",
+    title: "Dein Level. Dein Einstieg.",
+    description: "Vom ersten Workout bis zum erfahrenen Athleten: Wir passen die Übungen an dein Fitnesslevel an. Du trainierst gemeinsam mit der Community.",
   },
 ];
 
-const colorClasses = {
-  primary: {
-    icon: "text-primary-500",
-    border: "border-primary-500/20",
-    bg: "bg-primary-50",
-    badge: "bg-primary-100 text-primary-700",
-  },
-  secondary: {
-    icon: "text-secondary-500",
-    border: "border-secondary-500/20",
-    bg: "bg-secondary-50",
-    badge: "bg-secondary-100 text-secondary-700",
-  },
-  accent: {
-    icon: "text-primary-500",
-    border: "border-primary-500/20",
-    bg: "bg-primary-50",
-    badge: "bg-primary-100 text-primary-700",
-  },
-};
-
 export default function FeatureCards() {
   return (
-    <section className="py-24 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2
-            className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-heading"
-          >
-            Warum G3 CrossFit?
-          </h2>
-          <p
-            className="text-xl text-muted-foreground max-w-2xl mx-auto font-body"
-          >
-            Persönlich trainieren in unserer Box am Gleisdreieck
-          </p>
-        </div>
+    <section className={styles.section} aria-labelledby="why-g3-heading">
+      <div className={styles.layout}>
+        <header className={styles.intro}>
+          <h2 id="why-g3-heading">Dein Training.<br />Persönlich begleitet.</h2>
+          <p>Warum G3 CrossFit? Weil wir dich und dein Training im Blick haben. Mitten am Gleisdreieck.</p>
+        </header>
 
-        {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            const colors = colorClasses[feature.color as keyof typeof colorClasses];
+        <figure className={styles.photo}>
+          <div className={styles.imageFrame}>
+            <Image
+              src="/images/g3-gym.jpg"
+              alt="Athlet bei einer Kettlebell-Übung im G3 CrossFit"
+              fill
+              sizes="(min-width: 1280px) 560px, (min-width: 900px) 46vw, 100vw"
+              className={styles.image}
+            />
+          </div>
+          <figcaption>Training bei G3 CrossFit am Gleisdreieck.</figcaption>
+        </figure>
 
-            return (
-              <div
-                key={index}
-                className={`feature-card relative p-8 bg-card rounded-card border-2 ${colors.border} transition-[border-color,box-shadow] duration-200 ease-out  `}
-              >
-                {/* Icon */}
-                <div className={`inline-flex p-4 rounded-card ${colors.bg} mb-6  transition-transform duration-300`}>
-                  <Icon className={`h-8 w-8 ${colors.icon}`} />
-                </div>
-
-                {/* Title */}
-                <h3 className="text-2xl font-bold text-foreground mb-3 font-heading">
-                  {feature.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-muted-foreground mb-4 font-body leading-relaxed">
-                  {feature.description}
-                </p>
-
-                {/* Benefit Badge */}
-                <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${colors.badge}`}>
-                  ✓ {feature.benefit}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom CTA */}
-        <div
-          className="text-center mt-16"
-        >
-          <p className="text-lg text-muted-foreground mb-6 font-body">
-            Überzeuge dich selbst von unserer Community
-          </p>
-          <Button asChild className="h-auto min-h-12 whitespace-normal px-6 py-4 bg-accent hover:bg-accent-600 text-accent-foreground font-button font-semibold rounded-button shadow-lg  transition-[border-color,box-shadow] duration-200 ease-out"><Link href="/contact#booking">
-              Jetzt kostenloses Probetraining buchen
-            </Link></Button>
+        <div className={styles.details}>
+          <ul className={styles.benefits}>
+            {benefits.map(benefit => (
+              <li key={benefit.title}>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.description}</p>
+              </li>
+            ))}
+          </ul>
+          <div className={styles.actions}>
+            <Button asChild className={styles.primaryAction}>
+              <Link href="/contact#booking">Kostenloses Probetraining anfragen <ArrowUpRight aria-hidden="true" /></Link>
+            </Button>
+            <Link className={styles.scheduleLink} href={site.scheduleUrl}>Aktuellen Kursplan ansehen <ArrowUpRight size={17} aria-hidden="true" /></Link>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-

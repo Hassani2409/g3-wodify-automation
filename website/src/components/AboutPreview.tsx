@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Target, Heart, Zap } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import AboutImage from "./AboutImage";
 
 
 const values = [
@@ -29,29 +29,7 @@ export default function AboutPreview() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left Column - Image */}
-          <div
-            className="relative"
-          >
-            {/* Community Image */}
-            <div className="relative aspect-4/3 rounded-2xl overflow-hidden border-4 border-primary-500 shadow-2xl">
-              <Image
-                src="/images/g3-training.jpg"
-                alt="Trainingsbereich im G3 CrossFit"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-linear-to-br from-primary-900/40 to-transparent" />
-
-              {/* Decorative Elements */}
-              <div className="absolute top-4 right-4 w-20 h-20 bg-primary-500/30 rounded-full blur-2xl" />
-              <div className="absolute bottom-4 left-4 w-32 h-32 bg-secondary-500/30 rounded-full blur-2xl" />
-            </div>
-
-          </div>
+          <AboutImage />
 
           {/* Right Column - Content */}
           <div

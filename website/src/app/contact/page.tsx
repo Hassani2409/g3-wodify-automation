@@ -3,7 +3,7 @@
 import { site } from "@/lib/site";
 import Directions from "@/components/Directions";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
@@ -20,6 +20,8 @@ interface FormErrors {
 }
 
 export default function ContactPage() {
+  const submission = useRef<{ payload: string; key: string } | null>(null);
+  const [requestId, setRequestId] = useState<string | null>(null);
   const [step, setStep] = useState<number | 'success'>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingType, setBookingType] = useState<'trial' | 'drop-in'>('trial');
@@ -128,7 +130,7 @@ export default function ContactPage() {
     
     if (currentStep === 3) {
       if (!bookingFormData.privacy) {
-        newErrors.privacy = "Du musst die Datenschutzerklärung akzeptieren";
+        newErrors.privacy = "Bitte bestätige den Datenschutzhinweis";
       }
     }
     
@@ -186,17 +188,22 @@ export default function ContactPage() {
         booking_date: bookingFormData.date || undefined,
         booking_time: bookingFormData.time || undefined,
         experience_level: bookingFormData.experience || undefined,
-        source: 'Website Contact Form'
+        source: 'Website Contact Form',
+        privacy_acknowledged: bookingFormData.privacy
       };
 
-      // Call backend API to create lead in WODIFY
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${apiUrl}/api/leads`, {
+      const payload = JSON.stringify(leadData);
+      if (!submission.current || submission.current.payload !== payload) {
+        submission.current = { payload, key: crypto.randomUUID() };
+      }
+      const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Idempotency-Key': submission.current.key,
         },
-        body: JSON.stringify(leadData),
+        body: payload,
+        signal: AbortSignal.timeout(15000),
       });
 
       if (!response.ok) {
@@ -217,12 +224,12 @@ export default function ContactPage() {
 
       const result = await response.json();
       
-      // Log success (optional, für Debugging)
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Lead created successfully:', result);
+      if (result.success !== true || !result.request_id) {
+        throw new Error("Die Speicherung konnte nicht bestätigt werden. Bitte versuche es erneut.");
       }
       
       // Success - show success screen
+      setRequestId(result.request_id);
       setStep('success');
     } catch (error) {
       console.error('Error submitting booking:', error);
@@ -273,9 +280,9 @@ export default function ContactPage() {
       <section id="booking" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground font-heading">Direkt buchen</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground font-heading">Probetraining anfragen</h2>
             <p className="text-xl text-muted-foreground font-body">
-              Sichere dir deinen Platz für ein kostenloses Probetraining oder einen Drop-In.
+              Sende uns deinen Terminwunsch. Ein Termin steht erst nach persönlicher Bestätigung fest. E-Mails und Automatisierungen laufen derzeit nur im Testmodus.
             </p>
           </div>
           
@@ -290,7 +297,10 @@ export default function ContactPage() {
                   <CheckCircle className="w-16 h-16 mx-auto mb-6 text-secondary-500" />
                   <h3 className="text-3xl font-bold mb-4 text-secondary-700 font-heading">Anfrage gesendet!</h3>
                   <p className="text-lg mb-8 max-w-lg mx-auto text-muted-foreground font-body">
-                    Vielen Dank, {bookingFormData.firstName}! Wir haben deine Anfrage für den <strong>{new Date(bookingFormData.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong> erhalten und melden uns zur Terminabstimmung bei dir.
+                    Vielen Dank, {bookingFormData.firstName}! Wir haben deine Anfrage für den <strong>{new Date(bookingFormData.date).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong> gespeichert. Dein Wunschtermin ist noch nicht bestätigt.
+                    <br /><br />
+                    <strong>Testmodus:</strong> E-Mails und Automatisierungen werden nur als Vorschau erstellt. Es wurde keine E-Mail verschickt.
+                    {requestId && <span className="block mt-3 text-sm">Anfragenummer: {requestId}</span>}
                     {bookingType === 'drop-in' && (
                       <>
                         <br/><br/>
@@ -301,6 +311,8 @@ export default function ContactPage() {
                   <Button 
                     onClick={() => {
                       setStep(1);
+                      submission.current = null;
+                      setRequestId(null);
                       setBookingFormData({
                         firstName: '',
                         lastName: '',
@@ -327,6 +339,8 @@ export default function ContactPage() {
                       onClick={() => {
                         setBookingType('trial');
                         setStep(1);
+                      submission.current = null;
+                      setRequestId(null);
                         setErrors({});
                       }}
                       className={`flex-1 transition-[color,background-color,border-color,box-shadow,transform,opacity] font-button ${
@@ -342,6 +356,8 @@ export default function ContactPage() {
                       onClick={() => {
                         setBookingType('drop-in');
                         setStep(1);
+                      submission.current = null;
+                      setRequestId(null);
                         setErrors({});
                       }}
                       className={`flex-1 transition-[color,background-color,border-color,box-shadow,transform,opacity] font-button ${
@@ -672,7 +688,7 @@ export default function ContactPage() {
                                 required 
                               />
                               <span className="text-sm text-muted-foreground font-body">
-                                Ich habe die <Link href="/datenschutz" className="underline text-primary-700 hover:text-primary-800">Datenschutzerklärung</Link> gelesen und akzeptiere sie. *
+                                Ich habe die <Link href="/datenschutz" className="underline text-primary-700 hover:text-primary-800">Datenschutzerklärung</Link> gelesen. Meine Angaben werden zur Bearbeitung meiner Anfrage verwendet. *
                               </span>
                             </label>
                             {errors.privacy && (

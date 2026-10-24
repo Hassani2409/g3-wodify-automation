@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, Mail, MapPin, User, ShoppingBag, Heart, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
-import { getCart } from "@/lib/api/cart";
+import { useSelection } from "@/lib/commerce/selection";
 
 const navigation = [
   {
@@ -98,9 +98,9 @@ const navigation = [
           title: "Kategorien",
           links: [
             { name: "Bekleidung", href: "/shop/category/clothing", description: "T-Shirts, Hoodies & mehr" },
-            { name: "Accessoires", href: "/shop/category/accessories", description: "Trinkflaschen, Handtücher & mehr" },
-            { name: "Supplements", href: "/shop/category/supplements", description: "Protein, Pre-Workout & mehr" },
-            { name: "Equipment", href: "/shop/category/equipment", description: "Gewichte, Bänder & mehr" },
+            { name: "Accessoires", href: "/shop/category/accessories", description: "Tassen, Flaschen & mehr" },
+            { name: "Geräte", href: "/shop/category/equipment", description: "Hanteln, Matten & Training" },
+            { name: "Supplements", href: "/shop/category/supplements", description: "Vorschläge für das Sortiment" },
           ]
         },
         {
@@ -125,11 +125,11 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState("");
-  const [cartItemCount, setCartItemCount] = useState(0);
+  const cartItemCount = useSelection().reduce((sum, line) => sum + line.quantity, 0);
   const mobilePanel = useRef<HTMLDivElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
-  const { user, token } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -140,16 +140,6 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    if (user && token) {
-      getCart(token).then((cart) => {
-        if (!cancelled) setCartItemCount(cart?.items.length ?? 0);
-      }).catch((error) => console.error("Error loading cart count:", error));
-    }
-    return () => { cancelled = true; };
-  }, [user, token]);
 
   const solidHeader = isScrolled || pathname !== "/";
 
@@ -270,7 +260,7 @@ export default function Header() {
                 }`}
               >
                 <ShoppingBag aria-hidden="true" className="w-5 h-5" />
-                {user && cartItemCount > 0 && (
+                {cartItemCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-primary-500 text-white text-xs">
                     {cartItemCount}
                   </Badge>
@@ -436,7 +426,7 @@ export default function Header() {
                 >
                   <ShoppingBag className="w-5 h-5" />
                   <span>Warenkorb</span>
-                  {user && cartItemCount > 0 && (
+                  {cartItemCount > 0 && (
                     <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0 bg-primary-500 text-white text-xs">
                       {cartItemCount}
                     </Badge>

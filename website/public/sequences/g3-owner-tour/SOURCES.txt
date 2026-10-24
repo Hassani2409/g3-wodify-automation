@@ -1,0 +1,4 @@
+Source: user-provided Gym_owner_guiding_camera_motion_1080p_20261024190217.mp4, 2026-10-24.
+AI-staged scene with the owner; room is a design concept.
+240 original frames extracted in order, resized to 960x540 and converted to WebP quality 58. No frames synthesized.
+Prototype only; not used by the production homepage hero.
