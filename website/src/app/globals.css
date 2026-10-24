@@ -53,9 +53,9 @@
   --color-muted-foreground: #6B7280;
   --color-foreground: #1F2937;
 
-  --font-sans: 'Open Sans', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Barlow Condensed', sans-serif;
-  --font-button: 'Montserrat', sans-serif;
+  --font-sans: var(--font-g3-body), sans-serif;
+  --font-heading: var(--font-g3-heading), sans-serif;
+  --font-button: var(--font-g3-body), sans-serif;
   --font-agency-bold: 'Agency FB', 'Arial', sans-serif;
   --font-agency-regular: 'Agency FB', 'Arial', sans-serif;
 
@@ -117,3 +117,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+/* G3 professional refinement: retain the green/orange brand and existing routes. */
+body{--font-heading:var(--font-g3-heading);--font-sans:var(--font-g3-body);--font-button:var(--font-g3-body);background:#f7f8f4;color:#17241b;font-family:var(--font-g3-body),sans-serif}
+button,input,textarea,select{font:inherit;caret-color:#13401e}
+::selection{background:#ffb18b;color:#17241b}
+html{scroll-padding-top:95px;scrollbar-color:#5d785d #f7f8f4}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

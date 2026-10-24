@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.g3crossfit.de';
+  const baseUrl = 'https://g3crossfit.com';
   
   const routes = [
     {
