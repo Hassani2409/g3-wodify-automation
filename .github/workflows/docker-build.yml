@@ -31,18 +31,24 @@ jobs:
     
     - name: Test Docker image
       run: |
-        docker run --rm -d --name test-container -p 8000:8000 \
+        docker run -d --name test-container -p 8000:8000 \
           -e WODIFY_WEBHOOK_SECRET=test \
           -e SENDGRID_API_KEY=test \
           -e JWT_SECRET_KEY=test-jwt-secret-key-min-32-characters \
           g3-wodify-automation:latest
         
-        # Wait for container to start
-        sleep 10
-        
-        # Test health endpoint
-        curl -f http://localhost:8000/webhooks/health || exit 1
-        
-        # Cleanup
-        docker stop test-container
+        # Wait for readiness, retaining logs if the process exits early.
+        for attempt in $(seq 1 30); do
+          if curl --silent --fail http://localhost:8000/webhooks/health; then
+            exit 0
+          fi
+          sleep 2
+        done
+        docker logs test-container
+        exit 1
 
+    - name: Container diagnostics and cleanup
+      if: always()
+      run: |
+        docker logs test-container 2>&1 || true
+        docker rm -f test-container || true
