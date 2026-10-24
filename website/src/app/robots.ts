@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard/', '/admin/'],
       },
     ],
-    sitemap: 'https://www.g3crossfit.de/sitemap.xml',
+    sitemap: 'https://g3crossfit.com/sitemap.xml',
   };
 }
 

@@ -117,3 +117,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+/* Marketing refresh: font roles are supplied by local next/font assets. */
+body { font-family: var(--font-sans), sans-serif; }
+button { font-family: var(--font-sans), sans-serif; }
+:root { --font-button: var(--font-sans); }
+html { scroll-padding-top: 96px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

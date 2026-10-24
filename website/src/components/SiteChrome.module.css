@@ -1,0 +1,34 @@
+.header{height:86px;padding:0 max(28px,6vw);background:#13231b;color:#f1f2ec;display:flex;align-items:center;gap:30px;position:sticky;top:0;z-index:50;font-family:var(--font-sans),sans-serif}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;color:inherit;text-decoration:none;flex-shrink:0}
+.brand img{object-fit:contain;height:58px;width:50px}
+.brand>span{font-family:var(--font-heading);font-size:28px;font-weight:600;line-height:1}
+.brand small{display:block;margin-top:7px;font-family:var(--font-sans);font-size:10px;letter-spacing:.025em;font-weight:400;color:#c4d0bd}
+.desktopNav{display:flex;align-items:center;gap:28px}
+.desktopNav a{color:#dfe7d9;text-decoration:none;font-size:13px;font-weight:500;min-height:44px;display:flex;align-items:center;transition:color 180ms ease}
+.headerCta{min-height:43px;display:inline-flex;align-items:center;justify-content:center;gap:18px;padding:12px 18px;color:#13231b;background:#bfe28a;font-size:13px;font-weight:700;text-decoration:none;border-radius:3px;transition:transform 160ms ease-out,background-color 180ms ease}
+.headerCta:active{transform:scale(.97)}
+.menuToggle{display:none;border:0;background:none;color:inherit;padding:10px;cursor:pointer}
+.mobileNav{position:absolute;top:100%;left:0;right:0;padding:15px 22px 28px;background:#13231b;box-shadow:0 18px 24px rgba(10,20,12,.15)}
+.mobileNav[hidden]{display:none}
+.mobileNav a{display:flex;align-items:center;justify-content:space-between;padding:15px 0;color:#f1f2ec;font-family:var(--font-heading);font-size:30px;text-decoration:none}
+.header :is(a,button):focus-visible,.footer a:focus-visible{outline:3px solid #bfe28a;outline-offset:5px}
+.skip{position:fixed;left:20px;top:10px;z-index:1000;background:#bfe28a;color:#13231b;padding:12px 20px;transform:translateY(-160%)}
+.skip:focus{transform:translateY(0)}
+.footer{padding:70px max(28px,6vw) 25px;background:#101b15;color:#e7ede1;overflow:clip}
+.footerTop{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px}
+.footer h2{font-family:var(--font-sans);font-size:14px;font-weight:600;margin:0 0 20px;color:#bfe28a}
+.footer p{font-size:14px;line-height:1.9;margin:0 0 12px}
+.footer .footerTitle{font-family:var(--font-heading);font-size:47px;line-height:1.05;letter-spacing:-.02em;margin:0 0 18px;font-weight:500}
+.footer a{font-size:13px;color:#e0e8d9;text-underline-offset:5px;text-decoration-color:#719061}
+.footerTop>div>a:not(.footerAction){display:block;margin-bottom:14px}
+.footerAction{display:inline-flex;gap:30px;align-items:center;min-height:44px}
+.footerWord{font-family:var(--font-heading);font-size:15.5vw;line-height:1.05;letter-spacing:-.025em;white-space:nowrap;color:#bfe28a;font-weight:600;margin:65px 0 15px}
+.footerBottom{display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:12px;color:#bfccba}
+.footerBottom nav{display:flex;gap:23px}
+@media(hover:hover){.desktopNav a:hover,.footer a:hover{color:#bfe28a}.headerCta:hover{background:#d0eca8}}
+@media(max-width:1050px){.header{padding:0 5vw;gap:20px}.desktopNav{gap:20px}.footer{padding-left:5vw;padding-right:5vw}}
+@media(max-width:900px){.desktopNav{display:none}.menuToggle{display:flex}.header{gap:12px}.headerCta{margin-left:auto}.brand{margin-right:0}}
+@media(max-width:760px){.header{height:75px;padding:0 18px;gap:6px}.brand{gap:6px}.brand img{height:48px;width:38px}.brand>span{font-size:24px}.brand small{font-size:9px;margin-top:5px}.headerCta{padding:11px 12px;font-size:12px;gap:7px}.menuToggle{padding:8px}.footer{padding:50px 22px 25px}.footerTop{grid-template-columns:1fr 1fr;gap:35px 20px}.footerTop>div:first-child{grid-column:1/-1}.footerWord{font-size:15vw;margin:45px 0 25px}.footerBottom{flex-direction:column;align-items:flex-start;gap:15px}.footerBottom nav{gap:20px}.footer .footerTitle{font-size:44px}}
+@media(prefers-reduced-motion:reduce){.header *,.footer *{transition:none!important;animation:none!important}}
+
+@media(max-width:360px){.header{padding:0 12px}.brand>span{font-size:22px}.brand small{display:none}.headerCta{padding:11px 9px;font-size:11px;gap:4px}.headerCta svg{display:none}}
