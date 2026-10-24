@@ -8,7 +8,7 @@ from config.site_info import ASSISTANT_FACTS
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from loguru import logger
-from typing import Optional, List, Dict
+from typing import Optional
 
 from src.api.auth import get_current_user
 from src.models.database import User
@@ -40,12 +40,11 @@ class AIResponseResponse(BaseModel):
 
 @router.post("/generate-training-plan")
 async def generate_training_plan(
-    request: TrainingPlanRequest,
-    current_user: User = Depends(get_current_user)
+    request: TrainingPlanRequest, current_user: User = Depends(get_current_user)
 ):
     """
     Generate a personalized training plan using AI/LLM
-    
+
     This endpoint generates a training plan based on user input.
     Currently returns a mock response, but can be integrated with:
     - OpenAI API
@@ -54,10 +53,10 @@ async def generate_training_plan(
     """
     try:
         logger.info(f"Generating training plan for user {current_user.email}")
-        
+
         # TODO: Integrate with actual LLM service
         # For now, return a structured mock response
-        
+
         mock_plan = f"""# Dein personalisierter CrossFit Trainingsplan
 
 ## Woche: {request.experience_level} Level
@@ -161,35 +160,29 @@ async def generate_training_plan(
 
 Viel Erfolg bei deinem Training! 💪
 """
-        
-        return TrainingPlanResponse(
-            plan=mock_plan,
-            success=True
-        )
-        
+
+        return TrainingPlanResponse(plan=mock_plan, success=True)
+
     except Exception as e:
         logger.error(f"Error generating training plan: {str(e)}")
         raise HTTPException(
-            status_code=500,
-            detail="Fehler beim Generieren des Trainingsplans"
+            status_code=500, detail="Fehler beim Generieren des Trainingsplans"
         )
 
 
 @router.post("/generate-response")
-async def generate_response(
-    request: AIResponseRequest
-):
+async def generate_response(request: AIResponseRequest):
     """
     Generate a general AI response for phone assistant or chatbot
-    
+
     This endpoint can be used without authentication for public-facing features
     like phone assistant or chatbot.
-    
+
     Uses configured LLM provider (OpenAI, Anthropic) or falls back to rule-based responses.
     """
     try:
         logger.info(f"Generating AI response for prompt: {request.prompt[:50]}...")
-        
+
         # Build context with G3 CrossFit information
         system_context = f"""
 Du bist ein freundlicher und professioneller AI-Assistent für G3 CrossFit in Berlin.
@@ -206,24 +199,16 @@ GESPRÄCHSFÜHRUNG:
 
 {request.context or ""}
 """
-        
+
         # Generate response using LLM service
         response = await llm_service.generate_response(
-            prompt=request.prompt,
-            context=system_context
+            prompt=request.prompt, context=system_context
         )
-        
-        return AIResponseResponse(
-            response=response,
-            success=True
-        )
-        
+
+        return AIResponseResponse(response=response, success=True)
+
     except Exception as e:
         logger.error(f"Error generating AI response: {str(e)}")
         # Fallback to rule-based response on error
         fallback_response = llm_service._generate_fallback(request.prompt)
-        return AIResponseResponse(
-            response=fallback_response,
-            success=True
-        )
-
+        return AIResponseResponse(response=fallback_response, success=True)

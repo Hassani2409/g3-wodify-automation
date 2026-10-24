@@ -9,7 +9,6 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from loguru import logger
 from datetime import datetime
-from typing import Optional
 
 from src.services.sync_service import sync_service
 from src.services.wodify_api_service import wodify_api_service
@@ -23,14 +22,14 @@ limiter = Limiter(key_func=get_remote_address)
 @limiter.limit("10/hour")
 async def sync_members(
     request: Request,
-    force: bool = Query(False, description="Force sync even if recently synced")
+    force: bool = Query(False, description="Force sync even if recently synced"),
 ):
     """
     Manually trigger members synchronization from WODIFY
-    
+
     Query Parameters:
         force: Force sync even if recently synced (default: False)
-    
+
     Returns:
         Sync result with statistics
     """
@@ -47,14 +46,14 @@ async def sync_members(
 @limiter.limit("10/hour")
 async def sync_leads(
     request: Request,
-    force: bool = Query(False, description="Force sync even if recently synced")
+    force: bool = Query(False, description="Force sync even if recently synced"),
 ):
     """
     Manually trigger leads synchronization from WODIFY
-    
+
     Query Parameters:
         force: Force sync even if recently synced (default: False)
-    
+
     Returns:
         Sync result with statistics
     """
@@ -71,14 +70,14 @@ async def sync_leads(
 @limiter.limit("5/hour")
 async def sync_all(
     request: Request,
-    force: bool = Query(False, description="Force sync even if recently synced")
+    force: bool = Query(False, description="Force sync even if recently synced"),
 ):
     """
     Manually trigger full synchronization (members + leads) from WODIFY
-    
+
     Query Parameters:
         force: Force sync even if recently synced (default: False)
-    
+
     Returns:
         Combined sync results
     """
@@ -96,21 +95,23 @@ async def sync_all(
 async def get_sync_status(request: Request):
     """
     Get current synchronization status
-    
+
     Returns:
         Sync status information including last sync times and errors
     """
     try:
         status = sync_service.get_sync_status()
-        
+
         # Add WODIFY API health check
         wodify_health = await wodify_api_service.check_api_health()
         status["wodify_api_health"] = wodify_health
-        
+
         return status
     except Exception as e:
         logger.error(f"Error getting sync status: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to get sync status: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get sync status: {str(e)}"
+        )
 
 
 @router.delete("/errors")
@@ -118,7 +119,7 @@ async def get_sync_status(request: Request):
 async def clear_sync_errors(request: Request):
     """
     Clear sync error history
-    
+
     Returns:
         Confirmation message
     """
@@ -127,7 +128,7 @@ async def clear_sync_errors(request: Request):
         return {
             "success": True,
             "message": "Sync errors cleared",
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
         logger.error(f"Error clearing sync errors: {str(e)}")
@@ -140,6 +141,5 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "Synchronization API",
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }
-

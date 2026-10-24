@@ -31,23 +31,29 @@ async def admin_dashboard(request: Request):
     Admin dashboard with statistics and monitoring
     """
     session = database_service.get_session()
-    
+
     try:
         # Get statistics
         total_members = session.query(func.count(Member.client_id)).scalar() or 0
         total_leads = session.query(func.count(Lead.lead_id)).scalar() or 0
         total_emails = session.query(func.count(EmailLog.id)).scalar() or 0
         total_webhooks = session.query(func.count(WebhookLog.id)).scalar() or 0
-        
+
         # Get recent members
-        recent_members = session.query(Member).order_by(Member.created_at.desc()).limit(5).all()
-        
+        recent_members = (
+            session.query(Member).order_by(Member.created_at.desc()).limit(5).all()
+        )
+
         # Get recent leads
-        recent_leads = session.query(Lead).order_by(Lead.created_at.desc()).limit(5).all()
-        
+        recent_leads = (
+            session.query(Lead).order_by(Lead.created_at.desc()).limit(5).all()
+        )
+
         # Get recent emails
-        recent_emails = session.query(EmailLog).order_by(EmailLog.created_at.desc()).limit(10).all()
-        
+        recent_emails = (
+            session.query(EmailLog).order_by(EmailLog.created_at.desc()).limit(10).all()
+        )
+
         # Get WODIFY status
         try:
             wodify_health = await wodify_api_service.check_api_health()
@@ -56,7 +62,15 @@ async def admin_dashboard(request: Request):
             logger.warning(f"Failed to get WODIFY status: {str(e)}")
             wodify_health = {"status": "error", "error": str(e)}
             sync_status = {"wodify_configured": False}
-        
+
+        html_fragment_0 = (
+            (
+                "<p style='margin: 5px 0; color: #721c24;'><strong>Error:</strong> "
+                f"{wodify_health.get('error', 'Unknown error')}</p>"
+            )
+            if wodify_health.get("status") != "healthy"
+            else ""
+        )
         html_content = f"""
         <!DOCTYPE html>
         <html lang="de">
@@ -70,19 +84,19 @@ async def admin_dashboard(request: Request):
                     padding: 0;
                     box-sizing: border-box;
                 }}
-                
+
                 body {{
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                     min-height: 100vh;
                     padding: 20px;
                 }}
-                
+
                 .container {{
                     max-width: 1400px;
                     margin: 0 auto;
                 }}
-                
+
                 .header {{
                     background: white;
                     padding: 30px;
@@ -90,25 +104,25 @@ async def admin_dashboard(request: Request):
                     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                     margin-bottom: 30px;
                 }}
-                
+
                 .header h1 {{
                     color: #2A5D3C;
                     font-size: 32px;
                     margin-bottom: 10px;
                 }}
-                
+
                 .header p {{
                     color: #666;
                     font-size: 16px;
                 }}
-                
+
                 .stats-grid {{
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
                     gap: 20px;
                     margin-bottom: 30px;
                 }}
-                
+
                 .stat-card {{
                     background: white;
                     padding: 25px;
@@ -116,11 +130,11 @@ async def admin_dashboard(request: Request):
                     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                     transition: transform 0.3s ease;
                 }}
-                
+
                 .stat-card:hover {{
                     transform: translateY(-5px);
                 }}
-                
+
                 .stat-card h3 {{
                     color: #666;
                     font-size: 14px;
@@ -128,13 +142,13 @@ async def admin_dashboard(request: Request):
                     letter-spacing: 1px;
                     margin-bottom: 10px;
                 }}
-                
+
                 .stat-card .number {{
                     color: #2A5D3C;
                     font-size: 48px;
                     font-weight: bold;
                 }}
-                
+
                 .section {{
                     background: white;
                     padding: 30px;
@@ -142,7 +156,7 @@ async def admin_dashboard(request: Request):
                     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                     margin-bottom: 30px;
                 }}
-                
+
                 .section h2 {{
                     color: #2A5D3C;
                     font-size: 24px;
@@ -150,12 +164,12 @@ async def admin_dashboard(request: Request):
                     padding-bottom: 10px;
                     border-bottom: 2px solid #6BAF7E;
                 }}
-                
+
                 table {{
                     width: 100%;
                     border-collapse: collapse;
                 }}
-                
+
                 th {{
                     background: #f8f9fa;
                     padding: 12px;
@@ -164,16 +178,16 @@ async def admin_dashboard(request: Request):
                     color: #2A5D3C;
                     border-bottom: 2px solid #6BAF7E;
                 }}
-                
+
                 td {{
                     padding: 12px;
                     border-bottom: 1px solid #eee;
                 }}
-                
+
                 tr:hover {{
                     background: #f8f9fa;
                 }}
-                
+
                 .badge {{
                     display: inline-block;
                     padding: 4px 12px;
@@ -181,29 +195,29 @@ async def admin_dashboard(request: Request):
                     font-size: 12px;
                     font-weight: 600;
                 }}
-                
+
                 .badge-success {{
                     background: #d4edda;
                     color: #155724;
                 }}
-                
+
                 .badge-info {{
                     background: #d1ecf1;
                     color: #0c5460;
                 }}
-                
+
                 .badge-warning {{
                     background: #fff3cd;
                     color: #856404;
                 }}
-                
+
                 .test-section {{
                     background: #f8f9fa;
                     padding: 20px;
                     border-radius: 10px;
                     margin-top: 20px;
                 }}
-                
+
                 .test-button {{
                     background: #2A5D3C;
                     color: white;
@@ -214,11 +228,11 @@ async def admin_dashboard(request: Request):
                     cursor: pointer;
                     transition: background 0.3s ease;
                 }}
-                
+
                 .test-button:hover {{
                     background: #1f4429;
                 }}
-                
+
                 .footer {{
                     text-align: center;
                     color: white;
@@ -233,11 +247,11 @@ async def admin_dashboard(request: Request):
                     <h1>🐻 G3 CrossFit - Admin Dashboard</h1>
                     <p>WODIFY Automation System - Live Monitoring</p>
                     <p style="margin-top: 10px; font-size: 14px;">
-                        <strong>Environment:</strong> {settings.app_env} | 
+                        <strong>Environment:</strong> {settings.app_env} |
                         <strong>Time:</strong> {datetime.now().strftime("%d.%m.%Y %H:%M:%S")}
                     </p>
                 </div>
-                
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Total Members</h3>
@@ -256,38 +270,48 @@ async def admin_dashboard(request: Request):
                         <div class="number">{total_webhooks}</div>
                     </div>
                 </div>
-                
+
                 <div class="section">
                     <h2>🔗 WODIFY Integration Status</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
-                        <div style="background: {'#d4edda' if wodify_health.get('status') == 'healthy' else '#f8d7da'}; padding: 20px; border-radius: 10px; border: 2px solid {'#28a745' if wodify_health.get('status') == 'healthy' else '#dc3545'};">
-                            <h3 style="margin-bottom: 10px; color: {'#155724' if wodify_health.get('status') == 'healthy' else '#721c24'};">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:
+20px; margin-top: 20px;">
+                        <div style="background: {'#d4edda' if wodify_health.get('status') == 'healthy' else
+'#f8d7da'}; padding: 20px; border-radius: 10px; border: 2px solid {'#28a745' if wodify_health.get('status') ==
+'healthy' else '#dc3545'};">
+                            <h3 style="margin-bottom: 10px; color: {'#155724' if wodify_health.get('status') ==
+'healthy' else '#721c24'};">
                                 {'✓' if wodify_health.get('status') == 'healthy' else '✗'} WODIFY API Status
                             </h3>
-                            <p style="margin: 5px 0; color: {'#155724' if wodify_health.get('status') == 'healthy' else '#721c24'};">
+                            <p style="margin: 5px 0; color: {'#155724' if wodify_health.get('status') == 'healthy'
+else '#721c24'};">
                                 <strong>Status:</strong> {wodify_health.get('status', 'unknown').upper()}
                             </p>
-                            {f"<p style='margin: 5px 0; color: #721c24;'><strong>Error:</strong> {wodify_health.get('error', 'Unknown error')}</p>" if wodify_health.get('status') != 'healthy' else ""}
-                            <p style="margin: 5px 0; color: {'#155724' if wodify_health.get('status') == 'healthy' else '#721c24'};">
+                            {html_fragment_0}
+                            <p style="margin: 5px 0; color: {'#155724' if wodify_health.get('status') == 'healthy'
+else '#721c24'};">
                                 <strong>Configured:</strong> {'Yes' if wodify_health.get('api_configured') else 'No'}
                             </p>
                         </div>
-                        <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; border: 2px solid #0066cc;">
+                        <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; border: 2px solid
+#0066cc;">
                             <h3 style="margin-bottom: 10px; color: #004085;">🔄 Synchronization Status</h3>
                             <p style="margin: 5px 0; color: #004085;">
-                                <strong>Last Members Sync:</strong> {sync_status.get('last_sync_members', 'Never') or 'Never'}
+                                <strong>Last Members Sync:</strong> {sync_status.get('last_sync_members', 'Never')
+or 'Never'}
                             </p>
                             <p style="margin: 5px 0; color: #004085;">
-                                <strong>Last Leads Sync:</strong> {sync_status.get('last_sync_leads', 'Never') or 'Never'}
+                                <strong>Last Leads Sync:</strong> {sync_status.get('last_sync_leads', 'Never') or
+'Never'}
                             </p>
                             <p style="margin: 5px 0; color: #004085;">
                                 <strong>Total Errors:</strong> {sync_status.get('total_errors', 0)}
                             </p>
-                            <button class="test-button" onclick="triggerSync()" style="margin-top: 10px; width: 100%;">Trigger Manual Sync</button>
+                            <button class="test-button" onclick="triggerSync()" style="margin-top: 10px; width:
+100%;">Trigger Manual Sync</button>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="section">
                     <h2>📧 Recent Emails</h2>
                     <table>
@@ -300,7 +324,7 @@ async def admin_dashboard(request: Request):
                             </tr>
                         </thead>
                         <tbody>
-                            {''.join([f'''
+                            {''.join(['''
                             <tr>
                                 <td><span class="badge badge-info">{email.email_type}</span></td>
                                 <td>{email.recipient_name} ({email.recipient_email})</td>
@@ -311,7 +335,7 @@ async def admin_dashboard(request: Request):
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="section">
                     <h2>👥 Recent Members</h2>
                     <table>
@@ -325,7 +349,7 @@ async def admin_dashboard(request: Request):
                             </tr>
                         </thead>
                         <tbody>
-                            {''.join([f'''
+                            {''.join(['''
                             <tr>
                                 <td>{member.first_name} {member.last_name}</td>
                                 <td>{member.email}</td>
@@ -337,7 +361,7 @@ async def admin_dashboard(request: Request):
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="section">
                     <h2>🎯 Recent Leads</h2>
                     <table>
@@ -350,7 +374,7 @@ async def admin_dashboard(request: Request):
                             </tr>
                         </thead>
                         <tbody>
-                            {''.join([f'''
+                            {''.join(['''
                             <tr>
                                 <td>{lead.first_name} {lead.last_name}</td>
                                 <td>{lead.email}</td>
@@ -361,95 +385,105 @@ async def admin_dashboard(request: Request):
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="section">
                     <h2>🧪 Test Webhook</h2>
                     <div class="test-section">
                         <p style="margin-bottom: 15px;">Send a test webhook to verify the system is working:</p>
                         <button class="test-button" onclick="sendTestWebhook()">Send Test Membership Webhook</button>
-                        <button class="test-button" onclick="sendTestLead()" style="margin-left: 10px;">Send Test Lead Webhook</button>
+                        <button class="test-button" onclick="sendTestLead()" style="margin-left: 10px;">Send Test
+Lead Webhook</button>
                         <div id="test-result" style="margin-top: 15px; padding: 10px; border-radius: 5px;"></div>
                     </div>
                 </div>
-                
+
                 <div class="footer">
                     <p>G3 CrossFit WODIFY Automation v1.0.0</p>
                     <p style="margin-top: 5px; font-size: 14px;">Built with FastAPI, SQLAlchemy & SendGrid</p>
                 </div>
             </div>
-            
+
             <script>
                 async function sendTestWebhook() {{
                     const resultDiv = document.getElementById('test-result');
                     resultDiv.innerHTML = '<p style="color: #666;">Sending test webhook...</p>';
-                    
+
                     try {{
                         const response = await fetch('/admin/test-webhook/membership', {{
                             method: 'POST'
                         }});
                         const data = await response.json();
-                        
+
                         if (response.ok) {{
-                            resultDiv.innerHTML = '<p style="color: #155724; background: #d4edda; padding: 10px; border-radius: 5px;">✓ Test webhook sent successfully!</p>';
+                            resultDiv.innerHTML = '<p style="color: #155724; background: #d4edda; padding: 10px;
+border-radius: 5px;">✓ Test webhook sent successfully!</p>';
                             setTimeout(() => location.reload(), 2000);
                         }} else {{
-                            resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + data.detail + '</p>';
+                            resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px;
+border-radius: 5px;">✗ Error: ' + data.detail + '</p>';
                         }}
                     }} catch (error) {{
-                        resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + error.message + '</p>';
+                        resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px;
+border-radius: 5px;">✗ Error: ' + error.message + '</p>';
                     }}
                 }}
-                
+
                 async function sendTestLead() {{
                     const resultDiv = document.getElementById('test-result');
                     resultDiv.innerHTML = '<p style="color: #666;">Sending test lead webhook...</p>';
-                    
+
                     try {{
                         const response = await fetch('/admin/test-webhook/lead', {{
                             method: 'POST'
                         }});
                         const data = await response.json();
-                        
+
                         if (response.ok) {{
-                            resultDiv.innerHTML = '<p style="color: #155724; background: #d4edda; padding: 10px; border-radius: 5px;">✓ Test lead webhook sent successfully!</p>';
+                            resultDiv.innerHTML = '<p style="color: #155724; background: #d4edda; padding: 10px;
+border-radius: 5px;">✓ Test lead webhook sent successfully!</p>';
                             setTimeout(() => location.reload(), 2000);
                         }} else {{
-                            resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + data.detail + '</p>';
+                            resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px;
+border-radius: 5px;">✗ Error: ' + data.detail + '</p>';
                         }}
                     }} catch (error) {{
-                        resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + error.message + '</p>';
+                        resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px;
+border-radius: 5px;">✗ Error: ' + error.message + '</p>';
                     }}
                 }}
-                
+
                 async function triggerSync() {{
                     const resultDiv = document.getElementById('test-result');
                     resultDiv.innerHTML = '<p style="color: #666;">Starting synchronization...</p>';
-                    
+
                     try {{
                         const response = await fetch('/api/sync/all?force=false', {{
                             method: 'POST'
                         }});
                         const data = await response.json();
-                        
+
                         if (response.ok) {{
                             const membersInfo = data.members ? `Members: ${{data.members.synced || 0}} synced` : '';
                             const leadsInfo = data.leads ? `Leads: ${{data.leads.synced || 0}} synced` : '';
-                            resultDiv.innerHTML = '<p style="color: #155724; background: #d4edda; padding: 10px; border-radius: 5px;">✓ Sync completed! ' + membersInfo + ' ' + leadsInfo + '</p>';
+                            resultDiv.innerHTML = '<p style="color: #155724; background: #d4edda; padding: 10px;
+border-radius: 5px;">✓ Sync completed! ' + membersInfo + ' ' + leadsInfo + '</p>';
                             setTimeout(() => location.reload(), 3000);
                         }} else {{
-                            resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + (data.detail || data.error || 'Unknown error') + '</p>';
+                            resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px;
+border-radius: 5px;">✗ Error: ' + (data.detail || data.error || 'Unknown error') + '</p>';
                         }}
                     }} catch (error) {{
-                        resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px;">✗ Error: ' + error.message + '</p>';
+                        resultDiv.innerHTML = '<p style="color: #721c24; background: #f8d7da; padding: 10px;
+border-radius: 5px;">✗ Error: ' + error.message + '</p>';
                     }}
                 }}
             </script>
         </body>
         </html>
         """
-        
+
         return HTMLResponse(content=html_content)
-        
+
     finally:
         session.close()
 
@@ -461,11 +495,11 @@ async def get_stats(request: Request):
     Get system statistics as JSON including WODIFY status
     """
     session = database_service.get_session()
-    
+
     try:
         # Get sync status
         sync_status = sync_service.get_sync_status()
-        
+
         # Get WODIFY API health (async, but we'll handle errors gracefully)
         wodify_health = None
         try:
@@ -473,23 +507,24 @@ async def get_stats(request: Request):
         except Exception as e:
             logger.warning(f"Failed to check WODIFY API health: {str(e)}")
             wodify_health = {"status": "check_failed", "error": str(e)}
-        
+
         stats = {
             "total_members": session.query(func.count(Member.client_id)).scalar() or 0,
             "total_leads": session.query(func.count(Lead.lead_id)).scalar() or 0,
             "total_emails": session.query(func.count(EmailLog.id)).scalar() or 0,
             "total_webhooks": session.query(func.count(WebhookLog.id)).scalar() or 0,
-            "active_members": session.query(func.count(Member.client_id)).filter(
-                Member.membership_status == "Active"
-            ).scalar() or 0,
+            "active_members": session.query(func.count(Member.client_id))
+            .filter(Member.membership_status == "Active")
+            .scalar()
+            or 0,
             "sync_status": sync_status,
             "wodify_api_health": wodify_health,
             "scheduler_status": scheduler_service.get_scheduler_status(),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-        
+
         return stats
-        
+
     finally:
         session.close()
 
@@ -499,17 +534,17 @@ async def get_stats(request: Request):
 async def get_wodify_status(request: Request):
     """
     Get detailed WODIFY API status and configuration
-    
+
     Returns:
         WODIFY API health status, configuration, and sync status
     """
     try:
         # Get WODIFY API health
         wodify_health = await wodify_api_service.check_api_health()
-        
+
         # Get sync status
         sync_status = sync_service.get_sync_status()
-        
+
         # Get configuration (without exposing secrets)
         config = {
             "api_url": settings.wodify_api_url,
@@ -517,19 +552,21 @@ async def get_wodify_status(request: Request):
             "api_key_configured": bool(settings.wodify_api_key),
             "webhook_secret_configured": bool(settings.wodify_webhook_secret),
             "sales_portal_configured": bool(settings.wodify_sales_portal_url),
-            "tenant": settings.wodify_tenant
+            "tenant": settings.wodify_tenant,
         }
-        
+
         return {
             "wodify_api_health": wodify_health,
             "sync_status": sync_status,
             "configuration": config,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-        
+
     except Exception as e:
         logger.error(f"Error getting WODIFY status: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to get WODIFY status: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get WODIFY status: {str(e)}"
+        )
 
 
 @router.post("/test-webhook/membership")
@@ -541,7 +578,7 @@ async def send_test_membership_webhook(request: Request):
     from src.services.automation_service import automation_service
     from src.models.wodify import WodifyMembershipCreated, MembershipStatus
     import uuid
-    
+
     # Create test membership data
     test_data = WodifyMembershipCreated(
         client_id=f"test_{uuid.uuid4().hex[:8]}",
@@ -554,16 +591,16 @@ async def send_test_membership_webhook(request: Request):
         membership_status=MembershipStatus.ACTIVE,
         monthly_price=129.00,
         start_date=datetime.now(),
-        is_first_membership=True
+        is_first_membership=True,
     )
-    
+
     # Process the test webhook
     await automation_service.process_new_membership(test_data)
-    
+
     return {
         "status": "success",
         "message": "Test membership webhook processed",
-        "client_id": test_data.client_id
+        "client_id": test_data.client_id,
     }
 
 
@@ -572,7 +609,7 @@ async def send_test_membership_webhook(request: Request):
 async def get_scheduler_status(request: Request):
     """
     Get scheduler status and all scheduled jobs
-    
+
     Returns:
         Scheduler status with all jobs
     """
@@ -581,7 +618,9 @@ async def get_scheduler_status(request: Request):
         return status
     except Exception as e:
         logger.error(f"Error getting scheduler status: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to get scheduler status: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get scheduler status: {str(e)}"
+        )
 
 
 @router.get("/scheduler/jobs")
@@ -589,7 +628,7 @@ async def get_scheduler_status(request: Request):
 async def get_all_jobs(request: Request):
     """
     Get all scheduled jobs
-    
+
     Returns:
         List of all scheduled jobs
     """
@@ -606,10 +645,10 @@ async def get_all_jobs(request: Request):
 async def get_job_status(request: Request, job_id: str):
     """
     Get status of a specific job
-    
+
     Args:
         job_id: Job ID
-    
+
     Returns:
         Job status information
     """
@@ -623,7 +662,9 @@ async def get_job_status(request: Request, job_id: str):
         raise
     except Exception as e:
         logger.error(f"Error getting job status: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to get job status: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get job status: {str(e)}"
+        )
 
 
 @router.delete("/scheduler/jobs/{job_id}")
@@ -631,10 +672,10 @@ async def get_job_status(request: Request, job_id: str):
 async def delete_job(request: Request, job_id: str):
     """
     Remove a scheduled job
-    
+
     Args:
         job_id: Job ID to remove
-    
+
     Returns:
         Success status
     """
@@ -660,7 +701,7 @@ async def send_test_lead_webhook(request: Request):
     from src.services.automation_service import automation_service
     from src.models.wodify import WodifyLeadCreated, LeadStatus
     import uuid
-    
+
     # Create test lead data
     test_data = WodifyLeadCreated(
         lead_id=f"lead_{uuid.uuid4().hex[:8]}",
@@ -669,15 +710,14 @@ async def send_test_lead_webhook(request: Request):
         email=f"lead.{uuid.uuid4().hex[:8]}@example.com",
         phone="+49 987 654321",
         lead_status=LeadStatus.NEW,
-        interested_in="CrossFit Fundamentals"
+        interested_in="CrossFit Fundamentals",
     )
-    
+
     # Process the test webhook
     await automation_service.process_new_lead(test_data)
-    
+
     return {
         "status": "success",
         "message": "Test lead webhook processed",
-        "lead_id": test_data.lead_id
+        "lead_id": test_data.lead_id,
     }
-

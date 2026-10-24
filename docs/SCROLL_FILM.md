@@ -42,3 +42,7 @@ API-Referenzen: [ImageBitmap.close](https://developer.mozilla.org/en-US/docs/Web
 ## Abschluss C1 aus Standbild
 
 `ClosingInvitation` nach der Anfahrt: vorhandenes, vom Nutzer freigegebenes KI-Bild mit Inhaber. Desktop bei geeigneter Höhe/Breite, Hover und ohne reduzierte Bewegung: 160svh Gesamtstrecke, Bild skaliert scrollabhängig von 1.06 auf 1. Die Text- und CTA-Ebene bleibt unverändert; keine künstliche Personenbewegung. Mobil/Touch und kurze Fenster: normale Dokumenthöhe, Text vor vollständigem Standbild. Reduzierte Bewegung: keine Skalierung und keine zusätzliche Scrollstrecke. Kein zusätzlicher Film oder Canvas nötig; Herkunft sichtbar gekennzeichnet.
+
+## Vercel-Vorschau / CI (24.10.2026)
+
+Die beiden bereits verknüpften Vercel-Projekte `g3-wodify-automation` und `website` bauen die Next.js-Website aus `website/` mit Framework `nextjs`. Root Directory ist eine Projekteinstellung, kein Feld in `vercel.json`. Der FastAPI-Betrieb bleibt im separaten Docker-/Backend-Deployment; diese Vorschauen sind kein Nachweis einer produktiven CRM-Anbindung.

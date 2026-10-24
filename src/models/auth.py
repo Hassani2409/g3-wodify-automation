@@ -10,14 +10,18 @@ from typing import Optional
 
 class UserLogin(BaseModel):
     """User login request model"""
+
     email: EmailStr = Field(..., description="User email address")
     password: str = Field(..., min_length=8, description="User password")
 
 
 class UserRegister(BaseModel):
     """User registration request model"""
+
     email: EmailStr = Field(..., description="User email address")
-    password: str = Field(..., min_length=8, description="User password (min 8 characters)")
+    password: str = Field(
+        ..., min_length=8, description="User password (min 8 characters)"
+    )
     username: Optional[str] = Field(None, description="Optional username")
     first_name: Optional[str] = Field(None, description="First name")
     last_name: Optional[str] = Field(None, description="Last name")
@@ -26,6 +30,7 @@ class UserRegister(BaseModel):
 
 class TokenResponse(BaseModel):
     """Token response model"""
+
     access_token: str = Field(..., description="JWT access token")
     refresh_token: str = Field(..., description="JWT refresh token")
     token_type: str = Field(default="bearer", description="Token type")
@@ -33,11 +38,13 @@ class TokenResponse(BaseModel):
 
 class TokenRefresh(BaseModel):
     """Token refresh request model"""
+
     refresh_token: str = Field(..., description="Refresh token")
 
 
 class UserResponse(BaseModel):
     """User information response model"""
+
     id: str
     email: str
     username: Optional[str]
@@ -51,4 +58,3 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
