@@ -1,0 +1,6 @@
+g3-owner-entrance.mp4
+Source: user-supplied Google Flow film Gym_owner_giving_room_tour_1080p_20261024152911.mp4 (24 October 2026).
+User approved using the supplied film as-is and uploading it to the website.
+AI-staged scene with the user-identified owner and fictional training-box interior, not documentary footage of G3 premises.
+Web derivative: H.264, 1920x1080, 24fps, audio removed, CRF 24, faststart. Single playback, no loop.
+Poster: ../images/g3-owner-entrance-poster.jpg extracted near 9.8 seconds.
