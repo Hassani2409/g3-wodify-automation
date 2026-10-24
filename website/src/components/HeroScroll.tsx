@@ -9,6 +9,8 @@ import { site } from "@/lib/site";
 import { useScrollSequence } from "./useScrollSequence";
 import styles from "./HeroScroll.module.css";
 
+const POSTER_BLUR = "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoQAAkAAsBMJQBWACFr/0Q6VgAA/vkTm1VfEphtJzMT3HL6hRjs9rrw/ayXllHKuYLuE9QUwAA=";
+
 export default function HeroScroll() {
   const { sequenceRef, stickyRef, canvasRef, ready, active, enabled, toggle } = useScrollSequence({
     mediaQuery: "(min-width: 900px) and (min-height: 600px) and (hover: hover)", fit: "cover", topOffset: 0,
@@ -54,9 +56,11 @@ export default function HeroScroll() {
         <p className={styles.proof}>Maximal {site.maxParticipants} Personen pro Kurs. Bei einer Anmeldung: Personal Training ohne Aufpreis.</p>
       </div>
       <div className={styles.visual}>
-        <Image src="/sequences/g3-owner-tour/0000.webp" alt="KI-inszenierte Eingangsszene mit dem G3-Inhaber" fill priority sizes="100vw" className={styles.poster} />
-        <canvas ref={canvasRef} aria-hidden="true" className={styles.canvas} style={{ opacity: active && ready ? 1 : 0 }} />
-        <video ref={videoRef} className={styles.video} style={{ opacity: started ? 1 : 0 }} muted playsInline preload="none" poster="/sequences/g3-owner-tour/0000.webp" aria-hidden="true"
+        {/* Served unoptimized: the 960 px WebP is already small, and skipping the image optimizer avoids a black first paint on cold starts. */}
+        <Image src="/sequences/g3-owner-tour/0000.webp" alt="KI-inszenierte Eingangsszene mit dem G3-Inhaber" fill priority unoptimized
+          placeholder="blur" blurDataURL={POSTER_BLUR} sizes="100vw" className={`${styles.poster} photo-grade`} />
+        <canvas ref={canvasRef} aria-hidden="true" className={`${styles.canvas} photo-grade`} style={{ opacity: active && ready ? 1 : 0 }} />
+        <video ref={videoRef} className={`${styles.video} photo-grade`} style={{ opacity: started ? 1 : 0 }} muted playsInline preload="none" poster="/sequences/g3-owner-tour/0000.webp" aria-hidden="true"
           onError={() => { setVideoFailed(true); setStarted(false); setPlaying(false); }}
           onPlay={() => { setStarted(true); setPlaying(true); setVideoFailed(false); }} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} />
       </div>

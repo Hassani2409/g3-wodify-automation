@@ -29,10 +29,10 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, view
 
 export const metadata: Metadata = {
   title: {
-    default: "G3 CrossFit Berlin | Premium CrossFit Training",
+    default: "G3 CrossFit Berlin | CrossFit am Gleisdreieck",
     template: "%s | G3 CrossFit Berlin",
   },
-  description: "Dein CrossFit Gym im Herzen Berlins. Familiäre Atmosphäre, zertifizierte Coaches, alle Fitnesslevel. Kostenloses Probetraining buchen!",
+  description: "CrossFit Box am Gleisdreieck in Berlin, nahe Potsdamer Platz. Kleine Gruppen mit maximal 8 Personen, familiäre Atmosphäre. Kostenloses Probetraining anfragen.",
   keywords: [
     "CrossFit",
     "Berlin",
@@ -56,8 +56,8 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "G3 CrossFit Berlin | Premium CrossFit Training",
-    description: "Dein CrossFit Gym im Herzen Berlins. Familiäre Atmosphäre, zertifizierte Coaches, alle Fitnesslevel.",
+    title: "G3 CrossFit Berlin | CrossFit am Gleisdreieck",
+    description: "CrossFit Box am Gleisdreieck in Berlin. Kleine Gruppen mit maximal 8 Personen, familiäre Atmosphäre.",
     type: "website",
     locale: "de_DE",
     siteName: "G3 CrossFit Berlin",
@@ -73,8 +73,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "G3 CrossFit Berlin | Premium CrossFit Training",
-    description: "Dein CrossFit Gym im Herzen Berlins.",
+    title: "G3 CrossFit Berlin | CrossFit am Gleisdreieck",
+    description: "CrossFit Box am Gleisdreieck in Berlin.",
     images: ["/logo.png"],
   },
   robots: {

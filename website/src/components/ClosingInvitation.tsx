@@ -27,7 +27,7 @@ export default function ClosingInvitation() {
     <div className={styles.stage}>
       <div className={styles.visual}>
         <motion.div className={styles.image} style={{ transform: active ? transform : "none" }}>
-          <Image src="/images/g3-invitation.webp" alt="KI-inszenierte Einladungsszene mit dem Inhaber in einem Gym" fill sizes="100vw" />
+          <Image src="/images/g3-invitation.webp" alt="KI-inszenierte Einladungsszene mit dem Inhaber in einem Gym" fill sizes="100vw" className="photo-grade" />
         </motion.div>
       </div>
       <div className={styles.scrim} aria-hidden="true" />
