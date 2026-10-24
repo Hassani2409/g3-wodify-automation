@@ -118,7 +118,7 @@ export default function CheckoutPage() {
                             Vielen Dank für deine Bestellung.
                         </p>
                         {orderNumber && (
-                            <p className="text-xl font-semibold text-accent-600 mb-8 font-heading">
+                            <p className="text-xl font-semibold text-primary-600 mb-8 font-heading">
                                 Bestellnummer: {orderNumber}
                             </p>
                         )}

@@ -1,3 +1,5 @@
+import Directions from "@/components/Directions";
+import PodcastSection from "@/components/PodcastSection";
 import HeroSection from "@/components/HeroSection";
 import FeatureCards from "@/components/FeatureCards";
 import TrainingPrograms from "@/components/TrainingPrograms";
@@ -19,6 +21,8 @@ export default function Home() {
       <MotionSection>
         <CoachPreview />
       </MotionSection>
+      <PodcastSection />
+      <Directions />
     </div>
   );
 }

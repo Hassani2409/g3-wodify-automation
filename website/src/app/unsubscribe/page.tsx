@@ -142,8 +142,8 @@ function UnsubscribeRequest({ email, leadId }: { email: string | null; leadId: s
         <div className="mt-8 pt-6 border-t border-neutral-200">
           <p className="text-sm text-neutral-500 text-center">
             Falls du Fragen hast oder Hilfe benötigst, kontaktiere uns gerne unter{' '}
-            <a href="mailto:info@g3crossfit.de" className="text-green-600 hover:underline">
-              info@g3crossfit.de
+            <a href="mailto:info@g3crossfit.com" className="text-green-600 hover:underline">
+              info@g3crossfit.com
             </a>
           </p>
         </div>

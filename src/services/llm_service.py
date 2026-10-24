@@ -6,6 +6,7 @@ Supports OpenAI and Anthropic Claude
 from typing import Optional, List, Dict
 from loguru import logger
 from config.settings import settings
+from config.site_info import public_info_response
 
 
 class LLMService:
@@ -144,20 +145,12 @@ class LLMService:
         """Fallback rule-based responses when LLM is unavailable"""
         prompt_lower = prompt.lower()
         
-        if "probetraining" in prompt_lower or "trial" in prompt_lower:
-            return "Gerne können Sie ein kostenloses Probetraining bei uns buchen! Wir bieten flexible Termine von Montag bis Sonntag. Möchten Sie direkt einen Termin vereinbaren oder haben Sie Fragen zu unseren Kursen?"
-        
-        if "preis" in prompt_lower or "kostet" in prompt_lower or "mitgliedschaft" in prompt_lower:
-            return "Wir haben verschiedene Mitgliedschaftsoptionen: Starter für 89€, Unlimited für 139€ und Premium für 189€ pro Monat. Alle Mitgliedschaften beinhalten ein kostenloses Probetraining. Welche Option interessiert Sie am meisten?"
-        
-        if "standort" in prompt_lower or "wo" in prompt_lower or "adresse" in prompt_lower:
-            return "Wir befinden uns in der Musterstraße 123, 10115 Berlin. Wir haben kostenlose Parkplätze und sind sehr gut mit den öffentlichen Verkehrsmitteln erreichbar. Möchten Sie eine Wegbeschreibung?"
-        
-        if "öffnungszeiten" in prompt_lower or "wann" in prompt_lower or "stunden" in prompt_lower:
-            return "Unsere Öffnungszeiten sind: Montag bis Freitag von 6:00 bis 21:00 Uhr, Samstag von 8:00 bis 18:00 Uhr und Sonntag von 9:00 bis 16:00 Uhr. Wann passt es Ihnen am besten für ein Probetraining?"
-        
+        public_reply = public_info_response(prompt)
+        if public_reply:
+            return public_reply
+
         if "kurse" in prompt_lower or "klassen" in prompt_lower or "training" in prompt_lower:
-            return "Wir bieten verschiedene Kurse an: CrossFit Foundations für Anfänger, CrossFit Classes für alle Level, Olympic Weightlifting und Strength & Conditioning. Alle Level sind willkommen! Welcher Kurs interessiert Sie?"
+            return "Wir bieten verschiedene Kurse an: CrossFit, Yoga, Weightlifting, Functional Bodybuilding und Team-WODs. Alle Level sind willkommen! Welcher Kurs interessiert Sie?"
         
         if "anruf beginnt" in prompt_lower or "hallo" in prompt_lower:
             return "G3 CrossFit, mein Name ist Alex. Wie kann ich Ihnen helfen?"

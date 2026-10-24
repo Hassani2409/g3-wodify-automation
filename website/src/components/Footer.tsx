@@ -1,5 +1,7 @@
 "use client";
 
+import { site } from "@/lib/site";
+
 import Link from "next/link";
 import { Dumbbell, Phone, Mail, MapPin, Instagram, Facebook, Youtube } from "lucide-react";
 
@@ -37,7 +39,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="p-2 bg-accent-500 rounded-lg">
+              <div className="p-2 bg-primary-500 rounded-lg">
                 <Dumbbell className="h-8 w-8 text-white" />
               </div>
               <div className="flex flex-col">
@@ -62,7 +64,7 @@ export default function Footer() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 bg-primary-800 hover:bg-accent-500 rounded-lg transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-110"
+                    className="p-2 bg-primary-800 hover:bg-primary-700 rounded-lg transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out hover:scale-110"
                     aria-label={item.name}
                   >
                     <Icon className="h-5 w-5 text-white" />
@@ -118,50 +120,32 @@ export default function Footer() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="tel:+493012345678"
+                  href={site.phoneHref}
                   className="flex items-start gap-3 text-primary-200 hover:text-white transition-colors duration-300 group"
                 >
-                  <Phone className="w-5 h-5 mt-0.5 text-accent-500 group-hover:text-white transition-colors" />
-                  <span className="font-body">+49 30 1234 5678</span>
+                  <Phone className="w-5 h-5 mt-0.5 text-primary-500 group-hover:text-white transition-colors" />
+                  <span className="font-body">{site.phone}</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:info@g3crossfit.de"
+                  href={`mailto:${site.email}`}
                   className="flex items-start gap-3 text-primary-200 hover:text-white transition-colors duration-300 group"
                 >
-                  <Mail className="w-5 h-5 mt-0.5 text-accent-500 group-hover:text-white transition-colors" />
-                  <span className="font-body">info@g3crossfit.de</span>
+                  <Mail className="w-5 h-5 mt-0.5 text-primary-500 group-hover:text-white transition-colors" />
+                  <span className="font-body">{site.email}</span>
                 </a>
               </li>
               <li>
                 <div className="flex items-start gap-3 text-primary-200">
-                  <MapPin className="w-5 h-5 mt-0.5 text-accent-500" />
-                  <span className="font-body">
-                    Musterstraße 123
-                    <br />
-                    10115 Berlin
-                  </span>
+                  <MapPin className="w-5 h-5 mt-0.5 text-primary-500" />
+                  <span className="font-body">{site.street}<br />{site.postalCode} {site.city}</span>
                 </div>
               </li>
             </ul>
 
-            {/* Opening Hours */}
-            <div className="mt-6 pt-6 border-t border-primary-800">
-              <h4 className="text-white font-semibold mb-3 font-heading">
-                Öffnungszeiten
-              </h4>
-              <div className="space-y-2 text-sm font-body">
-                <div className="flex justify-between text-primary-200">
-                  <span>Mo - Fr</span>
-                  <span className="font-semibold text-white">6:00 - 21:00</span>
-                </div>
-                <div className="flex justify-between text-primary-200">
-                  <span>Sa - So</span>
-                  <span className="font-semibold text-white">9:00 - 18:00</span>
-                </div>
-              </div>
-            </div>
+            <p className="mt-6 text-primary-200 font-body">{site.entrance}</p>
+            <Link href="/schedule" className="inline-block mt-3 underline underline-offset-4">Aktuelle Kurszeiten</Link>
           </div>
         </div>
       </div>

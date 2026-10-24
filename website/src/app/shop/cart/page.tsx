@@ -155,7 +155,7 @@ export default function CartPage() {
                                                         Größe: {item.size}
                                                     </p>
                                                 )}
-                                                <p className="text-lg font-bold text-accent-600 font-heading">
+                                                <p className="text-lg font-bold text-primary-600 font-heading">
                                                     {item.price.toFixed(2)}€
                                                 </p>
                                             </div>

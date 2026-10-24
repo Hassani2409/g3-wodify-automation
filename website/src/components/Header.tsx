@@ -1,5 +1,7 @@
 "use client";
 
+import { site } from "@/lib/site";
+
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -32,7 +34,8 @@ const navigation = [
             { name: "Olympic Weightlifting", href: "/training#olympic-lifting", description: "Technikfokussiertes Training" },
             { name: "Strength & Conditioning", href: "/training#strength-conditioning", description: "Kraftaufbau & athletische Entwicklung" },
             { name: "Gymnastics & Mobility", href: "/training#gymnastics", description: "Körperbeherrschung & Beweglichkeit" },
-            { name: "Personal Training", href: "/training#personal-training", description: "1:1 Coaching" },
+            { name: "Yoga", href: "/training#yoga", description: "Bewegung und Entspannung" },
+            { name: "Team-WODs", href: "/training#team-wods", description: "Gemeinsam trainieren" },
           ]
         },
         {
@@ -268,7 +271,7 @@ export default function Header() {
               >
                 <ShoppingBag aria-hidden="true" className="w-5 h-5" />
                 {user && cartItemCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-accent-500 text-white text-xs">
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-primary-500 text-white text-xs">
                     {cartItemCount}
                   </Badge>
                 )}
@@ -313,7 +316,7 @@ export default function Header() {
                     className={`inline-flex items-center gap-2 px-6 py-3 rounded-button font-button font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out active:scale-[0.97] ${
                       solidHeader
                         ? "bg-primary-500 hover:bg-primary-600 text-white shadow-lg hover:shadow-xl"
-                        : "bg-white hover:bg-primary-50 text-primary-700 shadow-lg hover:shadow-xl"
+                        : "bg-accent hover:bg-accent-600 text-accent-foreground shadow-lg hover:shadow-xl"
                     }`}
                   >
                     <Phone className="w-4 h-4" />
@@ -403,26 +406,22 @@ export default function Header() {
                   </h3>
                   <div className="space-y-3">
                     <a
-                      href="tel:+493012345678"
+                      href={site.phoneHref}
                       className="flex items-center gap-3 text-foreground hover:text-primary-700 transition-colors"
                     >
                       <Phone className="w-5 h-5 text-primary-500" />
-                      <span className="font-body">+49 30 1234 5678</span>
+                      <span className="font-body">{site.phone}</span>
                     </a>
                     <a
-                      href="mailto:info@g3crossfit.de"
+                      href={`mailto:${site.email}`}
                       className="flex items-center gap-3 text-foreground hover:text-primary-700 transition-colors"
                     >
                       <Mail className="w-5 h-5 text-primary-500" />
-                      <span className="font-body">info@g3crossfit.de</span>
+                      <span className="font-body">{site.email}</span>
                     </a>
                     <div className="flex items-start gap-3 text-foreground">
                       <MapPin className="w-5 h-5 text-primary-500 mt-0.5" />
-                      <span className="font-body">
-                        Musterstraße 123
-                        <br />
-                        10115 Berlin
-                      </span>
+                      <span className="font-body">{site.street}<br />{site.postalCode} {site.city}</span>
                     </div>
                   </div>
                 </div>
@@ -438,7 +437,7 @@ export default function Header() {
                   <ShoppingBag className="w-5 h-5" />
                   <span>Warenkorb</span>
                   {user && cartItemCount > 0 && (
-                    <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0 bg-accent-500 text-white text-xs">
+                    <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0 bg-primary-500 text-white text-xs">
                       {cartItemCount}
                     </Badge>
                   )}
@@ -466,29 +465,15 @@ export default function Header() {
                     </Link>
                   <Link
                     href="/contact#booking"
-                    className="block w-full px-6 py-4 bg-primary-500 hover:bg-primary-600 text-white text-center font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out touch-manipulation active:scale-[0.98] active:bg-accent-700"
+                    className="block w-full px-6 py-4 bg-accent hover:bg-accent-600 text-accent-foreground text-center font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out touch-manipulation active:scale-[0.98] active:bg-accent-700"
                   >
                     Kostenloses Probetraining
                   </Link>
                   </>
                 )}
 
-                {/* Opening Hours */}
-                <div className="space-y-3 pt-4">
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider font-heading">
-                    Öffnungszeiten
-                  </h3>
-                  <div className="space-y-2 text-sm font-body">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Mo - Fr</span>
-                      <span className="font-semibold text-foreground">6:00 - 21:00</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Sa - So</span>
-                      <span className="font-semibold text-foreground">9:00 - 18:00</span>
-                    </div>
-                  </div>
-                </div>
+                <p className="text-muted-foreground text-sm">{site.entrance}</p>
+                <Link href="/schedule" className="text-primary-700 underline underline-offset-4">Aktuelle Kurszeiten</Link>
               </div>
             </motion.div>
           </>

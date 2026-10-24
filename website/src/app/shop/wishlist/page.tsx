@@ -167,7 +167,7 @@ export default function WishlistPage() {
                                         <Heart className={`w-5 h-5 fill-red-600 text-red-600 ${removingId === product.id ? 'opacity-50' : ''}`} />
                                     </button>
                                     {product.featured && (
-                                        <Badge className="absolute top-3 left-3 bg-accent-500 text-white">
+                                        <Badge className="absolute top-3 left-3 bg-primary-500 text-white">
                                             Featured
                                         </Badge>
                                     )}
@@ -194,7 +194,7 @@ export default function WishlistPage() {
                                     </div>
 
                                     <div className="flex items-center justify-between mb-4">
-                                        <span className="text-2xl font-bold text-accent-600 font-heading">
+                                        <span className="text-2xl font-bold text-primary-600 font-heading">
                                             {product.price.toFixed(2)}€
                                         </span>
                                     </div>

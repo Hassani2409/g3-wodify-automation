@@ -220,7 +220,7 @@ const coursesData = [
 
 // Course type definitions with colors
 const courseTypes: Record<string, { label: string; color: string; lightColor: string; textColor: string }> = {
-  crossfit: { label: 'CrossFit', color: 'bg-accent-500', lightColor: 'bg-accent-100', textColor: 'text-accent-800' },
+  crossfit: { label: 'CrossFit', color: 'bg-primary-500', lightColor: 'bg-primary-100', textColor: 'text-primary-800' },
   foundations: { label: 'Foundations', color: 'bg-secondary-500', lightColor: 'bg-secondary-100', textColor: 'text-secondary-800' },
   olympic: { label: 'Olympic Lifting', color: 'bg-red-500', lightColor: 'bg-red-100', textColor: 'text-red-800' },
   gymnastics: { label: 'Gymnastics', color: 'bg-purple-500', lightColor: 'bg-purple-100', textColor: 'text-purple-800' },
@@ -317,19 +317,19 @@ const CourseDetailModal = ({ course, onClose, onBook, onJoinWaitlist, isBooking,
 
               <div className="space-y-4 text-base mb-8 font-body">
                 <div className="flex items-center">
-                  <Calendar className="w-5 h-5 mr-3 text-accent-500" />
+                  <Calendar className="w-5 h-5 mr-3 text-primary-500" />
                   <strong>{course.day}, {course.startTime} - {course.endTime} Uhr</strong>
                 </div>
                 <div className="flex items-center">
-                  <User className="w-5 h-5 mr-3 text-accent-500" />
+                  <User className="w-5 h-5 mr-3 text-primary-500" />
                   <strong>Coach:</strong> {course.trainer}
                 </div>
                 <div className="flex items-center">
-                  <BarChart className="w-5 h-5 mr-3 text-accent-500" />
+                  <BarChart className="w-5 h-5 mr-3 text-primary-500" />
                   <strong>Level:</strong> {course.level}
                 </div>
                 <div className="flex items-center">
-                  <Info className="w-5 h-5 mr-3 text-accent-500" />
+                  <Info className="w-5 h-5 mr-3 text-primary-500" />
                   <strong>{isCourseFull ? 'Kurs ausgebucht' : `${spotsLeft} freie Plätze`}</strong>
                 </div>
               </div>
@@ -658,7 +658,7 @@ export default function SchedulePage() {
             </p>
           </div>
 
-          <Card className="bg-linear-to-br from-secondary-50 to-accent-50 border-2 border-dashed border-accent-500">
+          <Card className="bg-linear-to-br from-secondary-50 to-primary-50 border-2 border-dashed border-primary-500">
             <CardContent className="p-12 text-center">
               <div className="max-w-2xl mx-auto">
                 <Calendar className="w-20 h-20 mx-auto mb-6 text-primary-500" />
@@ -860,15 +860,15 @@ export default function SchedulePage() {
 
                               <div className="space-y-2 mb-4 text-sm text-foreground font-body">
                                 <div className="flex items-center">
-                                  <User className="w-4 h-4 mr-2 text-accent-500" />
+                                  <User className="w-4 h-4 mr-2 text-primary-500" />
                                   <span><strong>Coach:</strong> {course.trainer}</span>
                                 </div>
                                 <div className="flex items-center">
-                                  <BarChart className="w-4 h-4 mr-2 text-accent-500" />
+                                  <BarChart className="w-4 h-4 mr-2 text-primary-500" />
                                   <span><strong>Level:</strong> {course.level}</span>
                                 </div>
                                 <div className="flex items-center">
-                                  <Info className="w-4 h-4 mr-2 text-accent-500" />
+                                  <Info className="w-4 h-4 mr-2 text-primary-500" />
                                   <span>
                                     <strong>
                                       {isCourseFull ? 'Ausgebucht' : `${spotsLeft} freie Plätze`}

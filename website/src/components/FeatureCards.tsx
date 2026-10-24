@@ -6,21 +6,21 @@ const features = [
   {
     icon: Users,
     title: "Kleine Gruppen",
-    description: "Maximal 12 Personen pro Kurs für persönliche Betreuung und individuelle Anpassungen",
+    description: "Maximal 8 Personen. Bei nur einer Anmeldung: Personal Training ohne Aufpreis.",
     benefit: "Persönliche Betreuung",
     color: "primary",
   },
   {
     icon: Award,
     title: "Zertifizierte Coaches",
-    description: "Alle Trainer sind CrossFit Level 1 & 2 zertifiziert mit jahrelanger Erfahrung",
+    description: "Persönliches Coaching mit Fokus auf deine Ziele und sichere Technik",
     benefit: "Professionelles Coaching",
     color: "secondary",
   },
   {
     icon: Clock,
     title: "Flexible Kurszeiten",
-    description: "30+ Kurse pro Woche von 6:00 bis 20:00 Uhr - finde die perfekte Zeit für dich",
+    description: "Aktuelle Kurszeiten findest du im WODIFY-Kursplan",
     benefit: "Maximale Flexibilität",
     color: "accent",
   },
@@ -40,9 +40,9 @@ const features = [
   },
   {
     icon: Dumbbell,
-    title: "Modernste Ausstattung",
-    description: "Rogue Fitness Equipment, Concept2 Rudergeräte und professionelle Gewichte",
-    benefit: "Premium Equipment",
+    title: "Videoanalyse und Fehlerkorrektur",
+    description: "Feedback zu deinen Bewegungen für ein gezieltes Techniktraining",
+    benefit: "Technik im Blick",
     color: "accent",
   },
 ];
@@ -61,10 +61,10 @@ const colorClasses = {
     badge: "bg-secondary-100 text-secondary-700",
   },
   accent: {
-    icon: "text-accent-500",
-    border: "border-accent-500/20",
-    bg: "bg-accent-50",
-    badge: "bg-accent-100 text-accent-700",
+    icon: "text-primary-500",
+    border: "border-primary-500/20",
+    bg: "bg-primary-50",
+    badge: "bg-primary-100 text-primary-700",
   },
 };
 
@@ -82,7 +82,7 @@ export default function FeatureCards() {
           <p
             className="text-xl text-muted-foreground max-w-2xl mx-auto font-body"
           >
-            Entdecke, was uns zur besten CrossFit Box in Berlin macht
+            Persönlich trainieren in unserer Box am Gleisdreieck
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export default function FeatureCards() {
           <p className="text-lg text-muted-foreground mb-6 font-body">
             Überzeuge dich selbst von unserer Community
           </p>
-          <Button asChild className="h-auto min-h-12 whitespace-normal px-6 py-4 bg-primary-500 hover:bg-primary-600 text-white font-button font-semibold rounded-button shadow-lg  transition-[border-color,box-shadow] duration-200 ease-out"><Link href="/contact#booking">
+          <Button asChild className="h-auto min-h-12 whitespace-normal px-6 py-4 bg-accent hover:bg-accent-600 text-accent-foreground font-button font-semibold rounded-button shadow-lg  transition-[border-color,box-shadow] duration-200 ease-out"><Link href="/contact#booking">
               Jetzt kostenloses Probetraining buchen
             </Link></Button>
         </div>

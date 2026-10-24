@@ -190,7 +190,7 @@ export default function OrdersPage() {
                                                 )}
                                                 <div className="pt-2 border-t">
                                                     <p className="text-sm text-neutral-500 font-body">Gesamt</p>
-                                                    <p className="text-2xl font-bold text-accent-600 font-heading">
+                                                    <p className="text-2xl font-bold text-primary-600 font-heading">
                                                         {order.total.toFixed(2)}€
                                                     </p>
                                                 </div>

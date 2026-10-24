@@ -156,7 +156,7 @@ export default function CategoryPage() {
                                                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
                                                 width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                                 {product.featured && (
-                                                    <Badge className="absolute top-3 left-3 bg-accent-500 text-white">
+                                                    <Badge className="absolute top-3 left-3 bg-primary-500 text-white">
                                                         <Star className="w-3 h-3 mr-1" />
                                                         Featured
                                                     </Badge>
@@ -181,7 +181,7 @@ export default function CategoryPage() {
                                                 </div>
 
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-2xl font-bold text-accent-600 font-heading">
+                                                    <span className="text-2xl font-bold text-primary-600 font-heading">
                                                         {product.price.toFixed(2)}€
                                                     </span>
                                                 </div>

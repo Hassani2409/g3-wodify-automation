@@ -16,7 +16,7 @@ export default function DashboardPage() {
   const stats = [
     { label: "Trainings diese Woche", value: "3", icon: Dumbbell, color: "text-primary-500" },
     { label: "Gebuchte Kurse", value: "5", icon: Calendar, color: "text-secondary-500" },
-    { label: "Trainingsstreak", value: "7 Tage", icon: TrendingUp, color: "text-accent-500" },
+    { label: "Trainingsstreak", value: "7 Tage", icon: TrendingUp, color: "text-primary-500" },
     { label: "Erreichte Ziele", value: "12/15", icon: Award, color: "text-primary-600" },
   ];
 
@@ -26,7 +26,7 @@ export default function DashboardPage() {
       description: "Lass die KI einen personalisierten Plan für dich erstellen",
       href: "/dashboard/training",
       icon: Dumbbell,
-      color: "bg-accent-500"
+      color: "bg-primary-500"
     },
     { 
       title: "Meine Bestellungen", 
@@ -118,7 +118,7 @@ export default function DashboardPage() {
                           <p className="text-sm text-muted-foreground mb-4 font-body">
                             {action.description}
                           </p>
-                          <div className="flex items-center text-accent-500 text-sm font-medium font-body">
+                          <div className="flex items-center text-primary-500 text-sm font-medium font-body">
                             Jetzt starten
                             <ArrowRight className="h-4 w-4 ml-2" />
                           </div>
@@ -136,7 +136,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center font-heading">
-              <Clock className="h-5 w-5 mr-2 text-accent-500" />
+              <Clock className="h-5 w-5 mr-2 text-primary-500" />
               Nächste Kurse
             </CardTitle>
           </CardHeader>

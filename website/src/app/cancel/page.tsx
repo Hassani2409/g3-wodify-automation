@@ -103,8 +103,8 @@ export default function CancelPage() {
               {/* Reason 3 */}
               <Card>
                 <CardContent className="pt-6 text-center">
-                  <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <HelpCircle className="w-8 h-8 text-accent-500" />
+                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <HelpCircle className="w-8 h-8 text-primary-500" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 font-heading">
                     Fragen offen
@@ -157,7 +157,7 @@ export default function CancelPage() {
                   {/* Option 2: Contact us */}
                   <div className="bg-white rounded-card p-6 shadow-sm">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <MessageCircle className="w-6 h-6 text-white" />
                       </div>
                       <div>
@@ -186,7 +186,7 @@ export default function CancelPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
           >
-            <Card className="bg-linear-to-br from-accent-500 to-accent-600 text-white border-0">
+            <Card className="bg-linear-to-br from-primary-500 to-primary-600 text-white border-0">
               <CardContent className="py-12 text-center">
                 <h2 className="text-3xl font-bold mb-4 font-heading">
                   Noch unsicher? Probiere uns kostenlos aus!
@@ -198,7 +198,7 @@ export default function CancelPage() {
                   <Link href="/contact">
                     <Button 
                       size="lg" 
-                      className="bg-white text-accent-500 hover:bg-white/90 w-full sm:w-auto"
+                      className="bg-white text-primary-500 hover:bg-white/90 w-full sm:w-auto"
                     >
                       Probetraining buchen
                     </Button>

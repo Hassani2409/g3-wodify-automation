@@ -35,21 +35,22 @@
   --color-secondary: var(--color-secondary-500);
 
   --color-accent-*: initial;
-  --color-accent-50: #FFF3EF;
-  --color-accent-100: #FFE7DF;
-  --color-accent-200: #FFCFBF;
-  --color-accent-300: #FFB79F;
-  --color-accent-400: #FF9F7F;
-  --color-accent-500: #FF6B35;
-  --color-accent-600: #FF4500;
-  --color-accent-700: #CC3700;
-  --color-accent-800: #992900;
-  --color-accent-900: #661B00;
+  --color-accent-50: #FEFFF0;
+  --color-accent-100: #FCFFD9;
+  --color-accent-200: #F9FFB3;
+  --color-accent-300: #F7FF94;
+  --color-accent-400: #F5FF7E;
+  --color-accent-500: #F3FF67;
+  --color-accent-600: #E3F04A;
+  --color-accent-700: #B9C434;
+  --color-accent-800: #8C9527;
+  --color-accent-900: #5E641A;
   --color-accent: var(--color-accent-500);
 
   --color-primary-foreground: #FFFFFF;
   --color-secondary-foreground: #0d2a13;
-  --color-accent-foreground: #030508;
+  --color-accent-foreground: #0B2311;
+  --color-ink: #0B2311;
   --color-card-foreground: #030508;
   --color-popover: #FFFFFF;
   --color-popover-foreground: #030508;

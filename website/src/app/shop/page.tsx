@@ -147,7 +147,7 @@ export default function Shop() {
                             Hochwertige CrossFit-Ausrüstung und G3-Merchandise für dein Training
                         </p>
                         <div className="inline-flex items-center space-x-2 bg-white/20 rounded-lg px-4 py-2 backdrop-blur-sm">
-                            <ShoppingBag className="w-5 h-5 text-accent-400" />
+                            <ShoppingBag className="w-5 h-5 text-primary-400" />
                             <span className="font-medium font-body">Kostenloser Versand ab 50€</span>
                         </div>
                     </motion.div>
@@ -245,7 +245,7 @@ export default function Shop() {
                                                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
                                                 width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                                 {product.featured && (
-                                                    <Badge className="absolute top-3 left-3 bg-accent-500 text-white">
+                                                    <Badge className="absolute top-3 left-3 bg-primary-500 text-white">
                                                         <Star className="w-3 h-3 mr-1" />
                                                         Featured
                                                     </Badge>
@@ -275,7 +275,7 @@ export default function Shop() {
                                                 </div>
 
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-2xl font-bold text-accent-600 font-heading">
+                                                    <span className="text-2xl font-bold text-primary-600 font-heading">
                                                         {product.price.toFixed(2)}€
                                                     </span>
                                                     {product.sizes && product.sizes.length > 0 && (

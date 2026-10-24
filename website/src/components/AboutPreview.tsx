@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Target, Heart, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { specificUnsplashPhotos } from "@/lib/unsplash";
+
 
 const values = [
   {
@@ -36,8 +36,8 @@ export default function AboutPreview() {
             {/* Community Image */}
             <div className="relative aspect-4/3 rounded-2xl overflow-hidden border-4 border-primary-500 shadow-2xl">
               <Image
-                src={specificUnsplashPhotos.communityGroup}
-                alt="Symbolbild einer Trainingshalle"
+                src="/images/g3-training.jpg"
+                alt="Trainingsbereich im G3 CrossFit"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -47,7 +47,7 @@ export default function AboutPreview() {
               <div className="absolute inset-0 bg-linear-to-br from-primary-900/40 to-transparent" />
 
               {/* Decorative Elements */}
-              <div className="absolute top-4 right-4 w-20 h-20 bg-accent-500/30 rounded-full blur-2xl" />
+              <div className="absolute top-4 right-4 w-20 h-20 bg-primary-500/30 rounded-full blur-2xl" />
               <div className="absolute bottom-4 left-4 w-32 h-32 bg-secondary-500/30 rounded-full blur-2xl" />
             </div>
 
@@ -65,9 +65,7 @@ export default function AboutPreview() {
             </h2>
 
             <p className="text-xl text-neutral-300 mb-8 leading-relaxed">
-              G3 CrossFit ist Berlins führendes CrossFit-Gym. Seit 2016 helfen wir
-              Menschen dabei, ihre Fitnessziele zu erreichen und Teil einer starken
-              Community zu werden.
+              Unsere Box am Gleisdreieck bringt Menschen aus Mitte, Kreuzberg und Schöneberg zusammen.
             </p>
 
             <p className="text-lg text-neutral-400 mb-10 leading-relaxed">

@@ -160,7 +160,7 @@ export default function BlogPost() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <Badge className="bg-accent-500 text-white mb-4">
+            <Badge className="bg-primary-500 text-white mb-4">
               {post.category}
             </Badge>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
@@ -280,7 +280,7 @@ export default function BlogPost() {
                       width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                     </div>
                     <CardContent className="p-6 flex-1 flex flex-col">
-                      <Badge className="bg-accent-500 text-white mb-3 w-fit">
+                      <Badge className="bg-primary-500 text-white mb-3 w-fit">
                         {relatedPost.category}
                       </Badge>
                       <h3 className="text-xl font-bold mb-3 text-primary-600 line-clamp-2">
@@ -289,7 +289,7 @@ export default function BlogPost() {
                       <p className="text-neutral-600 mb-4 line-clamp-2 flex-1">
                         {relatedPost.content.substring(0, 150)}...
                       </p>
-                      <Button asChild variant="outline" className="group-hover:bg-accent-500 group-hover:text-white transition-[color,background-color,border-color,box-shadow,transform,opacity]">
+                      <Button asChild variant="outline" className="group-hover:bg-primary-500 group-hover:text-white transition-[color,background-color,border-color,box-shadow,transform,opacity]">
                         <Link href={`/blog/${relatedPost.id}`}>
                           Weiterlesen
                         </Link>

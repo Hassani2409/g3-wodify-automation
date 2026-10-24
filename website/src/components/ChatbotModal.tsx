@@ -1,5 +1,7 @@
 "use client";
 
+import { assistantFacts } from "@/lib/site";
+
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
@@ -40,12 +42,7 @@ Du bist ein freundlicher und hilfsbereiter Chatbot-Assistent für G3 CrossFit in
 Deine Aufgabe ist es, Besuchern der Website zu helfen und ihre Fragen zu beantworten.
 
 WICHTIGE INFORMATIONEN:
-- Standort: Musterstraße 123, 10115 Berlin
-- Telefon: +49 30 12345678
-- Öffnungszeiten: Mo-Fr 6:00-21:00, Sa 8:00-18:00, So 9:00-16:00
-- Preise: Starter 89€, Unlimited 139€, Premium 189€
-- Kostenloses Probetraining verfügbar
-- Alle Level willkommen
+${assistantFacts}
 
 GESPRÄCHSFÜHRUNG:
 - Sei freundlich, professionell und hilfsbereit

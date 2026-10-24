@@ -293,8 +293,8 @@ function SuccessContent() {
               {/* Step 3 */}
               <Card className="text-center">
                 <CardContent className="pt-6">
-                  <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Download className="w-8 h-8 text-accent-500" />
+                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Download className="w-8 h-8 text-primary-500" />
                   </div>
                   <h3 className="text-xl font-bold mb-2 font-heading">
                     3. App herunterladen

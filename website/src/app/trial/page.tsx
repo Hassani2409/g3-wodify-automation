@@ -81,13 +81,13 @@ export default function TrialPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-500/20 border border-accent-500/40 mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/20 border border-primary-500/40 mb-6"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
             </span>
-            <span className="text-accent-100 text-sm font-medium font-button">100% Kostenlos & Unverbindlich</span>
+            <span className="text-primary-100 text-sm font-medium font-button">100% Kostenlos & Unverbindlich</span>
           </motion.div>
 
           <motion.h1
@@ -97,7 +97,7 @@ export default function TrialPage() {
             className="text-5xl md:text-7xl font-bold text-white mb-6 font-heading"
           >
             Starte dein{" "}
-            <span className="bg-gradient-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               kostenloses Probetraining
             </span>
           </motion.h1>
@@ -120,7 +120,7 @@ export default function TrialPage() {
             <Link href="/contact#booking">
               <Button 
                 size="lg" 
-                className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out font-button text-base h-14 px-8 rounded-button"
+                className="bg-primary-500 hover:bg-primary-600 text-white shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out font-button text-base h-14 px-8 rounded-button"
                 onClick={() => {
                   trackCTAClick('trial_booking_hero', 'trial_page');
                   trackTrialBooking();
@@ -256,7 +256,7 @@ export default function TrialPage() {
               <Link href="/contact#booking">
                 <Button 
                   size="lg" 
-                  className="bg-accent-500 hover:bg-accent-600 text-white shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out font-button text-base h-14 px-8 rounded-button"
+                  className="bg-primary-500 hover:bg-primary-600 text-white shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-out font-button text-base h-14 px-8 rounded-button"
                 >
                   <Calendar className="mr-2 h-5 w-5" />
                   Jetzt buchen

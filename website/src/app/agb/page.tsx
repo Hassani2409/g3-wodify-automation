@@ -16,7 +16,7 @@ export default function AGBPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Scale className="h-16 w-16 mx-auto mb-6 text-accent-400" />
+            <Scale className="h-16 w-16 mx-auto mb-6 text-primary-400" />
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white font-heading">
               Allgemeine Geschäftsbedingungen
             </h1>
@@ -222,14 +222,14 @@ export default function AGBPage() {
                 <div className="bg-muted p-4 rounded-lg">
                   <p className="font-body">
                     <strong className="text-foreground">E-Mail:</strong>{" "}
-                    <a href="mailto:info@g3crossfit.de" className="text-primary-600 hover:text-primary-700">
-                      info@g3crossfit.de
+                    <a href="mailto:info@g3crossfit.com" className="text-primary-600 hover:text-primary-700">
+                      info@g3crossfit.com
                     </a>
                   </p>
                   <p className="font-body mt-2">
                     <strong className="text-foreground">Telefon:</strong>{" "}
-                    <a href="tel:+493012345678" className="text-primary-600 hover:text-primary-700">
-                      +49 30 1234 5678
+                    <a href="tel:+491605571866" className="text-primary-600 hover:text-primary-700">
+                      0160 55 718 66
                     </a>
                   </p>
                 </div>

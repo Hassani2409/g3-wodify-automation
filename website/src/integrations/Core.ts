@@ -1,3 +1,5 @@
+import { site } from "@/lib/site";
+
 /**
  * Core Integration Functions
  * Provides integration with backend AI/LLM services
@@ -17,26 +19,27 @@ function getFallbackResponse(prompt: string): string {
         return "Vielen Dank für Ihre Anfrage! Gerne helfe ich Ihnen weiter. Möchten Sie mehr über unsere Mitgliedschaften, Kurse oder ein kostenloses Probetraining erfahren?";
     }
     
-    const promptLower = prompt.toLowerCase();
+    const question = prompt.match(/Der (?:Nutzer|Anrufer) sagt: "([\s\S]*)"\s*$/)?.[1] ?? prompt;
+    const promptLower = question.toLowerCase();
     
     if (promptLower.includes('probetraining') || promptLower.includes('trial')) {
-        return "Gerne können Sie ein kostenloses Probetraining bei uns buchen! Wir bieten flexible Termine von Montag bis Sonntag. Möchten Sie direkt einen Termin vereinbaren oder haben Sie Fragen zu unseren Kursen?";
+        return "Gerne können Sie ein kostenloses Probetraining bei uns buchen! Deinen Termin stimmen wir persönlich mit dir ab. Möchten Sie direkt einen Termin vereinbaren oder haben Sie Fragen zu unseren Kursen?";
     }
     
     if (promptLower.includes('preis') || promptLower.includes('kostet') || promptLower.includes('mitgliedschaft')) {
-        return "Wir haben verschiedene Mitgliedschaftsoptionen: Starter für 89€, Unlimited für 139€ und Premium für 189€ pro Monat. Alle Mitgliedschaften beinhalten ein kostenloses Probetraining. Welche Option interessiert Sie am meisten?";
+        return `Aktuelle Preise bestätigen wir dir gern persönlich. Schreib uns an ${site.email}.`;
     }
     
-    if (promptLower.includes('standort') || promptLower.includes('wo') || promptLower.includes('adresse')) {
-        return "Wir befinden uns in der Musterstraße 123, 10115 Berlin. Wir haben kostenlose Parkplätze und sind sehr gut mit den öffentlichen Verkehrsmitteln erreichbar. Möchten Sie eine Wegbeschreibung?";
+    if (promptLower.includes('standort') || /\bwo\b/.test(promptLower) || promptLower.includes('adresse')) {
+        return `Du findest uns am ${site.street}, ${site.postalCode} ${site.city}, ${site.entrance}.`;
     }
     
-    if (promptLower.includes('öffnungszeiten') || promptLower.includes('wann') || promptLower.includes('stunden')) {
-        return "Unsere Öffnungszeiten sind: Montag bis Freitag von 6:00 bis 21:00 Uhr, Samstag von 8:00 bis 18:00 Uhr und Sonntag von 9:00 bis 16:00 Uhr. Wann passt es Ihnen am besten für ein Probetraining?";
+    if (promptLower.includes('öffnungszeiten') || promptLower.includes('geöffnet') || promptLower.includes('wann') || promptLower.includes('stunden')) {
+        return `Die aktuellen Zeiten findest du im Kursplan. Bei Fragen erreichst du uns unter ${site.email}.`;
     }
     
     if (promptLower.includes('kurse') || promptLower.includes('klassen') || promptLower.includes('training')) {
-        return "Wir bieten verschiedene Kurse an: CrossFit Foundations für Anfänger, CrossFit Classes für alle Level, Olympic Weightlifting und Strength & Conditioning. Alle Level sind willkommen! Welcher Kurs interessiert Sie?";
+        return "Wir bieten verschiedene Kurse an: CrossFit, Yoga, Weightlifting, Functional Bodybuilding und Team-WODs. Alle Level sind willkommen! Welcher Kurs interessiert Sie?";
     }
     
     if (promptLower.includes('anruf beginnt') || promptLower.includes('hallo')) {

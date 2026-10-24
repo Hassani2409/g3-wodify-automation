@@ -4,6 +4,7 @@ G3 CrossFit WODIFY Automation - AI/LLM Integration
 This module provides AI-powered features like training plan generation.
 """
 
+from config.site_info import ASSISTANT_FACTS
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from loguru import logger
@@ -194,12 +195,7 @@ async def generate_response(
 Du bist ein freundlicher und professioneller AI-Assistent für G3 CrossFit in Berlin.
 
 WICHTIGE INFORMATIONEN:
-- Standort: Musterstraße 123, 10115 Berlin
-- Telefon: +49 30 12345678
-- Öffnungszeiten: Mo-Fr 6:00-21:00, Sa 8:00-18:00, So 9:00-16:00
-- Preise: Starter 89€, Unlimited 139€, Premium 189€
-- Kostenloses Probetraining verfügbar
-- Alle Level willkommen
+{ASSISTANT_FACTS}
 
 GESPRÄCHSFÜHRUNG:
 - Sei freundlich, professionell und hilfsbereit

@@ -217,7 +217,7 @@ export default function ProductDetailPage() {
                                 {getCategoryName(product.category)}
                             </Badge>
                             {product.featured && (
-                                <Badge className="ml-2 bg-accent-500 text-white">
+                                <Badge className="ml-2 bg-primary-500 text-white">
                                     <Star className="w-3 h-3 mr-1" />
                                     Featured
                                 </Badge>
@@ -228,7 +228,7 @@ export default function ProductDetailPage() {
                             {product.name}
                         </h1>
 
-                        <p className="text-3xl font-bold mb-6 text-accent-600 font-heading">
+                        <p className="text-3xl font-bold mb-6 text-primary-600 font-heading">
                             {product.price.toFixed(2)}€
                         </p>
 

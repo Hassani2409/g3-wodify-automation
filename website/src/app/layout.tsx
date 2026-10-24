@@ -1,3 +1,4 @@
+import { site } from "@/lib/site";
 import type { Metadata, Viewport } from "next";
 import { Barlow_Condensed, Open_Sans } from "next/font/google";
 import "./globals.css";
@@ -50,7 +51,7 @@ export const metadata: Metadata = {
   authors: [{ name: "G3 CrossFit Berlin" }],
   creator: "G3 CrossFit Berlin",
   publisher: "G3 CrossFit Berlin",
-  metadataBase: new URL("https://www.g3crossfit.de"),
+  metadataBase: new URL(site.url),
   alternates: {
     canonical: "/",
   },
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "de_DE",
     siteName: "G3 CrossFit Berlin",
-    url: "https://www.g3crossfit.de",
+    url: site.url,
     images: [
       {
         url: "/logo.png",

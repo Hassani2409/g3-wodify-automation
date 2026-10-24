@@ -103,7 +103,7 @@ export default function Blog() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 text-sm font-medium transition-[color,background-color,border-color,box-shadow,transform,opacity] ${
                   selectedCategory === category
-                    ? 'bg-accent-500 text-white hover:bg-accent-600'
+                    ? 'bg-primary-500 text-white hover:bg-primary-600'
                     : 'border-neutral-300 text-neutral-700 hover:bg-neutral-50'
                 }`}
               >
@@ -133,7 +133,7 @@ export default function Blog() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     width={1200} height={800} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-accent-500 text-white">
+                      <Badge className="bg-primary-500 text-white">
                         {post.category}
                       </Badge>
                     </div>
@@ -176,7 +176,7 @@ export default function Blog() {
                     <Button
                       asChild
                       variant="outline"
-                      className="group-hover:bg-accent-500 group-hover:text-white group-hover:border-accent-500 transition-[color,background-color,border-color,box-shadow,transform,opacity]"
+                      className="group-hover:bg-primary-500 group-hover:text-white group-hover:border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity]"
                     >
                       <Link href={`/blog/${post.id}`}>
                         Artikel lesen
