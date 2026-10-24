@@ -125,6 +125,9 @@ app.include_router(sync_router)
 @app.on_event("startup")
 async def startup_event():
     """Run on application startup"""
+    from src.services.scheduler_service import scheduler_service
+
+    scheduler_service.start()
     logger.info(f"Starting {settings.app_name}")
     logger.info(f"Environment: {settings.app_env}")
     logger.info(f"Debug mode: {settings.debug}")

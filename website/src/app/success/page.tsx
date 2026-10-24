@@ -35,12 +35,10 @@ function SuccessContent() {
   const sessionId = searchParams.get('session_id');
   const [sessionData, setSessionData] = useState<CheckoutSession | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const error = sessionId ? null : "Keine Session-ID gefunden";
 
   useEffect(() => {
     if (!sessionId) {
-      setError('Keine Session-ID gefunden');
-      setLoading(false);
       return;
     }
 
@@ -119,7 +117,7 @@ function SuccessContent() {
     fetchSessionData();
   }, [sessionId]);
 
-  if (loading) {
+  if (sessionId && loading) {
     return (
       <div className="min-h-svh bg-background flex items-center justify-center">
         <div className="text-center">

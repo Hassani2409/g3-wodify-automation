@@ -51,11 +51,15 @@ class SchedulerService:
             )
 
         self.scheduler = AsyncIOScheduler(jobstores=jobstores)
-        self.scheduler.start()
         logger.info("Scheduler service initialized with persistent job store")
 
         # Schedule automatic sync jobs
         self._schedule_sync_jobs()
+
+    def start(self):
+        """Start only after ASGI has created the running event loop."""
+        if not self.scheduler.running:
+            self.scheduler.start()
 
     def schedule_welcome_email(
         self,
@@ -1303,7 +1307,8 @@ class SchedulerService:
 
     def shutdown(self):
         """Shutdown the scheduler"""
-        self.scheduler.shutdown()
+        if self.scheduler.running:
+            self.scheduler.shutdown()
         logger.info("Scheduler service shut down")
 
 

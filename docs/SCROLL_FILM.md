@@ -48,3 +48,5 @@ API-Referenzen: [ImageBitmap.close](https://developer.mozilla.org/en-US/docs/Web
 Die beiden bereits verknüpften Vercel-Projekte `g3-wodify-automation` und `website` bauen die Next.js-Website aus `website/` mit Framework `nextjs`. Root Directory ist eine Projekteinstellung, kein Feld in `vercel.json`. Der FastAPI-Betrieb bleibt im separaten Docker-/Backend-Deployment; diese Vorschauen sind kein Nachweis einer produktiven CRM-Anbindung.
 
 Das Projekt `website` verlangt verifizierte Git-Commits. Diese Schutzregel bleibt aktiv; Vorschau-Commits müssen über eine signierte GitHub-Aktion oder eine eingerichtete lokale Signatur entstehen.
+
+CI-Reparatur: Python-Gesamtsuite mit isolierten Testdatenbanken und gemocktem E-Mail-Client; Scheduler startet erst im ASGI-Startup. Docker nutzt eine für den Nicht-Root-Benutzer zugängliche virtuelle Umgebung und standardmäßig einen Worker (kein mehrfacher Scheduler). Next.js und die zugehörige ESLint-Konfiguration wurden auf 16.4.3 aktualisiert; die Vercel-Sicherheitssperre wird nicht umgangen.

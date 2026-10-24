@@ -27,7 +27,6 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const loadReviews = useCallback(async () => {
-        setIsLoading(true);
         try {
             const fetchedReviews = await getProductReviews(productId);
             setReviews(fetchedReviews);
@@ -39,8 +38,13 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
     }, [productId]);
 
     useEffect(() => {
-        loadReviews();
-    }, [loadReviews]);
+        let cancelled = false;
+        void getProductReviews(productId).then(result => {
+            if (!cancelled) setReviews(result);
+        }).catch(error => console.error('Error loading reviews:', error))
+          .finally(() => { if (!cancelled) setIsLoading(false); });
+        return () => { cancelled = true; };
+    }, [productId]);
 
     const handleSubmitReview = async () => {
         if (!token || !user) {
