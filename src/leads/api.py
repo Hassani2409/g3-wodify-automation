@@ -2,18 +2,27 @@ from datetime import datetime
 import secrets
 import uuid
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, Response
+from fastapi import (
+    BackgroundTasks,
+    APIRouter,
+    Depends,
+    Header,
+    HTTPException,
+    Query,
+    Request,
+    Response,
+)
 from pydantic import BaseModel
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from sqlalchemy import select, update
+from sqlalchemy import select, update, text
 from sqlalchemy.exc import SQLAlchemyError
 from typing import Literal
 
 from .config import get_settings
 from .models import AutomationPreview, Contact, Inquiry, SyncJob
 from .schemas import InquiryAccepted, InquiryInput
-from .service import IdempotencyConflict, accept_inquiry, process_next
+from .service import IntakeRateLimit, IdempotencyConflict, accept_inquiry, process_next
 from .storage import get_sessions
 
 
@@ -42,14 +51,25 @@ def require_admin(x_lead_admin_key: str = Header(default="")):
 async def create_lead(
     request: Request,
     lead_data: InquiryInput,
+    background_tasks: BackgroundTasks,
+    x_lead_ingest_key: str = Header(default=""),
     idempotency_key: str = Header(default="", min_length=16, max_length=128),
 ):
+    settings = get_settings()
+    if settings.lead_ingest_key and not secrets.compare_digest(
+        x_lead_ingest_key, settings.lead_ingest_key
+    ):
+        raise HTTPException(401, "Zugriff verweigert.")
     # Optional for older API clients; the website always supplies a stable UUID.
     key = idempotency_key or str(uuid.uuid4())
     if not all(c.isascii() and (c.isalnum() or c in "_-") for c in key):
         raise HTTPException(422, "Ungültiger Anfrageschlüssel.")
     try:
         request_id = accept_inquiry(get_sessions(), lead_data, key, get_settings())
+    except IntakeRateLimit:
+        raise HTTPException(
+            429, "Zu viele Anfragen. Bitte später erneut versuchen."
+        ) from None
     except IdempotencyConflict:
         raise HTTPException(
             409, "Anfrageschlüssel gehört zu anderen Angaben."
@@ -59,11 +79,18 @@ async def create_lead(
             503,
             "Anfrage konnte nicht gespeichert werden. Bitte später erneut versuchen.",
         ) from None
+    if settings.lead_process_on_submit:
+        background_tasks.add_task(process_next, get_sessions(), settings)
     return InquiryAccepted(request_id=request_id)
 
 
 @router.get("/health")
 def health():
+    try:
+        with get_sessions()() as session:
+            session.execute(text("SELECT 1"))
+    except SQLAlchemyError:
+        raise HTTPException(503, "Datenbank nicht erreichbar.") from None
     return {
         "status": "healthy",
         "crm_provider": get_settings().crm_provider,

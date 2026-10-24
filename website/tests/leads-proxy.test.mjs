@@ -30,10 +30,11 @@ test('lead proxy rejects oversized, malformed and unkeyed submissions before for
 });
 test('lead proxy forwards idempotency and only returns the public receipt', async () => {
   let count = 0;
-  const post = proxy({ LEAD_API_URL: 'https://backend.example' }, async (url, options) => {
+  const post = proxy({ LEAD_API_URL: 'https://backend.example', LEAD_INGEST_KEY: 'server-only-key' }, async (url, options) => {
     count++;
     assert.equal(url, 'https://backend.example/api/leads');
     assert.equal(options.headers['Idempotency-Key'], '1234567890123456');
+    assert.equal(options.headers['X-Lead-Ingest-Key'], 'server-only-key');
     assert.equal(options.redirect, 'error');
     return new Response(JSON.stringify({ success: true, request_id: 'request-1', automation_mode: 'test', private: 'hidden' }), { status: 202 });
   });

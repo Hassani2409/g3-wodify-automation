@@ -7,9 +7,13 @@ from sqlalchemy import and_, or_, select, update
 from sqlalchemy.exc import IntegrityError
 
 from .adapters import SyncError, get_adapter
-from .models import AutomationPreview, Contact, Inquiry, SyncJob
+from .models import AutomationPreview, Contact, Inquiry, SyncJob, IntakeWindow
 
 MAX_ATTEMPTS = 5
+
+
+class IntakeRateLimit(Exception):
+    pass
 
 
 class IdempotencyConflict(Exception):
@@ -30,6 +34,26 @@ def accept_inquiry(sessions, data, key, settings):
                     if existing.payload_hash != digest:
                         raise IdempotencyConflict()
                     return existing.id
+                bucket = datetime.utcnow().strftime("%Y%m%d%H%M")
+                limit = getattr(settings, "lead_intake_limit", 10)
+                window = session.get(IntakeWindow, bucket)
+                if window is None:
+                    session.add(IntakeWindow(bucket=bucket, count=1))
+                    session.flush()
+                else:
+                    changed = session.execute(
+                        update(IntakeWindow)
+                        .where(
+                            IntakeWindow.bucket == bucket, IntakeWindow.count < limit
+                        )
+                        .values(count=IntakeWindow.count + 1)
+                    )
+                    if changed.rowcount != 1:
+                        raise IntakeRateLimit()
+                cutoff = (datetime.utcnow() - timedelta(days=2)).strftime("%Y%m%d%H%M")
+                session.query(IntakeWindow).filter(
+                    IntakeWindow.bucket < cutoff
+                ).delete()
                 contact = session.scalar(
                     select(Contact).where(Contact.email == payload["email"])
                 )
@@ -146,6 +170,8 @@ async def process_next(sessions, settings, adapter=None, now=None):
         )
         snapshot = latest.payload
         payload = {
+            **snapshot,
+            "request_id": latest.id,
             "contact_id": contact.id,
             "email": snapshot["email"],
             "firstName": snapshot["firstName"],
@@ -160,7 +186,13 @@ async def process_next(sessions, settings, adapter=None, now=None):
         if mode == "live" and settings.crm_sync_mode != "live":
             raise SyncError("live_sync_disabled", retryable=False)
         result = await (
-            adapter or get_adapter(provider, mode, settings.hubspot_access_token)
+            adapter
+            or get_adapter(
+                provider,
+                mode,
+                settings.hubspot_access_token,
+                getattr(settings, "hubspot_inquiry_property", ""),
+            )
         ).upsert_contact(payload)
         state = "simulated" if result.simulated else "synced"
         remote_id = result.remote_id
