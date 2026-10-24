@@ -46,3 +46,5 @@ API-Referenzen: [ImageBitmap.close](https://developer.mozilla.org/en-US/docs/Web
 ## Vercel-Vorschau / CI (24.10.2026)
 
 Die beiden bereits verknüpften Vercel-Projekte `g3-wodify-automation` und `website` bauen die Next.js-Website aus `website/` mit Framework `nextjs`. Root Directory ist eine Projekteinstellung, kein Feld in `vercel.json`. Der FastAPI-Betrieb bleibt im separaten Docker-/Backend-Deployment; diese Vorschauen sind kein Nachweis einer produktiven CRM-Anbindung.
+
+Das Projekt `website` verlangt verifizierte Git-Commits. Diese Schutzregel bleibt aktiv; Vorschau-Commits müssen über eine signierte GitHub-Aktion oder eine eingerichtete lokale Signatur entstehen.
