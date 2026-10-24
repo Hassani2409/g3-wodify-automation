@@ -35,7 +35,7 @@ function getFallbackResponse(prompt: string): string {
     }
     
     if (promptLower.includes('öffnungszeiten') || promptLower.includes('geöffnet') || promptLower.includes('wann') || promptLower.includes('stunden')) {
-        return `Die aktuellen Zeiten findest du im Kursplan. Bei Fragen erreichst du uns unter ${site.email}.`;
+        return `Aktuelle Zeiten erfährst du über die Wodify-App oder unser Team unter ${site.email}.`;
     }
     
     if (promptLower.includes('kurse') || promptLower.includes('klassen') || promptLower.includes('training')) {

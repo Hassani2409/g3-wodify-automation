@@ -1,3 +1,4 @@
+import { serializeJsonLd } from "@/lib/serialize-json-ld";
 import { site } from "@/lib/site";
 export default function StructuredData() {
   const data = {
@@ -7,5 +8,5 @@ export default function StructuredData() {
     address: { "@type": "PostalAddress", streetAddress: site.street, postalCode: site.postalCode, addressLocality: site.city, addressCountry: "DE" },
     telephone: site.phoneHref.slice(4), email: site.email, hasMap: site.mapsUrl,
   };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\u003c") }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }} />;
 }

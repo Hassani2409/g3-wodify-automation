@@ -21,7 +21,7 @@ export const assistantFacts = `
 Standort: ${site.street}, ${site.postalCode} ${site.city}, ${site.entrance}.
 Kontakt: ${site.phone}, ${site.email}.
 Lage: am Gleisdreieck, nahe Potsdamer Platz.
-Öffnungszeiten und aktuelle Preise sind nicht bestätigt. Keine Uhrzeiten oder Preise erfinden; an ${site.email} oder den aktuellen Kursplan verweisen.
+Öffnungszeiten und aktuelle Preise sind nicht bestätigt. Keine Uhrzeiten oder Preise erfinden; an ${site.email} oder die Wodify-App verweisen.
 Kostenloses Probetraining auf /contact#booking anfragen. Keine sofortige Buchungsbestätigung versprechen.
 Keine kostenlosen Parkplätze versprechen.
 Kleine Kurse mit maximal ${site.maxParticipants} Personen. Bei nur einer Anmeldung findet das Training als Personal Training ohne Aufpreis statt.

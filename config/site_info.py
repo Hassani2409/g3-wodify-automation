@@ -5,7 +5,7 @@ SITE_EMAIL = "info@g3crossfit.com"
 ASSISTANT_FACTS = f"""
 Standort: {SITE_ADDRESS}. Telefon: {SITE_PHONE}. E-Mail: {SITE_EMAIL}.
 Öffnungszeiten und aktuelle Preise sind nicht bestätigt. Keine Zeiten oder Preise erfinden.
-Bei Fragen an die E-Mail-Adresse oder den aktuellen Kursplan verweisen.
+Bei Fragen an die E-Mail-Adresse oder die Wodify-App verweisen.
 Kostenloses Probetraining anfragen; keine sofortige Terminbestätigung versprechen.
 Keine kostenlosen Parkplätze versprechen.
 Maximal acht Personen laut Startseite. Bei einer Anmeldung Personal Training ohne Aufpreis.
@@ -20,7 +20,7 @@ def public_info_response(prompt: str) -> str | None:
     if any(word in question for word in ("preis", "kostet", "mitgliedschaft")):
         return f"Aktuelle Preise bestätigen wir dir gern persönlich unter {SITE_EMAIL}."
     if any(word in question for word in ("öffnungszeiten", "geöffnet", "wann", "stunden")):
-        return f"Bitte prüfe den aktuellen Kursplan oder frage unter {SITE_EMAIL} nach den Zeiten."
+        return f"Bitte prüfe die Wodify-App oder frage unter {SITE_EMAIL} nach den Zeiten."
     if any(word in question for word in ("standort", "adresse")) or re.search(r"\bwo\b", question):
         return f"Du findest uns am {SITE_ADDRESS}."
     if any(word in question for word in ("probetraining", "trial")):

@@ -10,7 +10,7 @@ class PublicInfoTests(unittest.TestCase):
 
     def test_opening_hours_are_not_invented(self):
         answer = site_info.public_info_response('Wann habt ihr geöffnet?')
-        self.assertIn('Kursplan', answer)
+        self.assertIn('Wodify', answer)
         self.assertNotIn('21:00', answer)
 
     def test_prices_are_not_invented(self):
@@ -20,8 +20,8 @@ class PublicInfoTests(unittest.TestCase):
 
     def test_context_does_not_override_latest_question(self):
         prompt = 'Kontext: Probetraining, Preise, Standort. Der Nutzer sagt: "Wann habt ihr geöffnet?"'
-        self.assertIn('Kursplan', site_info.public_info_response(prompt))
-        self.assertIn('Kursplan', site_info.public_info_response(prompt.replace('Nutzer', 'Anrufer')))
+        self.assertIn('Wodify', site_info.public_info_response(prompt))
+        self.assertIn('Wodify', site_info.public_info_response(prompt.replace('Nutzer', 'Anrufer')))
 
     def test_workout_is_not_a_location_question(self):
         self.assertIsNone(site_info.public_info_response('Wie sieht ein Workout aus?'))
