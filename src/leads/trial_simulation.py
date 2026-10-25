@@ -85,7 +85,8 @@ class TrialSimulation:
                 state.pop("attended", None)
                 state.pop("no_show", None)
                 db.execute(
-                    "UPDATE previews SET state='superseded' WHERE kind IN ('appointment_confirmation','appointment_reminder','feedback','general_followup')"
+                    "UPDATE previews SET state='superseded' WHERE kind IN ('appointment_con"
+                    "firmation','appointment_reminder','feedback','general_followup')"
                 )
             elif kind in ("cancel", "closed", "converted"):
                 state["stopped"] = kind
@@ -95,7 +96,8 @@ class TrialSimulation:
             elif kind in ("contacted", "responded"):
                 state[kind] = at.isoformat()
                 db.execute(
-                    "UPDATE previews SET state='superseded' WHERE kind IN ('team_reminder','team_escalation','general_followup')"
+                    "UPDATE previews SET state='superseded' WHERE kind IN ('team_reminder',"
+                    "'team_escalation','general_followup')"
                 )
             elif kind in ("attended", "no_show"):
                 appointment = state.get("appointment")
