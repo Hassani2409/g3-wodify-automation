@@ -52,27 +52,52 @@ def render(kind, state):
         "acknowledgment": greeting
         + "vielen Dank für deine Anfrage – schön, dass du G3 kennenlernen möchtest.\n\n"
         + wishes
-        + "Wir melden uns persönlich bei dir, um den Termin abzustimmen.\n\nWenn du vorher etwas ergänzen oder deinen Wunsch ändern möchtest, antworte einfach auf diese E-Mail.",
-        "team_notification": f"Neue Anfrage zur persönlichen Bearbeitung:\n\nName: {name}\nE-Mail: {state.get('email')}\nTelefon: {state.get('phone') or 'nicht angegeben'}\nTerminwunsch: {wish or 'offen'} – nicht bestätigt\nErfahrung: {state.get('experience') or 'nicht angegeben'}\nNachricht:\n{state.get('message') or 'keine'}\n\nBitte Kontakt aufnehmen, den Termin abstimmen und den Status aktualisieren.",
-        "team_reminder": "Die Anfrage ist seit einem Tag noch nicht als persönlich bearbeitet markiert. Bitte Kontakt aufnehmen und den Status aktualisieren. Der Termin ist nicht bestätigt.",
-        "team_escalation": "Die Anfrage ist seit drei Tagen noch nicht persönlich bearbeitet. Bitte intern klären. Es wurde keine externe Nachfrage erstellt.",
+        + "Wir melden uns persönlich bei dir, um den Termin abzustimmen.\n\nWenn du"
+        " vorher etwas ergänzen oder deinen Wunsch ändern möchtest, antworte ei"
+        "nfach auf diese E-Mail.",
+        "team_notification": f"Neue Anfrage zur persönlichen Bearbeitung:\n\nName: {name}\nE-Mail"
+        f": {state.get('email')}\nTelefon: {state.get('phone') or 'nicht angegeben'}"
+        f"\nTerminwunsch: {wish or 'offen'} – nicht bestätigt\n"
+        f"Erfahrung: {state.get('experience') or 'nicht angegeben'}"
+        f"\nNachricht:\n{state.get('message') or 'keine'}\n\nBitte Kontakt a"
+        f"ufnehmen, den Termin abstimmen und den Status aktualisieren.",
+        "team_reminder": "Die Anfrage ist seit einem Tag noch nicht als persönlich bearbeitet ma"
+        "rkiert. Bitte Kontakt aufnehmen und den Status aktualisieren. Der Term"
+        "in ist nicht bestätigt.",
+        "team_escalation": "Die Anfrage ist seit drei Tagen noch nicht persönlich bearbeitet. Bitt"
+        "e intern klären. Es wurde keine externe Nachfrage erstellt.",
         "general_followup": greeting
-        + "ich wollte kurz nachfragen, ob du dein Probetraining bei G3 noch mit uns abstimmen möchtest.\n\nAntworte gern auf diese E-Mail, wenn du noch Fragen hast oder einen passenden Termin suchst. Falls es gerade nicht passt, genügt eine kurze Nachricht – dann schließen wir deine Anfrage.",
+        + "ich wollte kurz nachfragen, ob du dein Probetraining bei G3 noch mit u"
+        "ns abstimmen möchtest.\n\nAntworte gern auf diese E-Mail, wenn du noch F"
+        "ragen hast oder einen passenden Termin suchst. Falls es gerade nicht p"
+        "asst, genügt eine kurze Nachricht – dann schließen wir deine Anfrage.",
         "appointment_confirmation": greeting
-        + f"dein Probetraining ist für den {when} bestätigt.\n\nDu findest uns am Tempelhofer Ufer 36, 10963 Berlin, im 2. Hinterhaus, 1. Etage.\n\nWenn du den Termin ändern oder absagen möchtest, antworte bitte auf diese E-Mail.\n\nWir freuen uns auf dich!",
+        + f"dein Probetraining ist für den {when} bestätigt.\n\nDu findest uns"
+        f" am Tempelhofer Ufer 36, 10963 Berlin, im 2. Hinterhaus, 1. Etage."
+        f"\n\nWenn du den Termin ändern oder absagen möchtest, antworte bitt"
+        f"e auf diese E-Mail.\n\nWir freuen uns auf dich!",
         "appointment_reminder": greeting
-        + f"{reminder_intro} {when}, ist dein bestätigtes Probetraining bei G3.\n\nUnsere Adresse: Tempelhofer Ufer 36, 10963 Berlin, 2. Hinterhaus, 1. Etage.\n\nFalls du verhindert bist oder noch eine Frage hast, antworte bitte auf diese E-Mail.",
+        + f"{reminder_intro} {when}, ist dein bestätigtes Probetraining bei G3"
+        f".\n\nUnsere Adresse: Tempelhofer Ufer 36, 10963 Berlin, 2. Hinterh"
+        f"aus, 1. Etage.\n\nFalls du verhindert bist oder noch eine Frage ha"
+        f"st, antworte bitte auf diese E-Mail.",
         "feedback": greeting
-        + "schön, dass du bei uns trainiert hast. Wie hast du dein Probetraining erlebt?\n\nWenn du Fragen hast oder mit uns weitertrainieren möchtest, antworte einfach auf diese E-Mail. Wir besprechen die nächsten Schritte persönlich mit dir.",
+        + "schön, dass du bei uns trainiert hast. Wie hast du dein Probetraining "
+        "erlebt?\n\nWenn du Fragen hast oder mit uns weitertrainieren möchtest, a"
+        "ntworte einfach auf diese E-Mail. Wir besprechen die nächsten Schritte"
+        " persönlich mit dir.",
     }
     text = texts[kind] + "\n\nDein G3-Team\n\n" + FOOTER
     subject = subjects[kind]
     html = (
         '<!doctype html><html lang="de"><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        f'<title>{escape(subject)}</title><body style="margin:0;background:#eef2ee;font-family:Arial,sans-serif;color:#17241c">'
+        f'<title>{escape(subject)}</title><body style="margin:0;background:#'
+        f'eef2ee;font-family:Arial,sans-serif;color:#17241c">'
         '<main style="max-width:600px;margin:24px auto;background:white;padding:28px">'
-        '<p style="background:#fff3ba;padding:12px;color:#272000"><strong>TESTVORSCHAU · NICHT VERSENDET</strong><br>Synthetisches Szenario, keine echte Terminbestätigung.</p>'
+        '<p style="background:#fff3ba;padding:12px;color:#272000"><strong>TESTV'
+        "ORSCHAU · NICHT VERSENDET</strong><br>Synthetisches Szenario, keine ec"
+        "hte Terminbestätigung.</p>"
         '<p style="color:#1d7533;font-weight:bold">G3 CROSSFIT</p>'
         f'<h1 style="font-size:24px">{escape(subject)}</h1>'
         f'<div style="white-space:pre-wrap;line-height:1.65;overflow-wrap:anywhere">{escape(text)}</div>'
@@ -114,7 +139,9 @@ def export_gallery(scenarios, output):
                 encoding="utf-8",
             )
             cards.append(
-                f'<details><summary>{escape(labels.get(preview["kind"], preview["kind"]))} · {"Entwertet" if preview["state"] == "superseded" else "Vorschau"} · Version {preview["version"]}</summary>'
+                f'<details><summary>{escape(labels.get(preview["kind"], preview["kind"]))}'
+                f' · {"Entwertet" if preview["state"] == "superseded" else "Vorschau"}'
+                f' · Version {preview["version"]}</summary>'
                 f'<p>Testempfänger: {escape(preview["recipient"])} · erzeugt: {escape(preview["created_at"])}</p>'
                 f'<p><a href="{base}.html">E-Mail-Vorschau öffnen</a> · <a href="{base}.txt">Klartext</a></p>'
                 f'<h3>{escape(preview["subject"])}</h3><pre>{escape(preview["text"])}</pre></details>'
@@ -123,10 +150,21 @@ def export_gallery(scenarios, output):
         '<!doctype html><html lang="de"><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         "<title>G3 · Probetraining-Testsimulation</title>"
-        "<style>body{font:16px/1.6 system-ui;background:#f2f5f1;color:#17271c;margin:0}main{max-width:1000px;margin:auto;padding:32px 20px}h1{font-size:clamp(28px,5vw,44px);line-height:1.1}h2{margin-top:48px}details{background:white;border:1px solid #cbd7cc;border-radius:10px;padding:18px;margin:12px 0}summary{cursor:pointer;font-weight:650;overflow-wrap:anywhere}pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1d7533}.notice{background:#fff3ba;padding:16px;border-radius:8px}</style>"
+        "<style>body{font:16px/1.6 system-ui;background:#f2f5f1;color:#17271c;m"
+        "argin:0}main{max-width:1000px;margin:auto;padding:32px 20px}h1{font-si"
+        "ze:clamp(28px,5vw,44px);line-height:1.1}h2{margin-top:48px}details{bac"
+        "kground:white;border:1px solid #cbd7cc;border-radius:10px;padding:18px"
+        ";margin:12px 0}summary{cursor:pointer;font-weight:650;overflow-wrap:an"
+        "ywhere}pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}a{"
+        "color:#1d7533}.notice{background:#fff3ba;padding:16px;border-radius:8p"
+        "x}</style>"
         "<main><p>G3 CROSSFIT · LOKALE ABNAHME</p><h1>Probetraining: E-Mail-Vorschauen</h1>"
-        '<p class="notice"><strong>TESTMODUS · NICHT VERSENDET</strong><br>Alle Personen und Termine sind synthetisch. Kein Zugriff auf Produktionskontakte. Aufklappen zeigt den Inhalt; „E-Mail-Vorschau öffnen“ zeigt die gestaltete Mail.</p>'
-        "<p>Vorschau = aktuell gültiger Entwurf · Entwertet = durch Absage, Antwort oder Verschiebung überholt, nur zur Prüfung erhalten.</p>"
+        '<p class="notice"><strong>TESTMODUS · NICHT VERSENDET</strong><br>Alle'
+        " Personen und Termine sind synthetisch. Kein Zugriff auf Produktionsko"
+        "ntakte. Aufklappen zeigt den Inhalt; „E-Mail-Vorschau öffnen“ zeigt di"
+        "e gestaltete Mail.</p>"
+        "<p>Vorschau = aktuell gültiger Entwurf · Entwertet = durch Absage, Ant"
+        "wort oder Verschiebung überholt, nur zur Prüfung erhalten.</p>"
         + "".join(cards)
         + "</main></html>"
     )
