@@ -169,10 +169,24 @@ export default function DatenschutzPage() {
                 </p>
               </div>
 
+              {/* KI-Assistent */}
+              <div id="assistent">
+                <h2 className="text-2xl font-bold text-foreground mb-4 font-heading">
+                  7. KI-Website-Assistent
+                </h2>
+                <p className="text-muted-foreground font-body">
+                  Auf unserer Website können Sie freiwillig einen KI-Assistenten nutzen. Ihre eingegebenen Nachrichten
+                  werden zur Beantwortung an Anthropic PBC (USA) übermittelt, dessen KI-Modell die Antworten erzeugt.
+                  Wir speichern die Chatinhalte nicht. Zur Begrenzung von Missbrauch wird Ihre IP-Adresse kurzzeitig
+                  im Arbeitsspeicher unseres Servers verarbeitet. Bitte geben Sie im Chat keine Gesundheits- oder
+                  Kontaktdaten ein. Die Antworten werden automatisch erzeugt und sind ohne Gewähr.
+                </p>
+              </div>
+
               {/* SSL-Verschlüsselung */}
               <div>
                 <h2 className="text-2xl font-bold text-foreground mb-4 font-heading">
-                  7. SSL-Verschlüsselung
+                  8. SSL-Verschlüsselung
                 </h2>
                 <p className="text-muted-foreground font-body">
                   Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte 

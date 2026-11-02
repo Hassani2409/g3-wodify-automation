@@ -40,6 +40,11 @@ const nextConfig: NextConfig = {
     } : false,
   },
 
+  // The old trial page duplicated the booking form with outdated styling.
+  async redirects() {
+    return [{ source: '/trial', destination: '/contact#booking', permanent: false }];
+  },
+
   // Headers for Security & Performance
   async headers() {
     return [

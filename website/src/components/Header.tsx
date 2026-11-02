@@ -11,6 +11,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, Mail, MapPin, User, ShoppingBag, Heart, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
+
+// The member portal is a prototype without a production backend; hide its entry until it is live.
+const memberPortalEnabled = process.env.NEXT_PUBLIC_MEMBER_PORTAL === "true";
 import { useSelection } from "@/lib/commerce/selection";
 
 const navigation = [
@@ -42,7 +45,7 @@ const navigation = [
           title: "Ressourcen",
           links: [
             { name: "Kursplan", href: "/schedule", description: "Live-Kursplan & Buchung" },
-            { name: "Probetraining", href: "/trial", description: "Kostenlos testen" },
+            { name: "Probetraining", href: "/contact#booking", description: "Kostenlos testen" },
             { name: "Mitgliedschaft", href: "/membership", description: "Preise & Pakete" },
             { name: "Coaches", href: "/coaches", description: "Unser Trainerteam" },
           ]
@@ -69,8 +72,7 @@ const navigation = [
         {
           title: "Erfahre mehr",
           links: [
-            { name: "Blog", href: "/blog", description: "Aktuelle News & Tipps" },
-            { name: "Showcase", href: "/showcase", description: "Erfolgsgeschichten" },
+            { name: "Blog", href: "/blog", description: "Beispielartikel & Tipps" },
             { name: "Kontakt", href: "/contact", description: "Sprich mit uns" },
           ]
         }
@@ -291,16 +293,18 @@ export default function Header() {
                 </Link>
               ) : (
                 <>
-                  <Link
-                    href="/login"
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-button font-button font-medium transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out ${
-                      solidHeader
-                        ? "text-primary-700 hover:text-primary-800"
-                        : "text-white hover:text-primary-50"
-                    }`}
-                  >
-                    Anmelden
-                  </Link>
+                  {memberPortalEnabled && (
+                    <Link
+                      href="/login"
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-button font-button font-medium transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out ${
+                        solidHeader
+                          ? "text-primary-700 hover:text-primary-800"
+                          : "text-white hover:text-primary-50"
+                      }`}
+                    >
+                      Anmelden
+                    </Link>
+                  )}
                   <Link
                     href="/contact#booking"
                     className={`inline-flex items-center gap-2 px-6 py-3 rounded-button font-button font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out active:scale-[0.97] ${
@@ -447,12 +451,14 @@ export default function Header() {
                   </Link>
                 ) : (
                   <>
-                    <Link
-                      href="/login"
-                      className="block w-full px-6 py-4 mb-3 bg-white hover:bg-muted text-primary-700 text-center font-button font-semibold rounded-button border-2 border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out"
-                    >
-                      Anmelden
-                    </Link>
+                    {memberPortalEnabled && (
+                      <Link
+                        href="/login"
+                        className="block w-full px-6 py-4 mb-3 bg-white hover:bg-muted text-primary-700 text-center font-button font-semibold rounded-button border-2 border-primary-500 transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out"
+                      >
+                        Anmelden
+                      </Link>
+                    )}
                   <Link
                     href="/contact#booking"
                     className="block w-full px-6 py-4 bg-accent hover:bg-accent-600 text-accent-foreground text-center font-button font-semibold rounded-button shadow-lg hover:shadow-xl transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-160 ease-out touch-manipulation active:scale-[0.98] active:bg-accent-700"
