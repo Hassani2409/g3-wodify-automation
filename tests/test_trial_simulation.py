@@ -248,6 +248,153 @@ def test_demo_exports_every_email_kind_without_network(tmp_path, monkeypatch):
         "appointment_confirmation",
         "appointment_reminder",
         "feedback",
+        "reschedule_offer",
+        "team_reschedule",
+        "no_show_followup",
+        "team_no_show",
+        "review_request",
+        "team_feedback_alert",
+        "reactivation_first",
+        "reactivation_second",
     }
     cancelled = cases["2 · Absage vor Erinnerung"]
     assert not any(p["kind"] in ("appointment_reminder", "feedback") for p in cancelled)
+
+
+def attend_and_request_feedback(sim):
+    start(sim)
+    confirm(sim)
+    sim.event("attended", "attended", dt("2026-10-30T19:00:00+01:00"))
+    sim.advance(dt("2026-10-31T19:00:00+01:00"))
+
+
+def test_reminder_asks_for_yes_or_no(sim):
+    start(sim)
+    confirm(sim)
+    sim.advance(dt("2026-10-29T18:00:00+01:00"))
+    reminder = next(p for p in sim.previews() if p["kind"] == "appointment_reminder")
+    assert "JA oder NEIN" in reminder["text"]
+
+
+def test_decline_offers_new_date_and_stops_appointment_steps(sim):
+    start(sim)
+    confirm(sim)
+    sim.event("no", "declined", dt("2026-10-29T19:00:00+01:00"))
+    sim.advance(dt("2026-11-02T10:00:00+01:00"))
+    assert kinds(sim) == [
+        "acknowledgment",
+        "team_notification",
+        "reschedule_offer",
+        "team_reschedule",
+    ]
+    offer = next(p for p in sim.previews() if p["kind"] == "reschedule_offer")
+    assert "30.10.2026 um 18:00 Uhr" in offer["text"]
+    team = next(p for p in sim.previews() if p["kind"] == "team_reschedule")
+    assert team["recipient"] == "info@g3crossfit.com"
+
+
+def test_new_confirmation_after_decline_restarts_appointment_flow(sim):
+    start(sim)
+    confirm(sim)
+    sim.event("no", "declined", dt("2026-10-29T19:00:00+01:00"))
+    with pytest.raises(ValueError):
+        sim.event("again", "declined", dt("2026-10-29T20:00:00+01:00"))
+    confirm(
+        sim,
+        event_id="new-date",
+        at="2026-10-30T11:00:00+01:00",
+        begins="2026-11-03T18:00:00+01:00",
+        ends="2026-11-03T19:00:00+01:00",
+    )
+    sim.advance(dt("2026-11-02T18:00:00+01:00"))
+    assert "reschedule_offer" not in kinds(sim)
+    reminders = [
+        p
+        for p in sim.previews()
+        if p["kind"] == "appointment_reminder" and p["state"] == "preview"
+    ]
+    assert len(reminders) == 1 and "03.11.2026" in reminders[0]["text"]
+
+
+def test_decline_only_before_start(sim):
+    start(sim)
+    with pytest.raises(ValueError):
+        sim.event("no", "declined", dt("2026-10-25T10:00:00+02:00"))
+    confirm(sim)
+    with pytest.raises(ValueError):
+        sim.event("late", "declined", dt("2026-10-30T18:00:00+01:00"))
+
+
+def test_no_show_creates_one_followup_and_team_note(sim):
+    start(sim)
+    confirm(sim)
+    sim.event("absent", "no_show", dt("2026-10-30T19:15:00+01:00"))
+    sim.advance(dt("2026-11-02T10:00:00+01:00"))
+    assert kinds(sim).count("no_show_followup") == 1
+    assert kinds(sim).count("team_no_show") == 1
+    assert "feedback" not in kinds(sim)
+
+
+def test_cancel_after_no_show_supersedes_followup(sim):
+    start(sim)
+    confirm(sim)
+    sim.event("absent", "no_show", dt("2026-10-30T19:15:00+01:00"))
+    sim.event("closed", "closed", dt("2026-10-30T20:00:00+01:00"))
+    assert "no_show_followup" not in kinds(sim)
+
+
+@pytest.mark.parametrize("rating", [1, 3, 4, 5])
+def test_every_rating_gets_the_same_review_request(tmp_path, rating):
+    from src.leads.trial_simulation import TrialSimulation
+
+    sim = TrialSimulation(
+        tmp_path / "r.sqlite", review_url="https://example.invalid/review"
+    )
+    attend_and_request_feedback(sim)
+    sim.event("fb", "feedback_received", dt("2026-11-01T09:00:00+01:00"), rating=rating)
+    assert kinds(sim).count("review_request") == 1
+    request = next(p for p in sim.previews() if p["kind"] == "review_request")
+    assert "https://example.invalid/review" in request["text"]
+    assert ("team_feedback_alert" in kinds(sim)) is (rating <= 3)
+
+
+def test_no_review_request_without_configured_link(sim):
+    attend_and_request_feedback(sim)
+    sim.event(
+        "fb",
+        "feedback_received",
+        dt("2026-11-01T09:00:00+01:00"),
+        rating=2,
+        comment="<b>zu voll</b>",
+    )
+    assert "review_request" not in kinds(sim)
+    alert = next(p for p in sim.previews() if p["kind"] == "team_feedback_alert")
+    assert "2 von 5" in alert["text"]
+    assert "<b>" not in alert["html"]
+
+
+def test_feedback_validation(sim, tmp_path):
+    from src.leads.trial_simulation import TrialSimulation
+
+    with pytest.raises(ValueError):
+        TrialSimulation(tmp_path / "x.sqlite", review_url="http://insecure.invalid")
+    start(sim)
+    confirm(sim)
+    sim.event("attended", "attended", dt("2026-10-30T19:00:00+01:00"))
+    with pytest.raises(ValueError):  # before the feedback request exists
+        sim.event(
+            "early", "feedback_received", dt("2026-10-31T10:00:00+01:00"), rating=5
+        )
+    for bad in (0, 6, "5", True, None):
+        with pytest.raises(ValueError):
+            sim.event(
+                f"bad-{bad}",
+                "feedback_received",
+                dt("2026-11-01T09:00:00+01:00"),
+                rating=bad,
+            )
+    sim.event("ok", "feedback_received", dt("2026-11-01T09:00:00+01:00"), rating=4)
+    with pytest.raises(ValueError):
+        sim.event(
+            "twice", "feedback_received", dt("2026-11-01T10:00:00+01:00"), rating=5
+        )

@@ -19,8 +19,18 @@ def instant(value):
     return value.astimezone(timezone.utc)
 
 
+APPOINTMENT_KINDS = (
+    "'appointment_confirmation','appointment_reminder','feedback','general_followup',"
+    "'reschedule_offer','team_reschedule','no_show_followup','team_no_show'"
+)
+
+
 class TrialSimulation:
-    def __init__(self, path):
+    def __init__(self, path, review_url=None):
+        # Review requests are only drafted when a verified public review link is configured.
+        if review_url is not None and not str(review_url).startswith("https://"):
+            raise ValueError("Review link must use HTTPS.")
+        self.review_url = review_url
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self._db() as db:
@@ -82,11 +92,44 @@ class TrialSimulation:
                     ends=ends.isoformat(),
                     confirmed=at.isoformat(),
                 )
-                state.pop("attended", None)
-                state.pop("no_show", None)
+                for key in ("attended", "no_show", "declined", "feedback"):
+                    state.pop(key, None)
                 db.execute(
-                    "UPDATE previews SET state='superseded' WHERE kind IN ('appointment_con"
-                    "firmation','appointment_reminder','feedback','general_followup')"
+                    f"UPDATE previews SET state='superseded' WHERE kind IN ({APPOINTMENT_KINDS})"
+                )
+            elif kind == "declined":
+                # Participant answered NEIN before the appointment: offer a new date personally.
+                appointment = state.get("appointment")
+                if not appointment or at >= instant(appointment["begins"]):
+                    raise ValueError(
+                        "Decline only before a confirmed appointment begins."
+                    )
+                state.pop("appointment")
+                state["declined"] = dict(
+                    at=at.isoformat(), begins=appointment["begins"]
+                )
+                db.execute(
+                    f"UPDATE previews SET state='superseded' WHERE kind IN ({APPOINTMENT_KINDS})"
+                )
+            elif kind == "feedback_received":
+                appointment = state.get("appointment")
+                if not state.get("attended") or at < instant(
+                    appointment["ends"]
+                ) + timedelta(hours=24):
+                    raise ValueError("Record feedback only after the feedback request.")
+                if state.get("feedback"):
+                    raise ValueError("Feedback already recorded.")
+                rating = data.get("rating")
+                if (
+                    not isinstance(rating, int)
+                    or isinstance(rating, bool)
+                    or not 1 <= rating <= 5
+                ):
+                    raise ValueError("Rating must be an integer from 1 to 5.")
+                state["feedback"] = dict(
+                    at=at.isoformat(),
+                    rating=rating,
+                    comment=str(data.get("comment") or "")[:2000],
                 )
             elif kind in ("cancel", "closed", "converted"):
                 state["stopped"] = kind
@@ -132,7 +175,7 @@ class TrialSimulation:
 
     def _generate(self, db, state, now):
         def add(kind, version=0):
-            content = render(kind, state)
+            content = render(kind, state, review_url=self.review_url)
             recipient = (
                 "info@g3crossfit.com" if kind.startswith("team_") else state["email"]
             )
@@ -171,6 +214,21 @@ class TrialSimulation:
                 appointment["ends"]
             ) + timedelta(hours=24):
                 add("feedback", version)
+            feedback = state.get("feedback")
+            if feedback:
+                # Every respondent gets the same review request, independent of the rating
+                # (no review gating). Low ratings additionally go to the team.
+                if self.review_url:
+                    add("review_request", version)
+                if feedback["rating"] <= 3:
+                    add("team_feedback_alert", version)
+            if state.get("no_show"):
+                add("no_show_followup", version)
+                add("team_no_show", version)
+            return
+        if state.get("declined"):
+            add("reschedule_offer", state["version"])
+            add("team_reschedule", state["version"])
             return
         if state.get("responded"):
             return

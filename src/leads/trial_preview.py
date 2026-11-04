@@ -10,10 +10,29 @@ FOOTER = (
 )
 
 
-def render(kind, state):
+OPT_OUT = (
+    "\n\nDu erhältst diese E-Mail, weil du Mitglied bei G3 warst. Du kannst der "
+    "Verwendung deiner E-Mail-Adresse für solche Nachrichten jederzeit widersprechen, "
+    "zum Beispiel mit einer kurzen Antwort „Abmelden“. Dafür entstehen dir keine "
+    "anderen als die Übermittlungskosten nach den Basistarifen."
+)
+
+
+def _format(begins):
+    return (
+        datetime.fromisoformat(begins)
+        .astimezone(BERLIN)
+        .strftime("%d.%m.%Y um %H:%M Uhr")
+    )
+
+
+def render(kind, state, review_url=None):
     name = state.get("first_name") or "du"
     greeting = f"Hallo {name},\n\n"
     appointment = state.get("appointment")
+    declined = state.get("declined") or {}
+    declined_when = _format(declined["begins"]) if declined.get("begins") else ""
+    feedback = state.get("feedback") or {}
     when = ""
     tomorrow = False
     if appointment:
@@ -47,6 +66,14 @@ def render(kind, state):
         if tomorrow
         else "Erinnerung an dein Probetraining bei G3",
         "feedback": "Wie war dein Probetraining bei G3?",
+        "reschedule_offer": "Neuer Termin für dein Probetraining?",
+        "team_reschedule": "Probetraining abgesagt: neuen Termin abstimmen",
+        "no_show_followup": "Wir haben dich beim Probetraining vermisst",
+        "team_no_show": "Nicht erschienen: Probetraining",
+        "review_request": "Danke für dein Feedback",
+        "team_feedback_alert": "Feedback nach Probetraining: bitte nachfragen",
+        "reactivation_first": "Wir denken an dich – G3 CrossFit",
+        "reactivation_second": "Lust, wieder bei G3 mitzutrainieren?",
     }
     texts = {
         "acknowledgment": greeting
@@ -79,13 +106,50 @@ def render(kind, state):
         "appointment_reminder": greeting
         + f"{reminder_intro} {when}, ist dein bestätigtes Probetraining bei G3"
         f".\n\nUnsere Adresse: Tempelhofer Ufer 36, 10963 Berlin, 2. Hinterh"
-        f"aus, 1. Etage.\n\nFalls du verhindert bist oder noch eine Frage ha"
-        f"st, antworte bitte auf diese E-Mail.",
+        f"aus, 1. Etage.\n\nKannst du kommen? Antworte bitte kurz mit JA oder NE"
+        f"IN. Bei NEIN schlagen wir dir gern einen neuen Termin vor. Für Fragen"
+        f" kannst du ebenfalls einfach auf diese E-Mail antworten.",
         "feedback": greeting
         + "schön, dass du bei uns trainiert hast. Wie hast du dein Probetraining "
-        "erlebt?\n\nWenn du Fragen hast oder mit uns weitertrainieren möchtest, a"
-        "ntworte einfach auf diese E-Mail. Wir besprechen die nächsten Schritte"
+        "erlebt? Antworte gern mit einer Zahl von 1 (gar nicht gut) bis 5 (sehr gut) "
+        "und ein paar Worten.\n\nWenn du Fragen hast oder mit uns weitertrainieren "
+        "möchtest, schreib es einfach dazu. Wir besprechen die nächsten Schritte"
         " persönlich mit dir.",
+        "reschedule_offer": greeting
+        + f"schade, dass es mit deinem Probetraining am {declined_when} nicht klappt"
+        " – kein Problem.\n\nAntworte einfach auf diese E-Mail mit zwei oder drei Zeiten,"
+        " die dir passen. Wir stimmen dann persönlich einen neuen Termin mit dir ab.",
+        "team_reschedule": f"{name} ({state.get('email')}) hat das bestätigte Probetraining"
+        f" am {declined_when} abgesagt. Ein Entwurf mit dem Angebot eines neuen Termins"
+        " wurde erstellt.\n\nBitte persönlich Kontakt aufnehmen und einen neuen Termin"
+        " bestätigen oder die Anfrage schließen.",
+        "no_show_followup": greeting
+        + f"zu deinem Probetraining am {when} haben wir dich leider nicht gesehen –"
+        " das kann passieren.\n\nWenn du es noch einmal versuchen möchtest, antworte"
+        " einfach auf diese E-Mail. Dann finden wir gemeinsam einen neuen Termin. Falls"
+        " es gerade nicht passt, genügt eine kurze Nachricht.",
+        "team_no_show": f"{name} ({state.get('email')}) ist zum bestätigten Probetraining"
+        f" am {when} nicht erschienen. Eine einmalige Nachfrage wurde als Entwurf erstellt."
+        "\n\nBei einer Antwort bitte einen neuen Termin bestätigen oder die Anfrage"
+        " schließen.",
+        "review_request": greeting
+        + "danke, dass du dir Zeit für dein Feedback genommen hast.\n\nWenn du magst,"
+        " teile deine Erfahrung auch öffentlich bei Google. Das hilft anderen, G3"
+        f" kennenzulernen:\n{review_url or ''}\n\nDas ist natürlich freiwillig –"
+        " ehrliche Meinungen sind uns wichtig.",
+        "team_feedback_alert": f"Feedback nach dem Probetraining von {name}"
+        f" ({state.get('email')}): {feedback.get('rating')} von 5.\n\nKommentar:\n"
+        f"{feedback.get('comment') or 'kein Kommentar'}\n\nBitte persönlich nachfragen,"
+        " was wir besser machen können.",
+        "reactivation_first": greeting
+        + "deine Mitgliedschaft bei G3 ist vor einiger Zeit ausgelaufen. Wir hoffen,"
+        " es geht dir gut!\n\nFalls du wieder einsteigen möchtest – ob nach einer Pause,"
+        " Verletzung oder einem Umzug –, antworte einfach auf diese E-Mail. Wir besprechen"
+        " persönlich, wie ein guter Wiedereinstieg für dich aussieht." + OPT_OUT,
+        "reactivation_second": greeting
+        + "wir würden uns freuen, dich wieder in der Box zu sehen.\n\nWenn du wieder"
+        " mittrainieren möchtest, antworte einfach auf diese E-Mail. Das ist unsere letzte"
+        " Nachfrage dazu – danach melden wir uns nicht mehr von selbst." + OPT_OUT,
     }
     text = texts[kind] + "\n\nDein G3-Team\n\n" + FOOTER
     subject = subjects[kind]
@@ -122,6 +186,14 @@ def export_gallery(scenarios, output):
         "appointment_confirmation": "Terminbestätigung",
         "appointment_reminder": "Terminerinnerung",
         "feedback": "Nachfrage nach dem Training",
+        "reschedule_offer": "Angebot neuer Termin nach Absage",
+        "team_reschedule": "Interner Hinweis: Absage",
+        "no_show_followup": "Nachfrage nach Nichterscheinen",
+        "team_no_show": "Interner Hinweis: Nicht erschienen",
+        "review_request": "Bitte um Google-Bewertung",
+        "team_feedback_alert": "Interner Hinweis: kritisches Feedback",
+        "reactivation_first": "Reaktivierung · erste Nachricht",
+        "reactivation_second": "Reaktivierung · letzte Nachricht",
     }
     cards = []
     index = 0

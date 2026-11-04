@@ -7,8 +7,12 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 
+from src.leads.reactivation_simulation import ReactivationSimulation
 from src.leads.trial_simulation import TrialSimulation
 from src.leads.trial_preview import export_gallery
+
+# Placeholder only: the real Google review link has not been verified yet.
+DEMO_REVIEW_URL = "https://example.invalid/g3-google-bewertung-platzhalter"
 
 
 def dt(value):
@@ -26,8 +30,13 @@ def build(output):
         ("5 · Persönlich kontaktiert, keine Antwort", "no-reply"),
         ("6 · Antwort stoppt allgemeine Nachfrage", "reply"),
         ("7 · Keine bestätigte Teilnahme", "no-attendance"),
+        ("8 · Absage per NEIN und neuer Termin", "declined"),
+        ("9 · Nicht erschienen", "no-show"),
+        ("10 · Feedback mit niedriger Bewertung", "low-feedback"),
     ]:
-        sim = TrialSimulation(output / "databases" / f"{slug}.sqlite")
+        sim = TrialSimulation(
+            output / "databases" / f"{slug}.sqlite", review_url=DEMO_REVIEW_URL
+        )
         sim.event(
             "inquiry",
             "inquiry",
@@ -65,11 +74,50 @@ def build(output):
                         ends="2026-11-02T19:00:00+01:00",
                     )
                     sim.advance(dt("2026-11-01T18:00:00+01:00"))
-                elif slug == "complete":
+                elif slug == "declined":
+                    sim.event("no", "declined", dt("2026-10-29T19:00:00+01:00"))
+                    sim.advance(dt("2026-10-30T10:00:00+01:00"))
+                    sim.event(
+                        "new-date",
+                        "confirm",
+                        dt("2026-10-30T11:00:00+01:00"),
+                        begins="2026-11-03T18:00:00+01:00",
+                        ends="2026-11-03T19:00:00+01:00",
+                    )
+                    sim.advance(dt("2026-11-02T18:00:00+01:00"))
+                elif slug == "no-show":
+                    sim.event("absent", "no_show", dt("2026-10-30T19:15:00+01:00"))
+                elif slug in ("complete", "low-feedback"):
                     sim.event("attended", "attended", dt("2026-10-30T19:00:00+01:00"))
                     sim.advance(dt("2026-10-31T19:00:00+01:00"))
+                    sim.event(
+                        "rating",
+                        "feedback_received",
+                        dt("2026-11-01T09:00:00+01:00"),
+                        rating=5 if slug == "complete" else 2,
+                        comment="Super Coaches!"
+                        if slug == "complete"
+                        else "Die Gruppe war mir zu groß.",
+                    )
                 else:
                     sim.advance(dt("2026-10-31T19:00:00+01:00"))
+        cases[label] = sim.previews()
+    for label, slug in [
+        ("11 · Reaktivierung ehemaliger Mitglieder", "reactivation"),
+        ("12 · Reaktivierung gestoppt durch Antwort", "reactivation-stop"),
+    ]:
+        sim = ReactivationSimulation(output / "databases" / f"{slug}.sqlite")
+        sim.event(
+            "ended",
+            "membership_ended",
+            dt("2026-06-30T23:59:00+02:00"),
+            first_name="Kim",
+            email="kim.test@example.com",
+        )
+        sim.advance(dt("2026-07-31T10:00:00+02:00"))
+        if slug == "reactivation-stop":
+            sim.event("reply", "responded", dt("2026-08-02T10:00:00+02:00"))
+        sim.advance(dt("2026-09-29T10:00:00+02:00"))
         cases[label] = sim.previews()
     export_gallery(cases, output)
     return cases
