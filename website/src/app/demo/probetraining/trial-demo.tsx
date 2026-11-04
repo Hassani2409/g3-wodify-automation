@@ -69,7 +69,7 @@ export default function TrialDemo() {
 
   return <div className={styles.demo}>
     <header className={styles.hero}><div className={styles.wrap}>
-      <Link href="/showcase" className={styles.back}>← Zum Projekt</Link>
+      <Link href="/" className={styles.back}>← Zur G3-Hauptseite</Link>
       <p className={styles.eyebrow}>G3 × Hassani Solutions · Ausführbare Arbeitsprobe</p>
       <h1>Deine Anfrage.<br /><span>Der Ablauf dahinter.</span></h1>
       <p className={styles.intro}>Gib deine Angaben ein und starte den Testlauf. Jeder Schritt zeigt dir live, welche Daten ankommen, was geprüft wird und welches Ergebnis entsteht.</p>
