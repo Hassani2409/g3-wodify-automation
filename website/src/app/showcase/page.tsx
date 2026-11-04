@@ -10,6 +10,13 @@ import { Bot, LayoutDashboard, Calendar, Palette, ArrowRight, Phone } from 'luci
 export default function Showcase() {
     const features = [
         {
+            icon: <Calendar className="w-8 h-8 text-white" />,
+            title: 'Probetraining-Automation · Demo',
+            description: 'Anfragen prüfen, Dubletten erkennen und Fehlerfälle testen. Simulierte Daten, keine echten Buchungen oder E-Mails.',
+            link: '/demo/probetraining',
+            linkText: 'Ablauf selbst testen'
+        },
+        {
             icon: <Bot className="w-8 h-8 text-white" />,
             title: 'KI-gestützter Assistent',
             description: 'Ein intelligenter Chatbot, der rund um die Uhr Anfragen beantwortet und Probetrainings bucht.',
