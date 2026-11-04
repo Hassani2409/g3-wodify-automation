@@ -1,0 +1,46 @@
+{
+  "testedAt": "2026-11-04T11:39:17.157Z",
+  "engine": "n8n 1.110.1 / Node 22.23.4",
+  "execution": "actual native n8n CLI; real HTTP to local test adapters",
+  "passed": 6,
+  "crm": "simulated; process-memory duplicate detection",
+  "email": "simulated; no message sent",
+  "results": [
+    {
+      "case": "invalid",
+      "status": "invalid",
+      "expected": "invalid",
+      "passed": true
+    },
+    {
+      "case": "no_consent",
+      "status": "invalid",
+      "expected": "invalid",
+      "passed": true
+    },
+    {
+      "case": "duplicate",
+      "status": "duplicate",
+      "expected": "duplicate",
+      "passed": true
+    },
+    {
+      "case": "crm_failure",
+      "status": "crm_failed",
+      "expected": "crm_failed",
+      "passed": true
+    },
+    {
+      "case": "valid",
+      "status": "mail_test_accepted",
+      "expected": "mail_test_accepted",
+      "passed": true
+    },
+    {
+      "case": "mail_failure",
+      "status": "mail_failed",
+      "expected": "mail_failed",
+      "passed": true
+    }
+  ]
+}

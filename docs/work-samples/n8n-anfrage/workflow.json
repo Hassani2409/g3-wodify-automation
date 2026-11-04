@@ -1,0 +1,378 @@
+{
+  "id": "HassaniAnfrageDemo",
+  "name": "Hassani | Anfrage → CRM → Mail | lokale n8n Demo",
+  "active": false,
+  "nodes": [
+    {
+      "id": "Testlauf-starten",
+      "name": "Testlauf starten",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        400
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "Sechs-synthetische-Testfaelle",
+      "name": "Sechs synthetische Testfaelle",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        400
+      ],
+      "parameters": {
+        "jsCode": "return [{\"case\":\"valid\",\"Name\":\"Demo Person\",\"Email\":\" demo@example.com \",\"Anliegen\":\"Bitte Beratung zu Anfrageprozessen\",\"Einwilligung\":\"Ja\",\"expected\":\"mail_test_accepted\"},{\"case\":\"duplicate\",\"Name\":\"Demo Person\",\"Email\":\"demo@example.com\",\"Anliegen\":\"Anfrage\",\"Einwilligung\":\"Ja\",\"expected\":\"duplicate\"},{\"case\":\"invalid\",\"Name\":\"X\",\"Email\":\"ungueltig\",\"Anliegen\":\"Anfrage\",\"Einwilligung\":\"Ja\",\"expected\":\"invalid\"},{\"case\":\"crm_failure\",\"Name\":\"CRM Test\",\"Email\":\"crm@example.com\",\"Anliegen\":\"Anfrage\",\"Einwilligung\":\"Ja\",\"expected\":\"crm_failed\"},{\"case\":\"mail_failure\",\"Name\":\"Mail Test\",\"Email\":\"mail@example.com\",\"Anliegen\":\"Anfrage\",\"Einwilligung\":\"Ja\",\"expected\":\"mail_failed\"},{\"case\":\"no_consent\",\"Name\":\"Demo Person\",\"Email\":\"consent@example.com\",\"Anliegen\":\"Anfrage\",\"Einwilligung\":\"Nein\",\"expected\":\"invalid\"}].map(json=>({json}));"
+      }
+    },
+    {
+      "id": "Eigene-Anfrage-eingeben",
+      "name": "Eigene Anfrage eingeben",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "formTitle": "Hassani — n8n Anfrage-Demo",
+        "formDescription": "Echte n8n-Ausführung mit lokalen Test-Schnittstellen. Automatische echte Test-E-Mail über Resend an die eingegebene Adresse. CRM ist simuliert. Einwilligung Ja bestätigt: Dies ist meine Adresse und ich möchte die Demo-Mail erhalten.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Anliegen",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Einwilligung",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Ja"
+                  },
+                  {
+                    "option": "Nein"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "onReceived",
+        "options": {
+          "path": "hassani-anfrage-demo",
+          "buttonLabel": "n8n-Test starten",
+          "respondWith": "text",
+          "responseText": "Anfrage im n8n-Testlauf empfangen. Details stehen unter Executions. Der Versandstatus steht in der Execution."
+        }
+      },
+      "webhookId": "hassani-anfrage-demo"
+    },
+    {
+      "id": "Daten-pruefen-und-normalisieren",
+      "name": "Daten pruefen und normalisieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        200
+      ],
+      "parameters": {
+        "jsCode": "return $input.all().map(({json:r})=>{const name=String(r.Name??'').trim(), email=String(r.Email??'').trim().toLowerCase(), message=String(r.Anliegen??'').trim(); const valid=name.length>=2&&name.length<=80&&email.length<=254&&/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)&&message.length>=3&&message.length<=2000&&r.Einwilligung==='Ja';return {json:{case:r.case??'form',name,email,message,consent:r.Einwilligung==='Ja',valid,status:valid?'validated':'invalid',expected:r.expected??null,mode:'local_test'}};});"
+      }
+    },
+    {
+      "id": "Gueltige-Anfrage",
+      "name": "Gueltige Anfrage",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        740,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "condition",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "validated",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Abgelehnt---keine-Folgeaktion",
+      "name": "Abgelehnt — keine Folgeaktion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        980,
+        500
+      ],
+      "parameters": {
+        "jsCode": "return $input.all();"
+      }
+    },
+    {
+      "id": "Demo-CRM---Duplikat-und-Aufgabe",
+      "name": "Demo CRM — Duplikat und Aufgabe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5689/crm",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 5000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "CRM-erfolgreich",
+      "name": "CRM erfolgreich",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1220,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "condition",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "crm_created",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Gestoppt---Duplikat-oder-CRM-Fehler",
+      "name": "Gestoppt — Duplikat oder CRM Fehler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        400
+      ],
+      "parameters": {
+        "jsCode": "return $input.all();"
+      }
+    },
+    {
+      "id": "Resend-Mail---ueber-lokalen-Versandadapter",
+      "name": "Resend Mail — ueber lokalen Versandadapter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5689/mail",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 5000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "Ergebnis---Testannahme-oder-Mailfehler",
+      "name": "Ergebnis — Testannahme oder Mailfehler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return $input.all();"
+      }
+    },
+    {
+      "id": "Hinweise",
+      "name": "Hinweise",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -460
+      ],
+      "parameters": {
+        "content": "## Native n8n-Arbeitsprobe\nFormular oder 6 Testfälle → Prüfung → HTTP-Test-CRM → HTTP-Test-Mail.\n\n**CRM simuliert, Formular-Mail echt über Resend.** Synthetische Tests versenden nichts. Kein LLM nötig. Kein echter Kundenauftrag.\n\nTestadapter zuerst starten: node adapter.mjs\nTestlauf starten: Execute workflow\nDetails: Executions / Node Input & Output\n\nDuplikate werden im Adapterprozess erkannt; Neustart leert die Testdaten. Für Livebetrieb sind persistente Idempotenz, echte CRM-Credentials und Zugriffsschutz erforderlich.",
+        "height": 360,
+        "width": 470
+      }
+    }
+  ],
+  "connections": {
+    "Testlauf starten": {
+      "main": [
+        [
+          {
+            "node": "Sechs synthetische Testfaelle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sechs synthetische Testfaelle": {
+      "main": [
+        [
+          {
+            "node": "Daten pruefen und normalisieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Eigene Anfrage eingeben": {
+      "main": [
+        [
+          {
+            "node": "Daten pruefen und normalisieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daten pruefen und normalisieren": {
+      "main": [
+        [
+          {
+            "node": "Gueltige Anfrage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gueltige Anfrage": {
+      "main": [
+        [
+          {
+            "node": "Demo CRM — Duplikat und Aufgabe",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Abgelehnt — keine Folgeaktion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Demo CRM — Duplikat und Aufgabe": {
+      "main": [
+        [
+          {
+            "node": "CRM erfolgreich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM erfolgreich": {
+      "main": [
+        [
+          {
+            "node": "Resend Mail — ueber lokalen Versandadapter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gestoppt — Duplikat oder CRM Fehler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend Mail — ueber lokalen Versandadapter": {
+      "main": [
+        [
+          {
+            "node": "Ergebnis — Testannahme oder Mailfehler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  }
+}
