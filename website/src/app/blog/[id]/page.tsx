@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Calendar, Clock, User, ArrowLeft, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
+import DemoContentNotice from "@/components/DemoContentNotice";
 
 // Mock blog posts data - in production, fetch from API
 const blogPosts = [
@@ -46,7 +47,7 @@ Avocados, Nüsse und Olivenöl unterstützen die Hormonproduktion und helfen bei
 Die richtige Ernährung ist genauso wichtig wie das Training selbst. Probiere diese Tipps aus und finde heraus, was für dich am besten funktioniert!
     `,
     category: "Ernährung",
-    author: "Sarah Mitchell",
+    author: "Musterautorin (Beispiel)",
     date: "2024-01-15",
     readTime: "8 min",
     image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -58,7 +59,7 @@ Die richtige Ernährung ist genauso wichtig wie das Training selbst. Probiere di
     content: `
 # Olympic Weightlifting Technik: Snatch perfekt meistern
 
-Lerne die komplexe Technik des Snatch von unserem Head Coach. Schritt-für-Schritt Anleitung für CrossFit Athleten in Berlin.
+Schritt-für-Schritt-Anleitung zur Technik des Snatch für CrossFit Athleten in Berlin.
 
 ## Die Grundlagen
 
@@ -85,7 +86,7 @@ Unter die Hantel kommen und sie über dem Kopf fangen. Die Füße landen in eine
 Perfekte Technik kommt nicht über Nacht. Übe regelmäßig mit leichten Gewichten und arbeite mit einem erfahrenen Coach zusammen.
     `,
     category: "Training",
-    author: "Dave Thompson",
+    author: "Musterautor (Beispiel)",
     date: "2024-01-10",
     readTime: "12 min",
     image: "https://images.unsplash.com/photo-1594381898411-846e7d193883?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -93,15 +94,15 @@ Perfekte Technik kommt nicht über Nacht. Übe regelmäßig mit leichten Gewicht
   },
   {
     id: 3,
-    title: "Success Story: Marias Transformation bei G3 CrossFit",
+    title: "Beispiel-Story: So könnte eine Mitgliedergeschichte aussehen",
     content: `
-# Success Story: Marias Transformation bei G3 CrossFit
+# Beispiel-Story: So könnte eine Mitgliedergeschichte aussehen
 
-Von völlig untrainiert zu CrossFit Enthusiastin in 12 Monaten. Lese Marias inspirierende Reise in unserem CrossFit Gym in Berlin-Mitte.
+Fiktive Vorlage für eine Mitgliedergeschichte. Echte Geschichten veröffentlichen wir nur mit Freigabe der Person.
 
 ## Der Anfang
 
-Maria kam zu uns mit dem Ziel, fitter zu werden und mehr Selbstvertrauen zu gewinnen. Sie hatte noch nie zuvor regelmäßig trainiert.
+Maria (eine fiktive Person) kam zu uns mit dem Ziel, fitter zu werden und mehr Selbstvertrauen zu gewinnen. Sie hatte noch nie zuvor regelmäßig trainiert.
 
 ## Die Herausforderungen
 
@@ -120,7 +121,7 @@ Nach 12 Monaten hat Maria nicht nur körperlich, sondern auch mental eine unglau
 "Gib nicht auf, auch wenn es schwer wird. Die Community bei G3 CrossFit hat mich durch die schwierigen Zeiten getragen. Jeder kann es schaffen!"
     `,
     category: "Success Stories",
-    author: "G3 Team",
+    author: "G3-Team (Beispiel)",
     date: "2024-01-05",
     readTime: "15 min",
     image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -197,6 +198,8 @@ export default function BlogPost() {
               Zurück zum Blog
             </Button>
           </div>
+
+          <DemoContentNotice className="mb-8" />
 
           <Card className="shadow-lg">
             <CardContent className="p-8 md:p-12">
