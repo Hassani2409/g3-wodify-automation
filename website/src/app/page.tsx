@@ -3,6 +3,7 @@ import Directions from "@/components/Directions";
 import PodcastSection from "@/components/PodcastSection";
 import HeroSection from "@/components/HeroSection";
 import FeatureCards from "@/components/FeatureCards";
+import WhiteboardWOD from "@/components/WhiteboardWOD";
 import TrainingScroll from "@/components/TrainingScroll";
 import TrainingPrograms from "@/components/TrainingPrograms";
 import AboutPreview from "@/components/AboutPreview";
@@ -13,6 +14,7 @@ export default function Home() {
     <div>
       <HeroSection />
       <MotionSection><FeatureCards /></MotionSection>
+      <WhiteboardWOD />
       <TrainingScroll />
       <MotionSection>
         <TrainingPrograms />

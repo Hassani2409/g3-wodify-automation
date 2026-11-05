@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Calendar, Clock, User, ChevronRight, Search, Filter } from "lucide-react";
 import { motion } from "framer-motion";
+import DemoContentNotice from "@/components/DemoContentNotice";
 
 export default function Blog() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +21,7 @@ export default function Blog() {
       title: "CrossFit Ernährung: 10 einfache Tipps für mehr Energie im Training",
       excerpt: "Entdecke, wie du deine Leistung im CrossFit Training durch die richtige Ernährung maximierst. Von Pre-Workout Snacks bis zur Regeneration nach dem Training.",
       category: "Ernährung",
-      author: "Sarah Mitchell",
+      author: "Musterautorin (Beispiel)",
       date: "2024-01-15",
       readTime: "8 min",
       image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -29,9 +30,9 @@ export default function Blog() {
     {
       id: 2,
       title: "Olympic Weightlifting Technik: Snatch perfekt meistern",
-      excerpt: "Lerne die komplexe Technik des Snatch von unserem Head Coach. Schritt-für-Schritt Anleitung für CrossFit Athleten in Berlin.",
+      excerpt: "Schritt-für-Schritt-Anleitung zur Technik des Snatch für CrossFit Athleten in Berlin.",
       category: "Training",
-      author: "Dave Thompson",
+      author: "Musterautor (Beispiel)",
       date: "2024-01-10",
       readTime: "12 min", 
       image: "https://images.unsplash.com/photo-1594381898411-846e7d193883?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -39,10 +40,10 @@ export default function Blog() {
     },
     {
       id: 3,
-      title: "Success Story: Marias Transformation bei G3 CrossFit",
-      excerpt: "Von völlig untrainiert zu CrossFit Enthusiastin in 12 Monaten. Lese Marias inspirierende Reise in unserem CrossFit Gym in Berlin-Mitte.",
+      title: "Beispiel-Story: So könnte eine Mitgliedergeschichte aussehen",
+      excerpt: "Fiktive Vorlage für eine Mitgliedergeschichte. Echte Geschichten veröffentlichen wir nur mit Freigabe der Person.",
       category: "Success Stories",
-      author: "G3 Team",
+      author: "G3-Team (Beispiel)",
       date: "2024-01-05",
       readTime: "15 min",
       image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -68,7 +69,7 @@ export default function Blog() {
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">CrossFit Blog Berlin</h1>
           <p className="text-xl md:text-2xl text-neutral-200 max-w-3xl mx-auto mb-8">
-            Trainingstipps, Ernährungsberatung und Erfolgsgeschichten von G3 CrossFit in Berlin-Mitte
+            Trainingstipps, Ernährungsberatung und Erfolgsgeschichten von G3 CrossFit am Gleisdreieck
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
             <div className="relative flex-1">
@@ -83,7 +84,7 @@ export default function Blog() {
             </div>
             <Button
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-primary-600"
+              className="bg-transparent border-white text-white hover:bg-white hover:text-primary-600"
             >
               <Filter className="w-4 h-4 mr-2" />
               Filter
@@ -91,6 +92,10 @@ export default function Blog() {
           </div>
         </div>
       </section>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <DemoContentNotice className="max-w-3xl mx-auto" />
+      </div>
 
       {/* Category Filter */}
       <section className="py-8 bg-white">
@@ -212,7 +217,7 @@ export default function Blog() {
             Bleib auf dem Laufenden
           </h2>
           <p className="text-xl mb-8 text-neutral-600 max-w-2xl mx-auto">
-            Erhalte unsere neuesten CrossFit Tipps, Trainingsartikel und Erfolgsgeschichten aus Berlin-Mitte direkt in dein Postfach.
+            Erhalte unsere neuesten CrossFit Tipps, Trainingsartikel und Geschichten vom Gleisdreieck direkt in dein Postfach.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
